@@ -1,8 +1,8 @@
 import { ChakraProvider } from "@chakra-ui/react";
 import type { AppProps } from "next/app";
 import "../styles/globals.css";
+import { theme } from "../styles/theme";
 import { NextPageWithLayout } from "./page";
-import { theme } from "./theme";
 
 interface AppPropsWithLayout extends AppProps {
   Component: NextPageWithLayout;
