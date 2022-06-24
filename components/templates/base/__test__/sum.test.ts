@@ -1,4 +1,4 @@
-import { sum } from "../lib/sum";
+import { sum } from "../../../../lib/sum";
 
 it("returns the sum of two numbers", () => {
   const result = sum(1, 1);

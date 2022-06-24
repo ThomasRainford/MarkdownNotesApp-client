@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import BaseTemplate from "../components/templates/base/BaseTemplate";
+import BaseTemplate from "../BaseTemplate";
 
 it("Displays the given children", () => {
   const children = "Hello World!";
