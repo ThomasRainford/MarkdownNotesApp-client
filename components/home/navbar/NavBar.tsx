@@ -37,6 +37,8 @@ const NavLink = ({ children, href }: { children: ReactNode; href: string }) => (
   </NextLink>
 );
 
+export interface Props {}
+
 const NavBar = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { colorMode, toggleColorMode } = useColorMode();
