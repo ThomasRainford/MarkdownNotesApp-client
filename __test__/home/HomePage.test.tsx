@@ -1,8 +1,8 @@
 import { render } from "@testing-library/react";
-import Navbar from "../NavBar";
+import Home from "../../pages/index";
 
 test("Should display heading correctly", () => {
-  const homePage = render(<Navbar />);
+  const homePage = render(<Home />);
 
   const heading = homePage.getByRole("heading");
 
@@ -10,7 +10,7 @@ test("Should display heading correctly", () => {
 });
 
 test("Should display login button", () => {
-  const homePage = render(<Navbar />);
+  const homePage = render(<Home />);
 
   const heading = homePage.getByRole("button", { name: /login/i });
 

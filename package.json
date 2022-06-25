@@ -6,7 +6,7 @@
     "dev": "env-cmd -f .env.dev next dev -p 4000",
     "build": "next build",
     "start": "next start -p 4000",
-    "test:unit": "jest",
+    "test:unit": "jest --watchAll",
     "test:e2e": "playwright test",
     "lint": "next lint",
     "format": "prettier --write .",
@@ -16,9 +16,10 @@
     "gen-env-types": "npx gen-env-types ./.env.dev"
   },
   "dependencies": {
+    "@chakra-ui/icons": "^2.0.2",
     "@chakra-ui/react": "^2.2.1",
-    "@emotion/react": "^11",
-    "@emotion/styled": "^11",
+    "@emotion/react": "^11.9.3",
+    "@emotion/styled": "^11.9.3",
     "@urql/exchange-graphcache": "^4.4.3",
     "env-cmd": "^10.1.0",
     "framer-motion": "^6",
@@ -26,6 +27,7 @@
     "next": "12.1.6",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-icons": "^4.4.0",
     "urql": "^2.2.2"
   },
   "devDependencies": {
