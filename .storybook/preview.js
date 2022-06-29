@@ -1,5 +1,6 @@
 import * as NextImage from "next/image";
 import "../styles/globals.css";
+import { theme } from "../styles/theme";
 
 const BREAKPOINTS_INT = {
   xs: 375,
@@ -42,4 +43,7 @@ export const parameters = {
     },
   },
   viewport: { viewports: customViewports },
+  chakra: {
+    theme,
+  },
 };
