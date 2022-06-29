@@ -62,7 +62,9 @@ const NavBar = () => {
           <HStack as={"nav"} spacing={4} display={{ base: "none", md: "flex" }}>
             {Links.map((link) => (
               <NavLink key={link} href="">
-                <Button variant="link">{link}</Button>
+                <Button role="link" variant="link">
+                  {link}
+                </Button>
               </NavLink>
             ))}
           </HStack>
