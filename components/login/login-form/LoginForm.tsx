@@ -10,10 +10,28 @@ import {
   Link,
   Stack,
   Text,
-  useColorModeValue
+  useColorModeValue,
 } from "@chakra-ui/react";
+import { useFormik } from "formik";
+import { FormEvent } from "react";
+
+interface FormValues {
+  usernameOrEmail: string;
+  password: string;
+}
 
 const LoginForm = () => {
+  const formik = useFormik<FormValues>({
+    initialValues: {
+      usernameOrEmail: "",
+      password: "",
+    },
+    onSubmit: (values, actions) => {
+      alert(JSON.stringify(values));
+      actions.resetForm();
+    },
+  });
+
   return (
     <Flex minH={"100vh"} align={"center"} justify={"center"}>
       <Stack
@@ -27,6 +45,7 @@ const LoginForm = () => {
         boxShadow={"md"}
       >
         <Stack align={"center"}>
+          <Heading size="4xl">📘</Heading>
           <Heading fontSize={"4xl"}>Welcome back!</Heading>
           <Text fontSize={"lg"} color={"gray.600"}>
             Login to get started 😃
@@ -38,14 +57,27 @@ const LoginForm = () => {
           boxShadow={"lg"}
           p={8}
         >
-          <Stack spacing={4}>
-            <FormControl id="email">
-              <FormLabel>Email address</FormLabel>
-              <Input type="email" />
+          <Stack
+            as="form"
+            onSubmit={(e) =>
+              formik.handleSubmit(e as unknown as FormEvent<HTMLFormElement>)
+            }
+          >
+            <FormControl id="usernameOrEmail">
+              <FormLabel>Username or Email address</FormLabel>
+              <Input
+                type="email"
+                value={formik.values.usernameOrEmail}
+                onChange={formik.handleChange}
+              />
             </FormControl>
             <FormControl id="password">
               <FormLabel>Password</FormLabel>
-              <Input type="password" />
+              <Input
+                type="password"
+                value={formik.values.password}
+                onChange={formik.handleChange}
+              />
             </FormControl>
             <Stack spacing={10}>
               <Stack
@@ -57,6 +89,7 @@ const LoginForm = () => {
                 <Link color={"blue.400"}>Forgot password?</Link>
               </Stack>
               <Button
+                type="submit"
                 bg={"blue.400"}
                 color={"white"}
                 _hover={{
