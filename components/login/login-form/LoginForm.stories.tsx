@@ -1,6 +1,5 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
-import LoginForm, { Props } from "./LoginForm";
-import { mockBaseTemplateProps } from "./LoginForm.mocks";
+import LoginForm from "./LoginForm";
 
 export default {
   title: "login/login-form/LoginForm",
@@ -14,7 +13,3 @@ const Template: ComponentStory<typeof LoginForm> = () => <LoginForm />;
 
 export const Base = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
-
-Base.args = {
-  ...mockBaseTemplateProps.base,
-} as Props;
