@@ -1,5 +1,6 @@
 import { Center, Grid, GridItem } from "@chakra-ui/react";
 import PrimaryLayout from "../../components/layouts/PrimaryLayout";
+import LoginForm from "../../components/login/login-form/LoginForm";
 import { NextPageWithLayout } from "../page";
 
 const Login: NextPageWithLayout = () => {
@@ -9,7 +10,7 @@ const Login: NextPageWithLayout = () => {
         <Center h="100%">Icon here</Center>
       </GridItem>
       <GridItem w="100%">
-        <Center h="100%">Login form here</Center>
+        <LoginForm />
       </GridItem>
     </Grid>
   );
