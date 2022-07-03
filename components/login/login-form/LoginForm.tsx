@@ -24,7 +24,7 @@ interface FormValues {
 }
 
 const LoginForm = () => {
-  const [result, login] = useLoginMutation();
+  const [, login] = useLoginMutation();
   const router = useRouter();
   const toast = useToast();
 
