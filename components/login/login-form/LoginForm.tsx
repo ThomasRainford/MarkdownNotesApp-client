@@ -11,9 +11,12 @@ import {
   Stack,
   Text,
   useColorModeValue,
+  useToast,
 } from "@chakra-ui/react";
 import { useFormik } from "formik";
+import { useRouter } from "next/router";
 import { FormEvent } from "react";
+import { useLoginMutation } from "../../../generated/graphql";
 
 interface FormValues {
   usernameOrEmail: string;
@@ -21,13 +24,38 @@ interface FormValues {
 }
 
 const LoginForm = () => {
+  const [result, login] = useLoginMutation();
+  const router = useRouter();
+  const toast = useToast();
+
   const formik = useFormik<FormValues>({
     initialValues: {
       usernameOrEmail: "",
       password: "",
     },
-    onSubmit: (values, actions) => {
-      alert(JSON.stringify(values));
+    onSubmit: async (values, actions) => {
+      const { usernameOrEmail, password } = values;
+      const response = await login({ usernameOrEmail, password });
+      if (response.data?.login.user && !toast.isActive("login")) {
+        console.log("Success");
+        router.push("/");
+        toast({
+          id: "login",
+          title: "Login Successfull",
+          status: "success",
+          position: "top",
+          duration: 2000,
+        });
+      }
+      if (response.data?.login.errors && !toast.isActive("login")) {
+        toast({
+          id: "login",
+          title: "Login Failed",
+          status: "error",
+          position: "top",
+          duration: 2000,
+        });
+      }
       actions.resetForm();
     },
   });
@@ -66,7 +94,7 @@ const LoginForm = () => {
             <FormControl id="usernameOrEmail">
               <FormLabel>Username or Email address</FormLabel>
               <Input
-                type="email"
+                type="text"
                 value={formik.values.usernameOrEmail}
                 onChange={formik.handleChange}
               />

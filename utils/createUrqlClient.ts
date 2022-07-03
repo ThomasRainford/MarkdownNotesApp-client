@@ -1,12 +1,12 @@
 import { cacheExchange } from "@urql/exchange-graphcache";
-import { dedupExchange, fetchExchange } from "urql";
+import { createClient, dedupExchange, fetchExchange } from "urql";
 
 export const createUrqlClient = () => {
-  return {
-    url: process.env.REACT_APP_API_URL,
+  return createClient({
+    url: process.env.NEXT_PUBLIC_API_URL,
     exchanges: [dedupExchange, cacheExchange({}), fetchExchange],
     fetchOptions: {
       credentials: "include" as const,
     },
-  };
+  });
 };

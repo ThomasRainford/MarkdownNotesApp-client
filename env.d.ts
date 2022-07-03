@@ -1,7 +1,8 @@
 declare global {
   namespace NodeJS {
     interface ProcessEnv {
-      REACT_APP_API_URL: string;
+      NEXT_PUBLIC_APP_URL: string;
+      NEXT_PUBLIC_API_URL: string;
     }
   }
 }

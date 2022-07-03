@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "env-cmd -f .env.dev next dev -p 4000",
+    "dev": "env-cmd -f .env.local next dev -p 4000",
     "build": "next build",
     "start": "next start -p 4000",
     "test:unit": "jest",
@@ -14,7 +14,7 @@
     "prepare": "husky install",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
-    "gen:env-types": "npx gen-env-types ./.env.dev",
+    "gen:env-types": "npx gen-env-types ./.env.local",
     "gen:gql": "graphql-codegen --config codegen.yml"
   },
   "dependencies": {
