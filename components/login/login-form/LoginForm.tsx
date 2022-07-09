@@ -48,6 +48,7 @@ const LoginForm = () => {
         });
       }
       if (response.data?.login.errors && !toast.isActive("login")) {
+        console.log("Failed");
         toast({
           id: "login",
           title: "Login Failed",

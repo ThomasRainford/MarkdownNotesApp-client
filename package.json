@@ -31,7 +31,8 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-icons": "^4.4.0",
-    "urql": "^2.2.2"
+    "urql": "^2.2.2",
+    "wonka": "^4.0.15"
   },
   "devDependencies": {
     "@babel/core": "^7.18.5",
