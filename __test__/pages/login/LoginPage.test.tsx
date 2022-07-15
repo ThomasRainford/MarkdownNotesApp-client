@@ -7,6 +7,7 @@ import { type sourceT } from "wonka/dist/types/src/Wonka_types.gen";
 import {
   LoginMutation,
   LoginMutationVariables,
+  MeQuery,
 } from "../../../generated/graphql";
 import Login from "../../../pages/account/login";
 import { createMockRouter } from "../../../test-utils/createMockRouter";
@@ -16,7 +17,7 @@ describe("Home Page", () => {
   test("Should login", async () => {
     const mockClient = createMockUrqlClient<
       LoginMutationVariables,
-      sourceT<{ data: LoginMutation }>
+      sourceT<{ data: LoginMutation | MeQuery }>
     >({
       executeMutation: (query: { variables: LoginMutationVariables }) => {
         const variables = query.variables;
@@ -29,6 +30,21 @@ describe("Home Page", () => {
                 email: "mail@test.com",
               },
               errors: null,
+            },
+          },
+        });
+      },
+      executeQuery: () => {
+        return fromValue({
+          data: {
+            me: {
+              _id: "id",
+              id: "id",
+              username: "User01",
+              email: "User01@mail.com",
+              followers: [] as string[],
+              following: [] as string[],
+              upvoted: [] as string[],
             },
           },
         });

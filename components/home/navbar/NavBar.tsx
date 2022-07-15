@@ -21,6 +21,7 @@ import {
 } from "@chakra-ui/react";
 import NextLink from "next/link";
 import { ReactNode } from "react";
+import { useMeQuery } from "../../../generated/graphql";
 
 const Links = ["My Collections"];
 
@@ -43,7 +44,10 @@ const NavBar = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { colorMode, toggleColorMode } = useColorMode();
 
-  const loggedIn = false;
+  const [meResult] = useMeQuery();
+
+  const loggedIn = !meResult.fetching && meResult.data?.me;
+  const username = loggedIn && meResult.data?.me?.username;
 
   return (
     <Box bg={useColorModeValue("gray.300", "gray.900")} px={4}>
@@ -97,7 +101,7 @@ const NavBar = () => {
                 </Center>
                 <br />
                 <Center>
-                  <p>Username</p>
+                  <p>{username}</p>
                 </Center>
                 <br />
                 <MenuDivider />
