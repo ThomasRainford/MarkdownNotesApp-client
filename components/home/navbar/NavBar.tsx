@@ -1,19 +1,12 @@
 import { CloseIcon, HamburgerIcon, MoonIcon, SunIcon } from "@chakra-ui/icons";
 import {
-  Avatar,
   Box,
   Button,
-  Center,
   Flex,
   Heading,
   HStack,
   IconButton,
   Link,
-  Menu,
-  MenuButton,
-  MenuDivider,
-  MenuItem,
-  MenuList,
   Stack,
   useColorMode,
   useColorModeValue,
@@ -22,6 +15,7 @@ import {
 import NextLink from "next/link";
 import { ReactNode } from "react";
 import { useMeQuery } from "../../../generated/graphql";
+import UserMenu from "../user-menu/UserMenu";
 
 const Links = ["My Collections"];
 
@@ -78,39 +72,7 @@ const NavBar = () => {
             {colorMode === "light" ? <MoonIcon /> : <SunIcon />}
           </Button>
           {loggedIn ? (
-            <Menu>
-              <MenuButton
-                as={Button}
-                rounded={"full"}
-                variant={"link"}
-                cursor={"pointer"}
-                minW={0}
-              >
-                <Avatar
-                  size={"sm"}
-                  src={"https://avatars.dicebear.com/api/male/username.svg"}
-                />
-              </MenuButton>
-              <MenuList alignItems={"center"}>
-                <br />
-                <Center>
-                  <Avatar
-                    size={"2xl"}
-                    src={"https://avatars.dicebear.com/api/male/username.svg"}
-                  />
-                </Center>
-                <br />
-                <Center>
-                  <p>{username}</p>
-                </Center>
-                <br />
-                <MenuDivider />
-                <MenuItem>Your Profile</MenuItem>
-                <MenuItem>Your Collections</MenuItem>
-                <MenuItem>Account Settings</MenuItem>
-                <MenuItem>Logout</MenuItem>
-              </MenuList>
-            </Menu>
+            <UserMenu me={meResult} />
           ) : (
             <NavLink href="account/login">
               <Button variant="outline" color="blue.300">
