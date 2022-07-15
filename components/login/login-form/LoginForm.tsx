@@ -37,7 +37,6 @@ const LoginForm = () => {
       const { usernameOrEmail, password } = values;
       const response = await login({ usernameOrEmail, password });
       if (response.data?.login.user && !toast.isActive("login")) {
-        console.log("Success");
         router.push("/");
         toast({
           id: "login",
@@ -48,7 +47,6 @@ const LoginForm = () => {
         });
       }
       if (response.data?.login.errors && !toast.isActive("login")) {
-        console.log("Failed");
         toast({
           id: "login",
           title: "Login Failed",

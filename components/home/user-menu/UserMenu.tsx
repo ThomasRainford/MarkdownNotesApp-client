@@ -19,7 +19,7 @@ export interface Props {
 
 const UserMenu = ({ me }: Props): JSX.Element => {
   const username = me.data?.me?.username;
-  console.log(me);
+
   const [, logout] = useLogoutMutation();
   const router = useRouter();
   const toast = useToast();
@@ -56,6 +56,7 @@ const UserMenu = ({ me }: Props): JSX.Element => {
         <MenuItem>Your Collections</MenuItem>
         <MenuItem>Account Settings</MenuItem>
         <MenuItem
+          data-testid="logout-button"
           onClick={async () => {
             const result = await logout();
             if (result.data?.logout && !result.error) {
