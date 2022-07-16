@@ -41,7 +41,6 @@ const NavBar = () => {
   const [meResult] = useMeQuery();
 
   const loggedIn = !meResult.fetching && meResult.data?.me;
-  const username = loggedIn && meResult.data?.me?.username;
 
   return (
     <Box bg={useColorModeValue("gray.300", "gray.900")} px={4}>
