@@ -13,7 +13,6 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useFormik } from "formik";
-import NextLink from "next/link";
 import { useRouter } from "next/router";
 import { FormEvent } from "react";
 import * as Yup from "yup";
@@ -35,7 +34,7 @@ const LoginForm = () => {
       password: "",
     },
     validationSchema: Yup.object().shape({
-      uesrnameOrEmail: Yup.string().required("Required"),
+      usernameOrEmail: Yup.string().required("Required"),
       password: Yup.string().required("Required"),
     }),
     onSubmit: async (values, actions) => {
@@ -63,7 +62,7 @@ const LoginForm = () => {
       actions.resetForm();
     },
   });
-  console.log(formik.errors?.usernameOrEmail, formik.touched.usernameOrEmail);
+
   return (
     <Flex minH={"100vh"} align={"center"} justify={"center"}>
       <Stack
@@ -83,11 +82,14 @@ const LoginForm = () => {
             Login to get started 😃
           </Text>
           <Box display={"flex"}>
-            <NextLink href={"/account/register"}>
-              <Text as={Link} fontSize={"md"} color={"gray.500"}>
-                Not signed up? Click here to register!
-              </Text>
-            </NextLink>
+            <Text
+              as={Link}
+              fontSize={"md"}
+              color={"gray.500"}
+              onClick={() => router.push("/account/register")}
+            >
+              Not signed up? Click here to register!
+            </Text>
           </Box>
         </Stack>
         <Box

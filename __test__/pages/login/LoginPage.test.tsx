@@ -92,8 +92,7 @@ describe("Home Page", () => {
       LoginMutationVariables,
       sourceT<{ data: LoginMutation }>
     >({
-      executeMutation: (query: { variables: LoginMutationVariables }) => {
-        const variables = query.variables;
+      executeMutation: () => {
         return fromValue({
           data: {
             login: {

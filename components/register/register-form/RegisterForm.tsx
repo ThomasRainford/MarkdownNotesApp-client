@@ -78,7 +78,6 @@ const RegisterForm = (): JSX.Element => {
       actions.resetForm();
     },
   });
-  console.log(formik.errors);
 
   return (
     <Flex minH={"100vh"} align={"center"} justify={"center"}>
