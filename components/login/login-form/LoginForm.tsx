@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  Checkbox,
   Flex,
   FormControl,
   FormLabel,
@@ -14,6 +13,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useFormik } from "formik";
+import NextLink from "next/link";
 import { useRouter } from "next/router";
 import { FormEvent } from "react";
 import { useLoginMutation } from "../../../generated/graphql";
@@ -62,7 +62,7 @@ const LoginForm = () => {
   return (
     <Flex minH={"100vh"} align={"center"} justify={"center"}>
       <Stack
-        spacing={8}
+        spacing={4}
         mx={"auto"}
         maxW={"lg"}
         py={12}
@@ -74,9 +74,16 @@ const LoginForm = () => {
         <Stack align={"center"}>
           <Heading size="4xl">📘</Heading>
           <Heading fontSize={"4xl"}>Welcome back!</Heading>
-          <Text fontSize={"lg"} color={"gray.600"}>
+          <Text fontSize={"lg"} color={"gray.400"}>
             Login to get started 😃
           </Text>
+          <Box display={"flex"}>
+            <NextLink href={"/account/register"}>
+              <Text as={Link} fontSize={"md"} color={"gray.500"}>
+                Not signed up? Click here to register!
+              </Text>
+            </NextLink>
+          </Box>
         </Stack>
         <Box
           rounded={"lg"}
@@ -112,7 +119,6 @@ const LoginForm = () => {
                 align={"start"}
                 justify={"space-between"}
               >
-                <Checkbox>Remember me</Checkbox>
                 <Link color={"blue.400"}>Forgot password?</Link>
               </Stack>
               <Button

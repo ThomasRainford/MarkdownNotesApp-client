@@ -331,6 +331,13 @@ export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
 export type LogoutMutation = { __typename?: 'Mutation', logout?: { __typename?: 'User', username: string } | null };
 
+export type RegisterMutationVariables = Exact<{
+  registerInput: UserRegisterInput;
+}>;
+
+
+export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserResponse', user?: { __typename?: 'User', id: string, username: string, email: string } | null, errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null } };
+
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -366,6 +373,25 @@ export const LogoutDocument = gql`
 
 export function useLogoutMutation() {
   return Urql.useMutation<LogoutMutation, LogoutMutationVariables>(LogoutDocument);
+};
+export const RegisterDocument = gql`
+    mutation Register($registerInput: UserRegisterInput!) {
+  register(registerInput: $registerInput) {
+    user {
+      id
+      username
+      email
+    }
+    errors {
+      field
+      message
+    }
+  }
+}
+    `;
+
+export function useRegisterMutation() {
+  return Urql.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument);
 };
 export const MeDocument = gql`
     query Me {
