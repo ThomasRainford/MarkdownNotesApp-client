@@ -16,6 +16,7 @@ import { useFormik } from "formik";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import { FormEvent } from "react";
+import * as Yup from "yup";
 import { useLoginMutation } from "../../../generated/graphql";
 
 interface FormValues {
@@ -33,6 +34,10 @@ const LoginForm = () => {
       usernameOrEmail: "",
       password: "",
     },
+    validationSchema: Yup.object().shape({
+      uesrnameOrEmail: Yup.string().required("Required"),
+      password: Yup.string().required("Required"),
+    }),
     onSubmit: async (values, actions) => {
       const { usernameOrEmail, password } = values;
       const response = await login({ usernameOrEmail, password });
@@ -58,7 +63,7 @@ const LoginForm = () => {
       actions.resetForm();
     },
   });
-
+  console.log(formik.errors?.usernameOrEmail, formik.touched.usernameOrEmail);
   return (
     <Flex minH={"100vh"} align={"center"} justify={"center"}>
       <Stack
@@ -104,6 +109,12 @@ const LoginForm = () => {
                 value={formik.values.usernameOrEmail}
                 onChange={formik.handleChange}
               />
+              {formik.errors.usernameOrEmail &&
+              formik.touched.usernameOrEmail ? (
+                <Text fontSize="sm" fontStyle={"italic"} color={"red.300"}>
+                  {formik.errors.usernameOrEmail}
+                </Text>
+              ) : null}
             </FormControl>
             <FormControl id="password">
               <FormLabel>Password</FormLabel>
@@ -112,6 +123,11 @@ const LoginForm = () => {
                 value={formik.values.password}
                 onChange={formik.handleChange}
               />
+              {formik.errors.password && formik.touched.password ? (
+                <Text fontSize="sm" fontStyle={"italic"} color={"red.300"}>
+                  {formik.errors.password}
+                </Text>
+              ) : null}
             </FormControl>
             <Stack spacing={10}>
               <Stack
