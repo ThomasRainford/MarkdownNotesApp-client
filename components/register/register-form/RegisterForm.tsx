@@ -47,7 +47,7 @@ const RegisterForm = (): JSX.Element => {
         .test("passwords-match", "Passwords must match", function (value) {
           return this.parent.password === value;
         })
-        .required("Requried"),
+        .required("Required"),
     }),
     onSubmit: async (values, actions) => {
       const { username, email, password } = values;
@@ -126,7 +126,12 @@ const RegisterForm = (): JSX.Element => {
                 onChange={formik.handleChange}
               />
               {formik.errors.username && formik.touched.username ? (
-                <Text fontSize="sm" fontStyle={"italic"} color={"red.300"}>
+                <Text
+                  id="username123"
+                  fontSize="sm"
+                  fontStyle={"italic"}
+                  color={"red.300"}
+                >
                   {formik.errors.username}
                 </Text>
               ) : null}
@@ -139,7 +144,12 @@ const RegisterForm = (): JSX.Element => {
                 onChange={formik.handleChange}
               />
               {formik.errors.email && formik.touched.email ? (
-                <Text fontSize="sm" fontStyle={"italic"} color={"red.300"}>
+                <Text
+                  id="email123"
+                  fontSize="sm"
+                  fontStyle={"italic"}
+                  color={"red.300"}
+                >
                   {formik.errors.email}
                 </Text>
               ) : null}
@@ -152,7 +162,12 @@ const RegisterForm = (): JSX.Element => {
                 onChange={formik.handleChange}
               />
               {formik.errors.password && formik.touched.password ? (
-                <Text fontSize="sm" fontStyle={"italic"} color={"red.300"}>
+                <Text
+                  id="password123"
+                  fontSize="sm"
+                  fontStyle={"italic"}
+                  color={"red.300"}
+                >
                   {formik.errors.password}
                 </Text>
               ) : null}
@@ -166,7 +181,12 @@ const RegisterForm = (): JSX.Element => {
               />
               {formik.errors.confirmPassword &&
               formik.touched.confirmPassword ? (
-                <Text fontSize="sm" fontStyle={"italic"} color={"red.300"}>
+                <Text
+                  id="confirmpassword123"
+                  fontSize="sm"
+                  fontStyle={"italic"}
+                  color={"red.300"}
+                >
                   {formik.errors.confirmPassword}
                 </Text>
               ) : null}
