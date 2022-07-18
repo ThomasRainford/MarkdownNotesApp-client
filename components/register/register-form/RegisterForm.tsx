@@ -13,7 +13,6 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useFormik } from "formik";
-import NextLink from "next/link";
 import { useRouter } from "next/router";
 import { FormEvent } from "react";
 import * as Yup from "yup";
@@ -50,7 +49,6 @@ const RegisterForm = (): JSX.Element => {
         })
         .required("Requried"),
     }),
-    enableReinitialize: true,
     onSubmit: async (values, actions) => {
       const { username, email, password } = values;
       const response = await register({
@@ -97,11 +95,16 @@ const RegisterForm = (): JSX.Element => {
           <Text fontSize={"lg"} color={"gray.400"}>
             Register to get started 😃
           </Text>
-          <NextLink href={"/account/login"}>
-            <Text as={Link} fontSize={"md"} color={"gray.500"}>
-              Already registered? Sign in here!
+          <Box display={"flex"}>
+            <Text
+              as={Link}
+              fontSize={"md"}
+              color={"gray.500"}
+              onClick={() => router.push("/account/login")}
+            >
+              Already signed up? Click here to login!
             </Text>
-          </NextLink>
+          </Box>
         </Stack>
         <Box
           rounded={"lg"}
@@ -157,7 +160,7 @@ const RegisterForm = (): JSX.Element => {
             <FormControl id="confirmPassword">
               <FormLabel>Confirm Password</FormLabel>
               <Input
-                type="confirmPassword"
+                type="password"
                 value={formik.values.confirmPassword}
                 onChange={formik.handleChange}
               />

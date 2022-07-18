@@ -13,8 +13,8 @@ import Login from "../../../pages/account/login";
 import { createMockRouter } from "../../../test-utils/createMockRouter";
 import { createMockUrqlClient } from "../../../test-utils/createMockUrqlClient";
 
-describe("Home Page", () => {
-  test("Should login", async () => {
+describe("Login Page", () => {
+  test("Should login successfully", async () => {
     const mockClient = createMockUrqlClient<
       LoginMutationVariables,
       sourceT<{ data: LoginMutation | MeQuery }>
