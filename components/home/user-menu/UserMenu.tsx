@@ -14,10 +14,10 @@ import { UseQueryState } from "urql";
 import { MeQuery, useLogoutMutation } from "../../../generated/graphql";
 
 export interface Props {
-  me: UseQueryState<MeQuery, object>;
+  user: UseQueryState<MeQuery, object>;
 }
 
-const UserMenu = ({ me }: Props): JSX.Element => {
+const UserMenu = ({ user: me }: Props): JSX.Element => {
   const username = me.data?.me?.username;
 
   const [, logout] = useLogoutMutation();

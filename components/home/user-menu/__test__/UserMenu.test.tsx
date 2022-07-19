@@ -43,7 +43,7 @@ describe("UserMenu component", () => {
     });
     render(
       <Provider value={mockClient as unknown as Client}>
-        <UserMenu me={me} />
+        <UserMenu user={me} />
       </Provider>
     );
 
@@ -87,7 +87,7 @@ describe("UserMenu component", () => {
     render(
       <RouterContext.Provider value={mockRouter}>
         <Provider value={mockClient as unknown as Client}>
-          <UserMenu me={me} />
+          <UserMenu user={me} />
         </Provider>
       </RouterContext.Provider>
     );

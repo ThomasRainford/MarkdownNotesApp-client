@@ -1,7 +1,7 @@
 import { Props } from "./UserMenu";
 
 const base: Props = {
-  me: {
+  user: {
     data: {
       me: {
         _id: "id",

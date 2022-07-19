@@ -12,13 +12,16 @@ import {
   useColorMode,
   useColorModeValue,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
+import { useRouter } from "next/router";
 import { ReactNode } from "react";
-import { useMeQuery } from "../../../generated/graphql";
+import { UseQueryState } from "urql";
+import { MeQuery } from "../../../generated/graphql";
 import UserMenu from "../user-menu/UserMenu";
 
-const Links = ["My Collections"];
+const Links = ["My Notes"];
 
 const NavLink = ({ children, href }: { children: ReactNode; href: string }) => (
   <NextLink href={href}>
@@ -33,16 +36,18 @@ const NavLink = ({ children, href }: { children: ReactNode; href: string }) => (
   </NextLink>
 );
 
-export interface Props {}
+export interface Props {
+  user: UseQueryState<MeQuery, object>;
+}
 
-const NavBar = () => {
+const NavBar = ({ user }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { colorMode, toggleColorMode } = useColorMode();
+  const router = useRouter();
+  const toast = useToast();
 
-  const [meResult] = useMeQuery();
-
-  const loginFetching = meResult.fetching;
-  const loggedIn = meResult.data?.me;
+  const loginFetching = user.fetching;
+  const loggedIn = user.data?.me;
 
   return (
     <Box bg={useColorModeValue("gray.300", "gray.900")} px={4}>
@@ -65,7 +70,16 @@ const NavBar = () => {
                 role="link"
                 variant="link"
                 onClick={() => {
-                  //router.push("");
+                  if (!loggedIn) {
+                    toast({
+                      id: "no-access",
+                      title: "Please login to access this page.",
+                      status: "error",
+                      position: "top",
+                      duration: 2000,
+                    });
+                  }
+                  router.push("/my-notes");
                 }}
               >
                 {link}
@@ -78,7 +92,7 @@ const NavBar = () => {
             {colorMode === "light" ? <MoonIcon /> : <SunIcon />}
           </Button>
           {loggedIn ? (
-            <UserMenu me={meResult} />
+            <UserMenu user={user} />
           ) : !loginFetching ? (
             <NavLink href="account/login">
               <Button variant="outline" color="blue.300">
