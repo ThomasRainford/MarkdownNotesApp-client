@@ -61,7 +61,14 @@ const NavBar = ({ user }: Props) => {
         />
         <HStack spacing={8} alignItems={"center"}>
           <Box>
-            <Heading size="lg">MDN Notes</Heading>
+            <Heading
+              size="lg"
+              onClick={() => {
+                if (router.pathname !== "/") router.push("/");
+              }}
+            >
+              MDN Notes
+            </Heading>
           </Box>
           <HStack as={"nav"} spacing={4} display={{ base: "none", md: "flex" }}>
             {Links.map((link) => (
