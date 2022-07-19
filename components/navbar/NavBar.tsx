@@ -18,8 +18,8 @@ import NextLink from "next/link";
 import { useRouter } from "next/router";
 import { ReactNode } from "react";
 import { UseQueryState } from "urql";
-import { MeQuery } from "../../../generated/graphql";
-import UserMenu from "../user-menu/UserMenu";
+import { MeQuery } from "../../generated/graphql";
+import UserMenu from "../home/user-menu/UserMenu";
 
 const Links = ["My Notes"];
 

@@ -1,5 +1,5 @@
-import NavBar from "../../components/home/navbar/NavBar";
 import PrimaryLayout from "../../components/layouts/PrimaryLayout";
+import NavBar from "../../components/navbar/NavBar";
 import { useMeQuery } from "../../generated/graphql";
 import { useIsAuth } from "../../utils/useIsAuth";
 import { NextPageWithLayout } from "../page";
