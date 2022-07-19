@@ -1,19 +1,13 @@
 import { cacheExchange } from "@urql/exchange-graphcache";
-import { createClient, dedupExchange, fetchExchange, ssrExchange } from "urql";
+import { SSRExchange } from "next-urql";
+import { dedupExchange, fetchExchange } from "urql";
 
-const isServerSide = typeof window === "undefined";
-
-const ssr = ssrExchange({
-  isClient: !isServerSide,
-  initialState: !isServerSide ? (window as any).__URQL_DATA__ : undefined,
-});
-
-export const createUrqlClient = () => {
-  return createClient({
+export const createUrqlClient = (ssrExchange: SSRExchange) => {
+  return {
     url: process.env.NEXT_PUBLIC_API_URL,
-    exchanges: [dedupExchange, cacheExchange({}), fetchExchange, ssr],
+    exchanges: [dedupExchange, cacheExchange({}), fetchExchange, ssrExchange],
     fetchOptions: {
       credentials: "include" as const,
     },
-  });
+  };
 };

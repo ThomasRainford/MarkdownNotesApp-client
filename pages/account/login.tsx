@@ -1,6 +1,8 @@
 import { Box, Center, Grid, Heading, SimpleGrid } from "@chakra-ui/react";
+import { withUrqlClient } from "next-urql";
 import PrimaryLayout from "../../components/layouts/PrimaryLayout";
 import LoginForm from "../../components/login/login-form/LoginForm";
+import { createUrqlClient } from "../../utils/createUrqlClient";
 import { NextPageWithLayout } from "../page";
 
 const Login: NextPageWithLayout = () => {
@@ -18,7 +20,7 @@ const Login: NextPageWithLayout = () => {
   );
 };
 
-export default Login;
+export default withUrqlClient(createUrqlClient)(Login);
 
 Login.getLayout = (page) => {
   return <PrimaryLayout>{page}</PrimaryLayout>;
