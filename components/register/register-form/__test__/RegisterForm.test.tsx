@@ -9,9 +9,9 @@ import {
   RegisterMutation,
   RegisterMutationVariables,
 } from "../../../../generated/graphql";
-import Register from "../../../../pages/account/register";
 import { createMockRouter } from "../../../../test-utils/createMockRouter";
 import { createMockUrqlClient } from "../../../../test-utils/createMockUrqlClient";
+import RegisterForm from "../RegisterForm";
 
 describe("RegisterForm component", () => {
   test("Should register successfully", async () => {
@@ -54,7 +54,7 @@ describe("RegisterForm component", () => {
     render(
       <RouterContext.Provider value={mockRouter}>
         <Provider value={mockClient as unknown as Client}>
-          <Register />
+          <RegisterForm />
         </Provider>
       </RouterContext.Provider>
     );
@@ -137,7 +137,7 @@ describe("RegisterForm component", () => {
     render(
       <RouterContext.Provider value={mockRouter}>
         <Provider value={mockClient as unknown as Client}>
-          <Register />
+          <RegisterForm />
         </Provider>
       </RouterContext.Provider>
     );
@@ -220,7 +220,7 @@ describe("RegisterForm component", () => {
     render(
       <RouterContext.Provider value={mockRouter}>
         <Provider value={mockClient as unknown as Client}>
-          <Register />
+          <RegisterForm />
         </Provider>
       </RouterContext.Provider>
     );
