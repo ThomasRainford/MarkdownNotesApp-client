@@ -7,6 +7,7 @@ import {
   HStack,
   IconButton,
   Link,
+  Spinner,
   Stack,
   useColorMode,
   useColorModeValue,
@@ -40,7 +41,8 @@ const NavBar = () => {
 
   const [meResult] = useMeQuery();
 
-  const loggedIn = !meResult.fetching && meResult.data?.me;
+  const loginFetching = meResult.fetching;
+  const loggedIn = meResult.data?.me;
 
   return (
     <Box bg={useColorModeValue("gray.300", "gray.900")} px={4}>
@@ -58,11 +60,16 @@ const NavBar = () => {
           </Box>
           <HStack as={"nav"} spacing={4} display={{ base: "none", md: "flex" }}>
             {Links.map((link) => (
-              <NavLink key={link} href="">
-                <Button role="link" variant="link">
-                  {link}
-                </Button>
-              </NavLink>
+              <Button
+                key={link}
+                role="link"
+                variant="link"
+                onClick={() => {
+                  //router.push("");
+                }}
+              >
+                {link}
+              </Button>
             ))}
           </HStack>
         </HStack>
@@ -72,12 +79,14 @@ const NavBar = () => {
           </Button>
           {loggedIn ? (
             <UserMenu me={meResult} />
-          ) : (
+          ) : !loginFetching ? (
             <NavLink href="account/login">
               <Button variant="outline" color="blue.300">
                 Login
               </Button>
             </NavLink>
+          ) : (
+            <Spinner />
           )}
         </Flex>
       </Flex>
