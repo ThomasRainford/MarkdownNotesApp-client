@@ -1,2 +1,7 @@
-// mongosh "mongodb+srv://main_user:NVCP7MeUP0MEWAgx@cluster0.qjojq.mongodb.net/testing-db?retryWrites=true&w=majority&useNewUrlParser=true&useUnifiedTopology=true" ./test-utils/db/db-up.js
-db.users.insertOne({ name: "Thomas" });
+db.users.insertMany([
+  {
+    email: "user1@mail.com",
+    username: "User1",
+    password: "$argon2i$v=19$m=16,t=2,p=1$cXdlcnR5dWk$96NSCvpc+wrSDbiZgCJrxg",
+  },
+]);
