@@ -32,6 +32,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-icons": "^4.4.0",
+    "shelljs": "^0.8.5",
     "urql": "^2.2.2",
     "wonka": "^4.0.15",
     "yup": "^0.32.11"
@@ -59,6 +60,7 @@
     "@types/node": "18.0.0",
     "@types/react": "18.0.14",
     "@types/react-dom": "18.0.5",
+    "@types/shelljs": "^0.8.11",
     "babel-loader": "^8.2.5",
     "eslint": "8.18.0",
     "eslint-config-next": "12.1.6",
