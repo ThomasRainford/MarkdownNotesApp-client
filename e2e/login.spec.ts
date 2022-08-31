@@ -15,15 +15,48 @@ test.describe("test login page", () => {
     );
   });
 
-  test("should display Next.js welcome page", async ({ page }) => {
-    // Start from the index page (the baseURL is set via the webServer in the playwright.config.ts)
+  test("should login successfully", async ({ page }) => {
     await page.goto("/");
-    // The new page should contain an h1 with "Welcome to Next.js!"
-    await expect(page.locator("h2")).toContainText("MDN Notes");
-    // Click login button and wait for the page url to change.
-    await page.locator('button:has-text("Login")').click();
-    await page.waitForTimeout(1000);
+    // Click text=Login
+    await Promise.all([
+      page.waitForNavigation(),
+      page.locator("text=Login").click(),
+    ]);
+    // Click input[type="text"]
+    await page.locator('input[type="text"]').click();
+    // Fill input[type="text"]
+    await page.locator('input[type="text"]').fill("User01");
+    // Press Tab
+    await page.locator('input[type="text"]').press("Tab");
+    // Fill input[type="password"]
+    await page.locator('input[type="password"]').fill("password");
+    // Click text=Sign in
+    await Promise.all([
+      page.waitForNavigation(),
+      page.locator("text=Sign in").click(),
+    ]);
+    // Click [id="menu-button-\:r9\:"]
+    await page.locator('[id="menu-button-\\:r9\\:"]').click();
+    // Click text=User01
+    expect(page.locator("text=User01")).toBeDefined();
+  });
 
-    expect(page.url()).toContain("/account/login");
+  test("should fail to login", async ({ page }) => {
+    await page.goto("/");
+    // Click text=Login
+    await Promise.all([
+      page.waitForNavigation(),
+      page.locator("text=Login").click(),
+    ]);
+    // Click input[type="text"]
+    await page.locator('input[type="text"]').click();
+    // Fill input[type="text"]
+    await page.locator('input[type="text"]').fill("UserDoesNotExist");
+    // Press Tab
+    await page.locator('input[type="text"]').press("Tab");
+    // Fill input[type="password"]
+    await page.locator('input[type="password"]').fill("password");
+    // Press Enter
+    await page.locator('input[type="password"]').press("Enter");
   });
 });
