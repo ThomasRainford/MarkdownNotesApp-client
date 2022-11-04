@@ -38,7 +38,9 @@ test.describe("test login page", () => {
     // Click [id="menu-button-\:r9\:"]
     await page.locator('[id="menu-button-\\:r9\\:"]').click();
     // Click text=User01
-    expect(page.locator("text=User01")).toBeDefined();
+    await expect(page.locator("#home-user-menu-username")).toContainText(
+      "User01"
+    );
   });
 
   test("should fail to login", async ({ page }) => {

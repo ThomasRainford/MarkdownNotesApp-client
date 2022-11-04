@@ -48,7 +48,7 @@ const UserMenu = ({ user: me }: Props): JSX.Element => {
         </Center>
         <br />
         <Center>
-          <p>{username}</p>
+          <p id="home-user-menu-username">{username}</p>
         </Center>
         <br />
         <MenuDivider />
