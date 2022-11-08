@@ -3,7 +3,6 @@ import shell from "shelljs";
 
 test.describe("test login page", () => {
   test.beforeAll(() => {
-    console.log("db ", process.env.NEXT_PUBLIC_TEST_DB_URL);
     shell.exec(
       `mongosh '${process.env.NEXT_PUBLIC_TEST_DB_URL}' ./test-utils/db/db-up.js`
     );
@@ -36,7 +35,7 @@ test.describe("test login page", () => {
       page.locator("text=Sign in").click(),
     ]);
     // Click [id="menu-button-\:r9\:"]
-    await page.locator('[id="menu-button-\\:r9\\:"]').click();
+    await page.locator("#menu-button-navbar-usermenu").click();
     // Click text=User01
     await expect(page.locator("#home-user-menu-username")).toContainText(
       "User01"

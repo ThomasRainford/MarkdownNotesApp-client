@@ -7,8 +7,8 @@
 db.user.insertMany([
   {
     _id: 1,
-    email: "user1@mail.com",
-    username: "User1",
+    email: "user01@mail.com",
+    username: "User01",
     password: "$argon2i$v=19$m=16,t=2,p=1$cXdlcnR5dWk$96NSCvpc+wrSDbiZgCJrxg",
     following: [],
     followers: [],
@@ -18,8 +18,8 @@ db.user.insertMany([
   },
   {
     _id: 2,
-    email: "user2@mail.com",
-    username: "User2",
+    email: "user02@mail.com",
+    username: "User02",
     password: "$argon2i$v=19$m=16,t=2,p=1$cXdlcnR5dWk$96NSCvpc+wrSDbiZgCJrxg",
     following: [],
     followers: [],

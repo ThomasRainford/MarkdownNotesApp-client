@@ -3,7 +3,6 @@ import shell from "shelljs";
 
 test.describe("basic tests", () => {
   test.beforeAll(() => {
-    console.log("db ", process.env.NEXT_PUBLIC_TEST_DB_URL);
     shell.exec(
       `mongosh '${process.env.NEXT_PUBLIC_TEST_DB_URL}' ./test-utils/db/db-up.js`
     );

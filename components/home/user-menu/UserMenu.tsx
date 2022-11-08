@@ -25,7 +25,7 @@ const UserMenu = ({ user: me }: Props): JSX.Element => {
   const toast = useToast();
 
   return (
-    <Menu>
+    <Menu id="navbar-usermenu">
       <MenuButton
         as={Button}
         rounded={"full"}
