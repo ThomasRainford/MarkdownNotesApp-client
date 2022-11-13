@@ -1,28 +1,27 @@
 import { CloseIcon, HamburgerIcon, MoonIcon, SunIcon } from "@chakra-ui/icons";
 import {
-  Avatar,
   Box,
   Button,
-  Center,
   Flex,
   Heading,
   HStack,
   IconButton,
   Link,
-  Menu,
-  MenuButton,
-  MenuDivider,
-  MenuItem,
-  MenuList,
+  Spinner,
   Stack,
   useColorMode,
   useColorModeValue,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
+import { useRouter } from "next/router";
 import { ReactNode } from "react";
+import { UseQueryState } from "urql";
+import { MeQuery } from "../../generated/graphql";
+import UserMenu from "./user-menu/UserMenu";
 
-const Links = ["My Collections"];
+const Links = ["My Notes"];
 
 const NavLink = ({ children, href }: { children: ReactNode; href: string }) => (
   <NextLink href={href}>
@@ -37,13 +36,18 @@ const NavLink = ({ children, href }: { children: ReactNode; href: string }) => (
   </NextLink>
 );
 
-export interface Props {}
+export interface Props {
+  user: UseQueryState<MeQuery, object>;
+}
 
-const NavBar = () => {
+const NavBar = ({ user }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { colorMode, toggleColorMode } = useColorMode();
+  const router = useRouter();
+  const toast = useToast();
 
-  const loggedIn = false;
+  const loginFetching = user.fetching;
+  const loggedIn = user.data?.me;
 
   return (
     <Box bg={useColorModeValue("gray.300", "gray.900")} px={4}>
@@ -57,15 +61,36 @@ const NavBar = () => {
         />
         <HStack spacing={8} alignItems={"center"}>
           <Box>
-            <Heading size="lg">MDN Notes</Heading>
+            <Heading
+              size="lg"
+              onClick={() => {
+                if (router.pathname !== "/") router.push("/");
+              }}
+            >
+              MDN Notes
+            </Heading>
           </Box>
           <HStack as={"nav"} spacing={4} display={{ base: "none", md: "flex" }}>
             {Links.map((link) => (
-              <NavLink key={link} href="">
-                <Button role="link" variant="link">
-                  {link}
-                </Button>
-              </NavLink>
+              <Button
+                key={link}
+                role="link"
+                variant="link"
+                onClick={() => {
+                  if (!loggedIn) {
+                    toast({
+                      id: "no-access",
+                      title: "Please login to access this page.",
+                      status: "error",
+                      position: "top",
+                      duration: 2000,
+                    });
+                  }
+                  router.push("/my-notes");
+                }}
+              >
+                {link}
+              </Button>
             ))}
           </HStack>
         </HStack>
@@ -74,45 +99,15 @@ const NavBar = () => {
             {colorMode === "light" ? <MoonIcon /> : <SunIcon />}
           </Button>
           {loggedIn ? (
-            <Menu>
-              <MenuButton
-                as={Button}
-                rounded={"full"}
-                variant={"link"}
-                cursor={"pointer"}
-                minW={0}
-              >
-                <Avatar
-                  size={"sm"}
-                  src={"https://avatars.dicebear.com/api/male/username.svg"}
-                />
-              </MenuButton>
-              <MenuList alignItems={"center"}>
-                <br />
-                <Center>
-                  <Avatar
-                    size={"2xl"}
-                    src={"https://avatars.dicebear.com/api/male/username.svg"}
-                  />
-                </Center>
-                <br />
-                <Center>
-                  <p>Username</p>
-                </Center>
-                <br />
-                <MenuDivider />
-                <MenuItem>Your Profile</MenuItem>
-                <MenuItem>Your Collections</MenuItem>
-                <MenuItem>Account Settings</MenuItem>
-                <MenuItem>Logout</MenuItem>
-              </MenuList>
-            </Menu>
-          ) : (
+            <UserMenu user={user} />
+          ) : !loginFetching ? (
             <NavLink href="account/login">
               <Button variant="outline" color="blue.300">
                 Login
               </Button>
             </NavLink>
+          ) : (
+            <Spinner />
           )}
         </Flex>
       </Flex>

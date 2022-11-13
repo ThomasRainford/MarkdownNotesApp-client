@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "env-cmd -f .env.dev next dev -p 4000",
+    "dev": "env-cmd -f .env.local next dev -p 4000",
     "build": "next build",
     "start": "next start -p 4000",
     "test:unit": "jest",
@@ -14,7 +14,8 @@
     "prepare": "husky install",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
-    "gen-env-types": "npx gen-env-types ./.env.dev"
+    "gen:env-types": "npx gen-env-types ./.env.local",
+    "gen:gql": "graphql-codegen --config codegen.yml"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.0.2",
@@ -23,17 +24,26 @@
     "@emotion/styled": "^11.9.3",
     "@urql/exchange-graphcache": "^4.4.3",
     "env-cmd": "^10.1.0",
+    "formik": "^2.2.9",
     "framer-motion": "^6",
     "graphql": "^16.5.0",
     "next": "12.1.6",
+    "next-urql": "^3.3.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-icons": "^4.4.0",
-    "urql": "^2.2.2"
+    "shelljs": "^0.8.5",
+    "urql": "^2.2.2",
+    "wonka": "^4.0.15",
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "@babel/core": "^7.18.5",
     "@chakra-ui/storybook-addon": "^4.0.1",
+    "@graphql-codegen/cli": "^2.6.4",
+    "@graphql-codegen/typescript": "^2.5.1",
+    "@graphql-codegen/typescript-operations": "^2.4.2",
+    "@graphql-codegen/typescript-urql": "^3.5.12",
     "@playwright/test": "^1.22.2",
     "@storybook/addon-actions": "^6.5.9",
     "@storybook/addon-essentials": "^6.5.9",
@@ -50,6 +60,7 @@
     "@types/node": "18.0.0",
     "@types/react": "18.0.14",
     "@types/react-dom": "18.0.5",
+    "@types/shelljs": "^0.8.11",
     "babel-loader": "^8.2.5",
     "eslint": "8.18.0",
     "eslint-config-next": "12.1.6",
@@ -61,6 +72,7 @@
     "typescript": "4.7.4"
   },
   "resolutions": {
-    "webpack": "^5"
+    "webpack": "^5",
+    "undici": "5.5.1"
   }
 }
