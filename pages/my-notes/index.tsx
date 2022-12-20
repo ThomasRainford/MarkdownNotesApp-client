@@ -1,5 +1,6 @@
 import { withUrqlClient } from "next-urql";
 import PrimaryLayout from "../../components/layouts/PrimaryLayout";
+import CollectionView from "../../components/my-notes/collection-view/CollectionView";
 import NavBar from "../../components/navbar/NavBar";
 import { useMeQuery } from "../../generated/graphql";
 import { createUrqlClient } from "../../utils/createUrqlClient";
@@ -14,6 +15,7 @@ const MyNotes: NextPageWithLayout = () => {
   return (
     <>
       <NavBar user={meResult} />
+      <CollectionView />
     </>
   );
 };
