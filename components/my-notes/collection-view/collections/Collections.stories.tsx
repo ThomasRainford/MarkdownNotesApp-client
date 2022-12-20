@@ -3,7 +3,7 @@ import Collections from "./Collections";
 import { mockCollectionsProps } from "./Collections.mocks";
 
 export default {
-  title: "templates/BaseTemplate",
+  title: "my-notes/collection-view/Collections",
   component: Collections,
   // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
   argTypes: {},
