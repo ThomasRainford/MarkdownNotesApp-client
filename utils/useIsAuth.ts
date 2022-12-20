@@ -1,9 +1,9 @@
 import { useRouter } from "next/router";
 import { useEffect } from "react";
-import { UseQueryState } from "urql";
+import { AnyVariables, UseQueryState } from "urql";
 import { MeQuery } from "../generated/graphql";
 
-export const useIsAuth = (user: UseQueryState<MeQuery, object>) => {
+export const useIsAuth = (user: UseQueryState<MeQuery, AnyVariables>) => {
   const router = useRouter();
 
   useEffect(() => {
