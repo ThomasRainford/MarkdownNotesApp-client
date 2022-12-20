@@ -10,11 +10,11 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { UseQueryState } from "urql";
+import { AnyVariables, UseQueryState } from "urql";
 import { MeQuery, useLogoutMutation } from "../../../generated/graphql";
 
 export interface Props {
-  user: UseQueryState<MeQuery, object>;
+  user: UseQueryState<MeQuery, AnyVariables>;
 }
 
 const UserMenu = ({ user: me }: Props): JSX.Element => {
@@ -58,7 +58,7 @@ const UserMenu = ({ user: me }: Props): JSX.Element => {
         <MenuItem
           data-testid="logout-button"
           onClick={async () => {
-            const result = await logout();
+            const result = await logout({});
             if (result.data?.logout && !result.error) {
               toast({
                 id: "logout",

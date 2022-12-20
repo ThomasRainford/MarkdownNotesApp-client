@@ -17,7 +17,7 @@ import {
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import { ReactNode } from "react";
-import { UseQueryState } from "urql";
+import { AnyVariables, UseQueryState } from "urql";
 import { MeQuery } from "../../generated/graphql";
 import UserMenu from "./user-menu/UserMenu";
 
@@ -37,7 +37,7 @@ const NavLink = ({ children, href }: { children: ReactNode; href: string }) => (
 );
 
 export interface Props {
-  user: UseQueryState<MeQuery, object>;
+  user: UseQueryState<MeQuery, AnyVariables>;
 }
 
 const NavBar = ({ user }: Props) => {
