@@ -50,6 +50,7 @@ const Lists = (): JSX.Element => {
             </Box>
             <Box mt={"1.75em"}>
               <InputGroup>
+                {/* eslint-disable-next-line */}
                 <InputLeftAddon children={<TriangleUpIcon />} />
                 <Input type="text" placeholder="Filter Lists..." />
               </InputGroup>

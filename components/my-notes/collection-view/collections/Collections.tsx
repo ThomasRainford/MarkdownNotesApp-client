@@ -1,5 +1,11 @@
 import { AddIcon } from "@chakra-ui/icons";
-import { Box, Heading, IconButton, Tag } from "@chakra-ui/react";
+import {
+  Box,
+  Heading,
+  IconButton,
+  Tag,
+  useColorModeValue,
+} from "@chakra-ui/react";
 import { useState } from "react";
 import { useLocalStorageValue } from "../../../../utils/hooks/useLocalStorageValue";
 import { LocalStorageContextType } from "../../../../utils/types/types";
@@ -45,7 +51,7 @@ const Collections = (): JSX.Element => {
   ) as LocalStorageContextType<string>;
 
   return (
-    <Box h={"100%"}>
+    <Box h={"100%"} backgroundColor={useColorModeValue("gray.300", "gray.800")}>
       <Box h={"50px"}></Box>
       <Box
         display={"flex"}
