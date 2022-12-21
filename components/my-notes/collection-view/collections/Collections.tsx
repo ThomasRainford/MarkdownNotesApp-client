@@ -18,6 +18,7 @@ const Collections = (): JSX.Element => {
       upvotes: 0,
       lists: [
         {
+          _id: 1,
           title: "List 1",
           notes: [{ _id: 1, title: "Note 1", body: "Body 1" }],
         },
@@ -29,6 +30,7 @@ const Collections = (): JSX.Element => {
       upvotes: 0,
       lists: [
         {
+          _id: 2,
           title: "List 2",
           notes: [{ _id: 2, title: "Note 2", body: "Body 2" }],
         },
@@ -40,6 +42,7 @@ const Collections = (): JSX.Element => {
       upvotes: 0,
       lists: [
         {
+          _id: 3,
           title: "List 3",
           notes: [{ _id: 3, title: "Note 3", body: "Body 3" }],
         },
@@ -86,7 +89,9 @@ const Collections = (): JSX.Element => {
             _hover={{
               bg: "gray.600",
             }}
-            onClick={() => setSelectedCollection(JSON.stringify(collection))}
+            onClick={() => {
+              setSelectedCollection(JSON.stringify(collection));
+            }}
           >
             <Heading as="h4" size={"md"}>
               {collection.title}

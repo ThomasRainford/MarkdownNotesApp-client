@@ -6,7 +6,7 @@ import Lists from "./lists/Lists";
 const Panel = () => {
   return <Collections />;
 };
-// useColorModeValue("gray.300", "gray.900")
+
 const Content = () => {
   return (
     <Box h={"100%"} backgroundColor={useColorModeValue("gray.200", "gray.700")}>
