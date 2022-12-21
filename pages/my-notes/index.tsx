@@ -6,6 +6,7 @@ import { LocalStorageProvider } from "../../contexts/LocalStorageContext";
 import { useMeQuery } from "../../generated/graphql";
 import { createUrqlClient } from "../../utils/createUrqlClient";
 import { useIsAuth } from "../../utils/hooks/useIsAuth";
+import { LocalStorageKeys } from "../../utils/types/types";
 import { NextPageWithLayout } from "../page";
 
 const MyNotes: NextPageWithLayout = () => {
@@ -16,7 +17,7 @@ const MyNotes: NextPageWithLayout = () => {
   return (
     <>
       <NavBar user={meResult} />
-      <LocalStorageProvider storageKey="selectedCollection">
+      <LocalStorageProvider storageKey={LocalStorageKeys.SELECTED_COLLECTION}>
         <CollectionView />
       </LocalStorageProvider>
     </>

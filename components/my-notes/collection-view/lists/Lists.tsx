@@ -8,11 +8,14 @@ import {
   Tag,
 } from "@chakra-ui/react";
 import { useLocalStorageValue } from "../../../../utils/hooks/useLocalStorageValue";
-import { LocalStorageContextType } from "../../../../utils/types/types";
+import {
+  LocalStorageContextType,
+  LocalStorageKeys,
+} from "../../../../utils/types/types";
 
 const Lists = (): JSX.Element => {
   const [selectedCollection] = useLocalStorageValue<string>(
-    "selectedCollection"
+    LocalStorageKeys.SELECTED_COLLECTION
   ) as LocalStorageContextType<string>;
   const collection = JSON.parse(selectedCollection);
   const lists = collection?.lists;

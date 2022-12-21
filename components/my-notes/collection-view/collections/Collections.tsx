@@ -8,7 +8,10 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { useLocalStorageValue } from "../../../../utils/hooks/useLocalStorageValue";
-import { LocalStorageContextType } from "../../../../utils/types/types";
+import {
+  LocalStorageContextType,
+  LocalStorageKeys,
+} from "../../../../utils/types/types";
 
 const Collections = (): JSX.Element => {
   const [collections] = useState([
@@ -50,7 +53,7 @@ const Collections = (): JSX.Element => {
     },
   ]);
   const [, setSelectedCollection] = useLocalStorageValue<string>(
-    "selectedCollection"
+    LocalStorageKeys.SELECTED_COLLECTION
   ) as LocalStorageContextType<string>;
 
   return (
