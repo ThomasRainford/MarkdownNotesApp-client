@@ -2,9 +2,10 @@ import { withUrqlClient } from "next-urql";
 import PrimaryLayout from "../../components/layouts/PrimaryLayout";
 import CollectionView from "../../components/my-notes/collection-view/CollectionView";
 import NavBar from "../../components/navbar/NavBar";
+import { LocalStorageProvider } from "../../contexts/LocalStorageContext";
 import { useMeQuery } from "../../generated/graphql";
 import { createUrqlClient } from "../../utils/createUrqlClient";
-import { useIsAuth } from "../../utils/useIsAuth";
+import { useIsAuth } from "../../utils/hooks/useIsAuth";
 import { NextPageWithLayout } from "../page";
 
 const MyNotes: NextPageWithLayout = () => {
@@ -15,7 +16,9 @@ const MyNotes: NextPageWithLayout = () => {
   return (
     <>
       <NavBar user={meResult} />
-      <CollectionView />
+      <LocalStorageProvider storageKey="selectedCollection">
+        <CollectionView />
+      </LocalStorageProvider>
     </>
   );
 };

@@ -19,7 +19,7 @@ const Content = () => {
         }
         mineSize={150}
         maxSize={400}
-        defaultSize={250}
+        defaultSize={270}
       />
     </Box>
   );
@@ -32,7 +32,7 @@ const CollectionView = (): JSX.Element => {
       content={<Content />}
       mineSize={150}
       maxSize={400}
-      defaultSize={250}
+      defaultSize={275}
     />
   );
 };
