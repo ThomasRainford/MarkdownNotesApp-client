@@ -4,8 +4,11 @@ import { LocalStorageProvider } from "../../../../contexts/LocalStorageContext";
 import { LocalStorageKeys } from "../../../../utils/types/types";
 import CollectionView from "../CollectionView";
 
-test("Displays CollectionView", async () => {
+beforeEach(() => {
   localStorage.removeItem(LocalStorageKeys.SELECTED_COLLECTION);
+});
+
+test("Displays CollectionView", async () => {
   render(
     <LocalStorageProvider storageKey={LocalStorageKeys.SELECTED_COLLECTION}>
       <CollectionView />
@@ -18,7 +21,6 @@ test("Displays CollectionView", async () => {
 });
 
 test("clicking collection displays correct collection title", async () => {
-  localStorage.removeItem(LocalStorageKeys.SELECTED_COLLECTION);
   render(
     <LocalStorageProvider storageKey={LocalStorageKeys.SELECTED_COLLECTION}>
       <CollectionView />
@@ -44,7 +46,6 @@ test("clicking collection displays correct collection title", async () => {
 });
 
 test("clicking collection displays the correct lists", async () => {
-  localStorage.removeItem(LocalStorageKeys.SELECTED_COLLECTION);
   render(
     <LocalStorageProvider storageKey={LocalStorageKeys.SELECTED_COLLECTION}>
       <CollectionView />

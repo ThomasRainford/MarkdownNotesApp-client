@@ -36,3 +36,13 @@ export const testCollections = [
     ],
   },
 ];
+
+export const testUser = {
+  _id: "kdslfj34r89sdkflj02983kj",
+  email: "user1@email.com",
+  username: "User01",
+  following: [],
+  followers: [],
+  upvoted: [],
+  __typename: "User" as "User",
+};
