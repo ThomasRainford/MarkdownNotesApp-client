@@ -4,64 +4,66 @@ import { LocalStorageProvider } from "../../../../contexts/LocalStorageContext";
 import { LocalStorageKeys } from "../../../../utils/types/types";
 import CollectionView from "../CollectionView";
 
-beforeEach(() => {
-  localStorage.removeItem(LocalStorageKeys.SELECTED_COLLECTION);
-});
-
-test("Displays CollectionView", async () => {
-  render(
-    <LocalStorageProvider storageKey={LocalStorageKeys.SELECTED_COLLECTION}>
-      <CollectionView />
-    </LocalStorageProvider>
-  );
-
-  const collectionPanelHeader = screen.getByText(/collections/i);
-
-  expect(collectionPanelHeader).toBeInTheDocument();
-});
-
-test("clicking collection displays correct collection title", async () => {
-  render(
-    <LocalStorageProvider storageKey={LocalStorageKeys.SELECTED_COLLECTION}>
-      <CollectionView />
-    </LocalStorageProvider>
-  );
-
-  const title = "Collection 1";
-
-  const collectionInList = screen.getByText(title);
-
-  await act(async () => {
-    fireEvent.click(collectionInList);
+describe("CollectionView component", () => {
+  beforeEach(() => {
+    localStorage.removeItem(LocalStorageKeys.SELECTED_COLLECTION);
   });
 
-  const collectionTitle = screen.getAllByRole("heading", {
-    name: title,
+  test("Displays CollectionView", async () => {
+    render(
+      <LocalStorageProvider storageKey={LocalStorageKeys.SELECTED_COLLECTION}>
+        <CollectionView />
+      </LocalStorageProvider>
+    );
+
+    const collectionPanelHeader = screen.getByText(/collections/i);
+
+    expect(collectionPanelHeader).toBeInTheDocument();
   });
 
-  expect(
-    collectionTitle.find((ct) => ct.id === "list-collection-heading")
-      ?.textContent
-  ).toBe(title);
-});
+  test("clicking collection displays correct collection title", async () => {
+    render(
+      <LocalStorageProvider storageKey={LocalStorageKeys.SELECTED_COLLECTION}>
+        <CollectionView />
+      </LocalStorageProvider>
+    );
 
-test("clicking collection displays the correct lists", async () => {
-  render(
-    <LocalStorageProvider storageKey={LocalStorageKeys.SELECTED_COLLECTION}>
-      <CollectionView />
-    </LocalStorageProvider>
-  );
+    const title = "Collection 1";
 
-  const title = "Collection 1";
+    const collectionInList = screen.getByText(title);
 
-  const collectionInList = screen.getByText(title);
+    await act(async () => {
+      fireEvent.click(collectionInList);
+    });
 
-  await act(async () => {
-    fireEvent.click(collectionInList);
+    const collectionTitle = screen.getAllByRole("heading", {
+      name: title,
+    });
+
+    expect(
+      collectionTitle.find((ct) => ct.id === "list-collection-heading")
+        ?.textContent
+    ).toBe(title);
   });
 
-  const lists = screen.getAllByRole("heading", { name: /list/i });
+  test("clicking collection displays the correct lists", async () => {
+    render(
+      <LocalStorageProvider storageKey={LocalStorageKeys.SELECTED_COLLECTION}>
+        <CollectionView />
+      </LocalStorageProvider>
+    );
 
-  expect(lists).toHaveLength(1);
-  expect(lists[0].textContent).toBe("List 1");
+    const title = "Collection 1";
+
+    const collectionInList = screen.getByText(title);
+
+    await act(async () => {
+      fireEvent.click(collectionInList);
+    });
+
+    const lists = screen.getAllByRole("heading", { name: /list/i });
+
+    expect(lists).toHaveLength(1);
+    expect(lists[0].textContent).toBe("List 1");
+  });
 });

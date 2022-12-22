@@ -17,9 +17,11 @@ const MyNotes: NextPageWithLayout = () => {
   return (
     <>
       <NavBar user={meResult} />
-      <LocalStorageProvider storageKey={LocalStorageKeys.SELECTED_COLLECTION}>
-        <CollectionView />
-      </LocalStorageProvider>
+      {!meResult.fetching && meResult.data ? (
+        <LocalStorageProvider storageKey={LocalStorageKeys.SELECTED_COLLECTION}>
+          <CollectionView />
+        </LocalStorageProvider>
+      ) : null}
     </>
   );
 };
