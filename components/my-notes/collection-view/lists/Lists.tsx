@@ -35,7 +35,12 @@ const Lists = (): JSX.Element => {
           <Box>
             <Box display={"flex"}>
               <Box mr={"2em"}>
-                <Heading as="h3" size={"md"} textColor={"gray.300"}>
+                <Heading
+                  id="list-collection-heading"
+                  as="h3"
+                  size={"md"}
+                  textColor={"gray.300"}
+                >
                   {collection.title}
                 </Heading>
               </Box>
@@ -77,7 +82,7 @@ const Lists = (): JSX.Element => {
                   bg: "gray.600",
                 }}
               >
-                <Heading as="h4" size={"md"} pr={"1em"}>
+                <Heading id="list-heading" as="h4" size={"md"} pr={"1em"}>
                   {list.title}
                 </Heading>
                 <Tag>{notes.length}</Tag>

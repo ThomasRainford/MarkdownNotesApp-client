@@ -65,7 +65,13 @@ const Collections = (): JSX.Element => {
         px={"1em"}
         py={"1em"}
       >
-        <Heading as="h3" size={"lg"} fontWeight="normal" textColor={"gray.400"}>
+        <Heading
+          id="collection-heading"
+          as="h3"
+          size={"lg"}
+          fontWeight="normal"
+          textColor={"gray.400"}
+        >
           Collections
         </Heading>
         <Box display={"flex"} alignItems={"center"}>
@@ -96,7 +102,11 @@ const Collections = (): JSX.Element => {
               setSelectedCollection(JSON.stringify(collection));
             }}
           >
-            <Heading as="h4" size={"md"}>
+            <Heading
+              id={`collection-header-${collection._id}`}
+              as="h4"
+              size={"md"}
+            >
               {collection.title}
             </Heading>
             <Tag>{lists.length}</Tag>
