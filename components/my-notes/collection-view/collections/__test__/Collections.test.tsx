@@ -7,7 +7,7 @@ import Collections from "../Collections";
 test("Displays Collections", () => {
   localStorage.setItem(
     LocalStorageKeys.SELECTED_COLLECTION,
-    JSON.stringify(testCollections)
+    JSON.stringify(testCollections[0])
   );
   render(
     <LocalStorageProvider storageKey={LocalStorageKeys.SELECTED_COLLECTION}>
