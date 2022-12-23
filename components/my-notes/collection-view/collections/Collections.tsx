@@ -7,6 +7,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { useState } from "react";
+import { SelectedCollectionContext } from "../../../../contexts/SelectedCollectionContext";
 import { useLocalStorageValue } from "../../../../utils/hooks/useLocalStorageValue";
 import {
   LocalStorageContextType,
@@ -52,9 +53,10 @@ const Collections = (): JSX.Element => {
       ],
     },
   ]);
-  const [, setSelectedCollection] = useLocalStorageValue<string>(
+  const [, setSelectedCollection] = useLocalStorageValue(
+    SelectedCollectionContext,
     LocalStorageKeys.SELECTED_COLLECTION
-  ) as LocalStorageContextType<string>;
+  ) as LocalStorageContextType;
 
   return (
     <Box h={"100%"} backgroundColor={useColorModeValue("gray.300", "gray.800")}>

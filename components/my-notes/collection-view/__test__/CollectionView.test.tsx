@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { act } from "react-dom/test-utils";
-import { LocalStorageProvider } from "../../../../contexts/LocalStorageContext";
+import { SelectedCollectionProvider } from "../../../../contexts/SelectedCollectionContext";
 import { LocalStorageKeys } from "../../../../utils/types/types";
 import CollectionView from "../CollectionView";
 
@@ -11,9 +11,9 @@ describe("CollectionView component", () => {
 
   test("Displays CollectionView", async () => {
     render(
-      <LocalStorageProvider storageKey={LocalStorageKeys.SELECTED_COLLECTION}>
+      <SelectedCollectionProvider>
         <CollectionView />
-      </LocalStorageProvider>
+      </SelectedCollectionProvider>
     );
 
     const collectionPanelHeader = screen.getByText(/collections/i);
@@ -23,9 +23,9 @@ describe("CollectionView component", () => {
 
   test("clicking collection displays correct collection title", async () => {
     render(
-      <LocalStorageProvider storageKey={LocalStorageKeys.SELECTED_COLLECTION}>
+      <SelectedCollectionProvider>
         <CollectionView />
-      </LocalStorageProvider>
+      </SelectedCollectionProvider>
     );
 
     const title = "Collection 1";
@@ -48,9 +48,9 @@ describe("CollectionView component", () => {
 
   test("clicking collection displays the correct lists", async () => {
     render(
-      <LocalStorageProvider storageKey={LocalStorageKeys.SELECTED_COLLECTION}>
+      <SelectedCollectionProvider>
         <CollectionView />
-      </LocalStorageProvider>
+      </SelectedCollectionProvider>
     );
 
     const title = "Collection 1";

@@ -2,11 +2,11 @@ import { withUrqlClient } from "next-urql";
 import PrimaryLayout from "../../components/layouts/PrimaryLayout";
 import CollectionView from "../../components/my-notes/collection-view/CollectionView";
 import NavBar from "../../components/navbar/NavBar";
-import { LocalStorageProvider } from "../../contexts/LocalStorageContext";
+import { SelectedCollectionProvider } from "../../contexts/SelectedCollectionContext";
+import { SelectedListProvider } from "../../contexts/SelectedListContext";
 import { useMeQuery } from "../../generated/graphql";
 import { createUrqlClient } from "../../utils/createUrqlClient";
 import { useIsAuth } from "../../utils/hooks/useIsAuth";
-import { LocalStorageKeys } from "../../utils/types/types";
 import { NextPageWithLayout } from "../page";
 
 const MyNotes: NextPageWithLayout = () => {
@@ -18,9 +18,11 @@ const MyNotes: NextPageWithLayout = () => {
     <>
       <NavBar user={meResult} />
       {!meResult.fetching && meResult.data ? (
-        <LocalStorageProvider storageKey={LocalStorageKeys.SELECTED_COLLECTION}>
-          <CollectionView />
-        </LocalStorageProvider>
+        <SelectedCollectionProvider>
+          <SelectedListProvider>
+            <CollectionView />
+          </SelectedListProvider>
+        </SelectedCollectionProvider>
       ) : null}
     </>
   );

@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import { LocalStorageProvider } from "../../../../../contexts/LocalStorageContext";
+import { SelectedCollectionProvider } from "../../../../../contexts/SelectedCollectionContext";
 import { testCollections } from "../../../../../test-utils/testData";
 import { LocalStorageKeys } from "../../../../../utils/types/types";
 import Collections from "../Collections";
@@ -11,9 +11,9 @@ describe("Collections component", () => {
       JSON.stringify(testCollections[0])
     );
     render(
-      <LocalStorageProvider storageKey={LocalStorageKeys.SELECTED_COLLECTION}>
+      <SelectedCollectionProvider>
         <Collections />
-      </LocalStorageProvider>
+      </SelectedCollectionProvider>
     );
 
     const collectionPanelHeader = screen.getByText(/collections/i);
@@ -27,9 +27,9 @@ describe("Collections component", () => {
       JSON.stringify(testCollections)
     );
     render(
-      <LocalStorageProvider storageKey={LocalStorageKeys.SELECTED_COLLECTION}>
+      <SelectedCollectionProvider>
         <Collections />
-      </LocalStorageProvider>
+      </SelectedCollectionProvider>
     );
 
     const collections = screen.getAllByRole("heading", { name: /collection/i });

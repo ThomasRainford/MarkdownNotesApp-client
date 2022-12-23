@@ -7,6 +7,8 @@ import {
   InputLeftAddon,
   Tag,
 } from "@chakra-ui/react";
+import { SelectedCollectionContext } from "../../../../contexts/SelectedCollectionContext";
+import { SelectedListContext } from "../../../../contexts/SelectedListContext";
 import { useLocalStorageValue } from "../../../../utils/hooks/useLocalStorageValue";
 import {
   LocalStorageContextType,
@@ -14,9 +16,14 @@ import {
 } from "../../../../utils/types/types";
 
 const Lists = (): JSX.Element => {
-  const [selectedCollection] = useLocalStorageValue<string>(
+  const [selectedCollection] = useLocalStorageValue(
+    SelectedCollectionContext,
     LocalStorageKeys.SELECTED_COLLECTION
-  ) as LocalStorageContextType<string>;
+  ) as LocalStorageContextType;
+  const [, setSelectedList] = useLocalStorageValue(
+    SelectedListContext,
+    LocalStorageKeys.SELECTED_LIST
+  ) as LocalStorageContextType;
   const collection =
     typeof selectedCollection === "string"
       ? JSON.parse(selectedCollection)
@@ -84,6 +91,7 @@ const Lists = (): JSX.Element => {
                 _hover={{
                   bg: "gray.600",
                 }}
+                onClick={() => setSelectedList(JSON.stringify(list))}
               >
                 <Heading id="list-heading" as="h4" size={"md"} pr={"1em"}>
                   {list.title}

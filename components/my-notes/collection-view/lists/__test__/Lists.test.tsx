@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import { LocalStorageProvider } from "../../../../../contexts/LocalStorageContext";
+import { SelectedCollectionProvider } from "../../../../../contexts/SelectedCollectionContext";
 import { testCollections } from "../../../../../test-utils/testData";
 import { LocalStorageKeys } from "../../../../../utils/types/types";
 import Lists from "../Lists";
@@ -11,9 +11,9 @@ describe("Lists component", () => {
       JSON.stringify(testCollections[0])
     );
     render(
-      <LocalStorageProvider storageKey={LocalStorageKeys.SELECTED_COLLECTION}>
+      <SelectedCollectionProvider>
         <Lists />
-      </LocalStorageProvider>
+      </SelectedCollectionProvider>
     );
 
     const listPanelHeader = screen.getByText(/collection 1/i);
