@@ -1,6 +1,6 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
-import { LocalStorageProvider } from "../../../contexts/LocalStorageContext";
-import { LocalStorageKeys } from "../../../utils/types/types";
+import { SelectedCollectionProvider } from "../../../contexts/SelectedCollectionContext";
+import { SelectedListProvider } from "../../../contexts/SelectedListContext";
 import CollectionView from "./CollectionView";
 import { mockCollectionViewProps } from "./CollectionView.mocks";
 
@@ -13,9 +13,11 @@ export default {
 
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
 const Template: ComponentStory<typeof CollectionView> = () => (
-  <LocalStorageProvider storageKey={LocalStorageKeys.SELECTED_COLLECTION}>
-    <CollectionView />
-  </LocalStorageProvider>
+  <SelectedCollectionProvider>
+    <SelectedListProvider>
+      <CollectionView />
+    </SelectedListProvider>
+  </SelectedCollectionProvider>
 );
 
 export const Base = Template.bind({});
