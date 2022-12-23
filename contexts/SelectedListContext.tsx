@@ -11,7 +11,7 @@ export function SelectedListProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const value = useLocalStorage<string>(LocalStorageKeys.SELECTED_LIST, null);
+  const value = useLocalStorage(LocalStorageKeys.SELECTED_LIST, null);
 
   return (
     <SelectedListContext.Provider value={value}>

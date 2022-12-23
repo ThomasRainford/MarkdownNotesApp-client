@@ -11,10 +11,7 @@ export function SelectedCollectionProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const value = useLocalStorage<string>(
-    LocalStorageKeys.SELECTED_COLLECTION,
-    null
-  );
+  const value = useLocalStorage(LocalStorageKeys.SELECTED_COLLECTION, null);
 
   return (
     <SelectedCollectionContext.Provider value={value}>
