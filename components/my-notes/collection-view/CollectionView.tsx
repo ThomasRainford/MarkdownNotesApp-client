@@ -1,17 +1,21 @@
 import { Box, useColorModeValue } from "@chakra-ui/react";
 import ResizeablePanel from "../resizeable-panel/ResizablePanel";
-import Collections from "./collections/Collections";
-import Lists from "./lists/Lists";
+import CollectionsPane from "./collections/CollectionsPane";
+import ListsPane from "./lists/ListsPane";
 
-const Panel = () => {
-  return <Collections />;
+// TODO: Refactor Collections component to be 'CollectionPane' and Lists to
+// 'ListsPane'. These components will render a Collections and Lists components
+// that will only render out the list of collections or lists.
+
+const LeftPane = () => {
+  return <CollectionsPane />;
 };
 
-const Content = () => {
+const RightPane = () => {
   return (
     <Box h={"100%"} backgroundColor={useColorModeValue("gray.200", "gray.700")}>
       <ResizeablePanel
-        panel={<Lists />}
+        panel={<ListsPane />}
         content={
           <Box
             h={"100%"}
@@ -31,8 +35,8 @@ const Content = () => {
 const CollectionView = (): JSX.Element => {
   return (
     <ResizeablePanel
-      panel={<Panel />}
-      content={<Content />}
+      panel={<LeftPane />}
+      content={<RightPane />}
       mineSize={150}
       maxSize={400}
       defaultSize={275}

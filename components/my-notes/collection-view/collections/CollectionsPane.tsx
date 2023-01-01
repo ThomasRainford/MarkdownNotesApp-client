@@ -8,6 +8,7 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { SelectedCollectionContext } from "../../../../contexts/SelectedCollectionContext";
+import { SelectedListContext } from "../../../../contexts/SelectedListContext";
 import { testCollections } from "../../../../test-utils/testData";
 import { useLocalStorageValue } from "../../../../utils/hooks/useLocalStorageValue";
 import {
@@ -15,11 +16,15 @@ import {
   LocalStorageKeys,
 } from "../../../../utils/types/types";
 
-const Collections = (): JSX.Element => {
+const CollectionsPane = (): JSX.Element => {
   const [collections] = useState(testCollections);
   const [, setSelectedCollection] = useLocalStorageValue(
     SelectedCollectionContext,
     LocalStorageKeys.SELECTED_COLLECTION
+  ) as LocalStorageContextType;
+  const [, setSelectedList] = useLocalStorageValue(
+    SelectedListContext,
+    LocalStorageKeys.SELECTED_LIST
   ) as LocalStorageContextType;
 
   return (
@@ -66,6 +71,7 @@ const Collections = (): JSX.Element => {
             }}
             onClick={() => {
               setSelectedCollection(JSON.stringify(collection));
+              setSelectedList("");
             }}
           >
             <Heading
@@ -83,4 +89,4 @@ const Collections = (): JSX.Element => {
   );
 };
 
-export default Collections;
+export default CollectionsPane;

@@ -15,7 +15,7 @@ import {
   LocalStorageKeys,
 } from "../../../../utils/types/types";
 
-const Lists = (): JSX.Element => {
+const ListsPane = (): JSX.Element => {
   const [selectedCollection] = useLocalStorageValue(
     SelectedCollectionContext,
     LocalStorageKeys.SELECTED_COLLECTION
@@ -106,4 +106,4 @@ const Lists = (): JSX.Element => {
   );
 };
 
-export default Lists;
+export default ListsPane;

@@ -1,9 +1,12 @@
 import { createContext } from "react";
 import useLocalStorage from "../utils/hooks/useLocalStorage";
-import { LocalStorageKeys } from "../utils/types/types";
+import {
+  LocalStorageContextType,
+  LocalStorageKeys,
+} from "../utils/types/types";
 
 export const SelectedCollectionContext = createContext<
-  [string, (value: string) => void] | undefined
+  LocalStorageContextType | undefined
 >(undefined);
 
 export function SelectedCollectionProvider({

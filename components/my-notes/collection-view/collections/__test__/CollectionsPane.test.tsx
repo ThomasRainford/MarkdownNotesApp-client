@@ -3,9 +3,9 @@ import { act } from "react-dom/test-utils";
 import { SelectedCollectionProvider } from "../../../../../contexts/SelectedCollectionContext";
 import { testCollections } from "../../../../../test-utils/testData";
 import { LocalStorageKeys } from "../../../../../utils/types/types";
-import Collections from "../Collections";
+import CollectionsPane from "../CollectionsPane";
 
-describe("Collections component", () => {
+describe("CollectionsPane component", () => {
   test("Displays Collections", () => {
     localStorage.setItem(
       LocalStorageKeys.SELECTED_COLLECTION,
@@ -13,7 +13,7 @@ describe("Collections component", () => {
     );
     render(
       <SelectedCollectionProvider>
-        <Collections />
+        <CollectionsPane />
       </SelectedCollectionProvider>
     );
 
@@ -29,7 +29,7 @@ describe("Collections component", () => {
     );
     render(
       <SelectedCollectionProvider>
-        <Collections />
+        <CollectionsPane />
       </SelectedCollectionProvider>
     );
 
@@ -45,7 +45,7 @@ describe("Collections component", () => {
   test("Selects a collection that is stored in local storage", async () => {
     render(
       <SelectedCollectionProvider>
-        <Collections />
+        <CollectionsPane />
       </SelectedCollectionProvider>
     );
 

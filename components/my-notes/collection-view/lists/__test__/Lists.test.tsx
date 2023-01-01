@@ -3,7 +3,7 @@ import { act } from "react-dom/test-utils";
 import { SelectedCollectionProvider } from "../../../../../contexts/SelectedCollectionContext";
 import { testCollections } from "../../../../../test-utils/testData";
 import { LocalStorageKeys } from "../../../../../utils/types/types";
-import Lists from "../Lists";
+import ListsPane from "../ListsPane";
 
 describe("Lists component", () => {
   test("Displays Lists", () => {
@@ -13,7 +13,7 @@ describe("Lists component", () => {
     );
     render(
       <SelectedCollectionProvider>
-        <Lists />
+        <ListsPane />
       </SelectedCollectionProvider>
     );
 
@@ -27,7 +27,7 @@ describe("Lists component", () => {
   test("Selects a list that is stored in local storage", async () => {
     render(
       <SelectedCollectionProvider>
-        <Lists />
+        <ListsPane />
       </SelectedCollectionProvider>
     );
 
