@@ -13,13 +13,13 @@ const LeftPane = () => {
 
 const RightPane = () => {
   return (
-    <Box h={"100%"} backgroundColor={useColorModeValue("gray.200", "gray.700")}>
+    <Box h={"100%"} backgroundColor={useColorModeValue("gray.300", "gray.700")}>
       <ResizeablePanel
         panel={<ListsPane />}
         content={
           <Box
             h={"100%"}
-            backgroundColor={useColorModeValue("gray.100", "gray.600")}
+            backgroundColor={useColorModeValue("gray.200", "gray.600")}
           >
             <div>Note Editor</div>
           </Box>

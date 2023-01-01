@@ -4,6 +4,7 @@ import {
   Heading,
   IconButton,
   Tag,
+  useColorMode,
   useColorModeValue,
 } from "@chakra-ui/react";
 import { useState } from "react";
@@ -27,8 +28,10 @@ const CollectionsPane = (): JSX.Element => {
     LocalStorageKeys.SELECTED_LIST
   ) as LocalStorageContextType;
 
+  const { colorMode } = useColorMode();
+
   return (
-    <Box h={"100%"} backgroundColor={useColorModeValue("gray.300", "gray.800")}>
+    <Box h={"100%"} backgroundColor={useColorModeValue("gray.400", "gray.800")}>
       <Box h={"50px"}></Box>
       <Box
         display={"flex"}
@@ -41,7 +44,7 @@ const CollectionsPane = (): JSX.Element => {
           as="h3"
           size={"lg"}
           fontWeight="normal"
-          textColor={"gray.400"}
+          textColor={useColorModeValue("gray.700", "gray.400")}
         >
           Collections
         </Heading>
@@ -67,7 +70,7 @@ const CollectionsPane = (): JSX.Element => {
             pt={"1em"}
             pb={"1em"}
             _hover={{
-              bg: "gray.600",
+              bg: colorMode === "light" ? "gray.200" : "gray.600",
             }}
             onClick={() => {
               setSelectedCollection(JSON.stringify(collection));
@@ -78,6 +81,7 @@ const CollectionsPane = (): JSX.Element => {
               id={`collection-header-${collection._id}`}
               as="h4"
               size={"md"}
+              color={colorMode === "light" ? "gray.700" : "gray.300"}
             >
               {collection.title}
             </Heading>

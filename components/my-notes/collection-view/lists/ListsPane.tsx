@@ -1,4 +1,8 @@
-import { CheckCircleIcon, TriangleUpIcon } from "@chakra-ui/icons";
+import {
+  ArrowForwardIcon,
+  CheckCircleIcon,
+  TriangleUpIcon,
+} from "@chakra-ui/icons";
 import {
   Box,
   Heading,
@@ -6,6 +10,7 @@ import {
   InputGroup,
   InputLeftAddon,
   Tag,
+  useColorMode,
 } from "@chakra-ui/react";
 import { SelectedCollectionContext } from "../../../../contexts/SelectedCollectionContext";
 import { SelectedListContext } from "../../../../contexts/SelectedListContext";
@@ -30,6 +35,8 @@ const ListsPane = (): JSX.Element => {
       : selectedCollection;
   const lists = collection?.lists;
 
+  const { colorMode } = useColorMode();
+
   return (
     <Box h={"100%"}>
       <Box
@@ -42,14 +49,14 @@ const ListsPane = (): JSX.Element => {
         {!collection ? (
           <p>Select a collection</p>
         ) : (
-          <Box>
+          <Box w={"100%"}>
             <Box display={"flex"}>
               <Box mr={"2em"}>
                 <Heading
                   id="list-collection-heading"
                   as="h3"
                   size={"md"}
-                  textColor={"gray.300"}
+                  textColor={colorMode === "light" ? "gray.600" : "gray.300"}
                 >
                   {collection.title}
                 </Heading>
@@ -84,19 +91,34 @@ const ListsPane = (): JSX.Element => {
               <Box
                 key={list._id}
                 display={"flex"}
+                justifyContent={"space-between"}
                 pl={"1.5em"}
                 pr={"1em"}
                 pt={"1em"}
                 pb={"1em"}
                 _hover={{
-                  bg: "gray.600",
+                  bg: colorMode === "light" ? "gray.200" : "gray.600",
                 }}
                 onClick={() => setSelectedList(JSON.stringify(list))}
               >
-                <Heading id="list-heading" as="h4" size={"md"} pr={"1em"}>
-                  {list.title}
-                </Heading>
-                <Tag>{notes.length}</Tag>
+                <Box display={"flex"}>
+                  <Heading
+                    id="list-heading"
+                    as="h4"
+                    size={"md"}
+                    pr={"1em"}
+                    color={colorMode === "light" ? "gray.600" : "gray.300"}
+                  >
+                    {list.title}
+                  </Heading>
+                  <Tag>{notes.length}</Tag>
+                </Box>
+                <Box>
+                  <ArrowForwardIcon
+                    boxSize={6}
+                    color={colorMode === "light" ? "gray.700" : "gray.500"}
+                  />
+                </Box>
               </Box>
             );
           })}
