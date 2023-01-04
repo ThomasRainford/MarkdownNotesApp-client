@@ -10,6 +10,7 @@ import {
 import { ReactNode, useEffect, useState } from "react";
 import { SelectedCollectionContext } from "../../../../contexts/SelectedCollectionContext";
 import { SelectedListContext } from "../../../../contexts/SelectedListContext";
+import { getLocalStorageValue } from "../../../../utils/getLocalStorageValue";
 import { useLocalStorageValue } from "../../../../utils/hooks/useLocalStorageValue";
 import {
   LocalStorageContextType,
@@ -20,7 +21,9 @@ import Lists from "./lists/Lists";
 const ListPaneHeader = ({ collection, selectedList }: any) => {
   const { colorMode } = useColorMode();
 
-  const list = selectedList === "" ? "" : JSON.parse(selectedList);
+  const list = selectedList === "" ? "" : getLocalStorageValue(selectedList);
+  console.log("list", list, selectedList);
+  console.log("collection", collection);
 
   return (
     <>
@@ -76,7 +79,7 @@ const ListsPane = (): JSX.Element => {
     LocalStorageKeys.SELECTED_LIST
   ) as LocalStorageContextType;
   const collection =
-    typeof selectedCollection === "string"
+    typeof selectedCollection === "string" && selectedCollection !== ""
       ? JSON.parse(selectedCollection)
       : selectedCollection;
 

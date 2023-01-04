@@ -3,6 +3,7 @@ import { Box, Heading, IconButton, useColorMode } from "@chakra-ui/react";
 import { ReactNode, useEffect, useState } from "react";
 import { SelectedCollectionContext } from "../../../../contexts/SelectedCollectionContext";
 import { SelectedListContext } from "../../../../contexts/SelectedListContext";
+import { getLocalStorageValue } from "../../../../utils/getLocalStorageValue";
 import { useLocalStorageValue } from "../../../../utils/hooks/useLocalStorageValue";
 import {
   LocalStorageContextType,
@@ -20,8 +21,11 @@ const CollectionsPane = (): JSX.Element => {
     SelectedListContext,
     LocalStorageKeys.SELECTED_LIST
   ) as LocalStorageContextType;
-  const collection = JSON.parse(selectedCollection);
 
+  const collection = getLocalStorageValue(selectedCollection);
+  console.log("collection", collection);
+
+  console.log("selectedList", selectedList);
   const [content, setContent] = useState<ReactNode | null>(
     selectedList === "" ? <Collections /> : <Lists />
   );

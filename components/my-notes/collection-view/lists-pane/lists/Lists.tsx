@@ -19,7 +19,7 @@ const Lists = (): JSX.Element => {
     LocalStorageKeys.SELECTED_LIST
   ) as LocalStorageContextType;
   const collection =
-    typeof selectedCollection === "string"
+    typeof selectedCollection === "string" && selectedCollection !== ""
       ? JSON.parse(selectedCollection)
       : selectedCollection;
   const lists = collection?.lists;

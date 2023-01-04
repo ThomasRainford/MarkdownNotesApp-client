@@ -1,6 +1,7 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { act } from "react-dom/test-utils";
 import { SelectedCollectionProvider } from "../../../../../contexts/SelectedCollectionContext";
+import { SelectedListProvider } from "../../../../../contexts/SelectedListContext";
 import { testCollections } from "../../../../../test-utils/testData";
 import { LocalStorageKeys } from "../../../../../utils/types/types";
 import CollectionsPane from "../CollectionsPane";
@@ -11,9 +12,12 @@ describe("CollectionsPane component", () => {
       LocalStorageKeys.SELECTED_COLLECTION,
       JSON.stringify(testCollections[0])
     );
+    localStorage.setItem(LocalStorageKeys.SELECTED_LIST, "");
     render(
       <SelectedCollectionProvider>
-        <CollectionsPane />
+        <SelectedListProvider>
+          <CollectionsPane />
+        </SelectedListProvider>
       </SelectedCollectionProvider>
     );
 
@@ -25,11 +29,14 @@ describe("CollectionsPane component", () => {
   test("Displays the list of collections", () => {
     localStorage.setItem(
       LocalStorageKeys.SELECTED_COLLECTION,
-      JSON.stringify(testCollections)
+      JSON.stringify(testCollections[0])
     );
+    localStorage.setItem(LocalStorageKeys.SELECTED_LIST, "");
     render(
       <SelectedCollectionProvider>
-        <CollectionsPane />
+        <SelectedListProvider>
+          <CollectionsPane />
+        </SelectedListProvider>
       </SelectedCollectionProvider>
     );
 
@@ -45,7 +52,9 @@ describe("CollectionsPane component", () => {
   test("Selects a collection that is stored in local storage", async () => {
     render(
       <SelectedCollectionProvider>
-        <CollectionsPane />
+        <SelectedListProvider>
+          <CollectionsPane />
+        </SelectedListProvider>
       </SelectedCollectionProvider>
     );
 
