@@ -1,9 +1,10 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { act } from "react-dom/test-utils";
-import { SelectedCollectionProvider } from "../../../../../contexts/SelectedCollectionContext";
-import { testCollections } from "../../../../../test-utils/testData";
-import { LocalStorageKeys } from "../../../../../utils/types/types";
-import ListsPane from "../ListsPane";
+import { SelectedCollectionProvider } from "../../../../../../contexts/SelectedCollectionContext";
+import { SelectedListProvider } from "../../../../../../contexts/SelectedListContext";
+import { testCollections } from "../../../../../../test-utils/testData";
+import { LocalStorageKeys } from "../../../../../../utils/types/types";
+import Lists from "../Lists";
 
 describe("Lists component", () => {
   test("Displays Lists", () => {
@@ -13,21 +14,23 @@ describe("Lists component", () => {
     );
     render(
       <SelectedCollectionProvider>
-        <ListsPane />
+        <SelectedListProvider>
+          <Lists />
+        </SelectedListProvider>
       </SelectedCollectionProvider>
     );
 
-    const listPanelHeader = screen.getByText(/collection 1/i);
     const listInList = screen.getByText(/list 1/i);
 
-    expect(listPanelHeader).toBeInTheDocument();
     expect(listInList).toBeInTheDocument();
   });
 
   test("Selects a list that is stored in local storage", async () => {
     render(
       <SelectedCollectionProvider>
-        <ListsPane />
+        <SelectedListProvider>
+          <Lists />
+        </SelectedListProvider>
       </SelectedCollectionProvider>
     );
 

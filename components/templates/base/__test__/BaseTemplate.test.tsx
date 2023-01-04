@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import BaseTemplate from "../BaseTemplate";
 
-describe("BaseTemplate tests", () => {
+describe("BaseTemplate component", () => {
   test("Displays the given children", () => {
     const children = "Hello World!";
 
