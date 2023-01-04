@@ -1,6 +1,6 @@
 import { AddIcon } from "@chakra-ui/icons";
 import { Box, Heading, IconButton, useColorModeValue } from "@chakra-ui/react";
-import Collections from "./Collections/Collections";
+import Collections from "./collections/Collections";
 
 const CollectionsPane = (): JSX.Element => (
   <Box h={"100%"} backgroundColor={useColorModeValue("gray.400", "gray.800")}>

@@ -1,6 +1,6 @@
 import { Box, useColorModeValue } from "@chakra-ui/react";
 import ResizeablePanel from "../resizeable-panel/ResizablePanel";
-import CollectionsPane from "./collections/CollectionsPane";
+import CollectionsPane from "./collections-pane/CollectionsPane";
 import ListsPane from "./lists/ListsPane";
 
 // TODO: Refactor Collections component to be 'CollectionPane' and Lists to
