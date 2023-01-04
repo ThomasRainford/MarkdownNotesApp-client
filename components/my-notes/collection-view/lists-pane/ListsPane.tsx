@@ -1,17 +1,13 @@
-import {
-  ArrowForwardIcon,
-  CheckCircleIcon,
-  TriangleUpIcon,
-} from "@chakra-ui/icons";
+import { CheckCircleIcon, TriangleUpIcon } from "@chakra-ui/icons";
 import {
   Box,
   Heading,
   Input,
   InputGroup,
   InputLeftAddon,
-  Tag,
   useColorMode,
 } from "@chakra-ui/react";
+import { ReactNode, useEffect, useState } from "react";
 import { SelectedCollectionContext } from "../../../../contexts/SelectedCollectionContext";
 import { SelectedListContext } from "../../../../contexts/SelectedListContext";
 import { useLocalStorageValue } from "../../../../utils/hooks/useLocalStorageValue";
@@ -19,13 +15,63 @@ import {
   LocalStorageContextType,
   LocalStorageKeys,
 } from "../../../../utils/types/types";
+import Lists from "./lists/Lists";
+
+const ListPaneHeader = ({ collection, selectedList }: any) => {
+  const { colorMode } = useColorMode();
+
+  const list = selectedList === "" ? "" : JSON.parse(selectedList);
+
+  return (
+    <>
+      {selectedList === "" ? (
+        <>
+          <Box mr={"2em"}>
+            <Heading
+              id="list-collection-heading"
+              as="h3"
+              size={"md"}
+              textColor={colorMode === "light" ? "gray.600" : "gray.300"}
+            >
+              {collection.title}
+            </Heading>
+          </Box>
+          <Box display={"flex"} justifyContent="space-between">
+            <CheckCircleIcon
+              color={"blue.400"}
+              boxSize={4}
+              mt={"4px"}
+              mr="0.25em"
+            />
+            <Heading as={"h6"} size="sm" mt={"2px"}>
+              {collection.upvotes}
+            </Heading>
+          </Box>
+        </>
+      ) : (
+        <>
+          <Box mr={"2em"}>
+            <Heading
+              id="list-collection-heading"
+              as="h3"
+              size={"md"}
+              textColor={colorMode === "light" ? "gray.600" : "gray.300"}
+            >
+              {list.title}
+            </Heading>
+          </Box>
+        </>
+      )}
+    </>
+  );
+};
 
 const ListsPane = (): JSX.Element => {
   const [selectedCollection] = useLocalStorageValue(
     SelectedCollectionContext,
     LocalStorageKeys.SELECTED_COLLECTION
   ) as LocalStorageContextType;
-  const [, setSelectedList] = useLocalStorageValue(
+  const [selectedList] = useLocalStorageValue(
     SelectedListContext,
     LocalStorageKeys.SELECTED_LIST
   ) as LocalStorageContextType;
@@ -33,9 +79,18 @@ const ListsPane = (): JSX.Element => {
     typeof selectedCollection === "string"
       ? JSON.parse(selectedCollection)
       : selectedCollection;
-  const lists = collection?.lists;
 
-  const { colorMode } = useColorMode();
+  const [content, setContent] = useState<ReactNode | null>(
+    selectedList === "" ? <Lists /> : <div>Notes here</div>
+  );
+
+  useEffect(() => {
+    if (selectedList === "") {
+      setContent(<Lists />);
+    } else {
+      setContent(<div>Notes here</div>);
+    }
+  }, [selectedList]);
 
   return (
     <Box h={"100%"}>
@@ -51,27 +106,10 @@ const ListsPane = (): JSX.Element => {
         ) : (
           <Box w={"100%"}>
             <Box display={"flex"}>
-              <Box mr={"2em"}>
-                <Heading
-                  id="list-collection-heading"
-                  as="h3"
-                  size={"md"}
-                  textColor={colorMode === "light" ? "gray.600" : "gray.300"}
-                >
-                  {collection.title}
-                </Heading>
-              </Box>
-              <Box display={"flex"} justifyContent="space-between">
-                <CheckCircleIcon
-                  color={"blue.400"}
-                  boxSize={4}
-                  mt={"4px"}
-                  mr="0.25em"
-                />
-                <Heading as={"h6"} size="sm" mt={"2px"}>
-                  {collection.upvotes}
-                </Heading>
-              </Box>
+              <ListPaneHeader
+                collection={collection}
+                selectedList={selectedList}
+              />
             </Box>
             <Box mt={"1.75em"}>
               <InputGroup>
@@ -83,47 +121,7 @@ const ListsPane = (): JSX.Element => {
           </Box>
         )}
       </Box>
-      {!lists ? null : (
-        <>
-          {lists.map((list: any) => {
-            const notes = list.notes;
-            return (
-              <Box
-                key={list._id}
-                display={"flex"}
-                justifyContent={"space-between"}
-                pl={"1.5em"}
-                pr={"1em"}
-                pt={"1em"}
-                pb={"1em"}
-                _hover={{
-                  bg: colorMode === "light" ? "gray.200" : "gray.600",
-                }}
-                onClick={() => setSelectedList(JSON.stringify(list))}
-              >
-                <Box display={"flex"}>
-                  <Heading
-                    id="list-heading"
-                    as="h4"
-                    size={"md"}
-                    pr={"1em"}
-                    color={colorMode === "light" ? "gray.600" : "gray.300"}
-                  >
-                    {list.title}
-                  </Heading>
-                  <Tag>{notes.length}</Tag>
-                </Box>
-                <Box>
-                  <ArrowForwardIcon
-                    boxSize={6}
-                    color={colorMode === "light" ? "gray.700" : "gray.500"}
-                  />
-                </Box>
-              </Box>
-            );
-          })}
-        </>
-      )}
+      {content}
     </Box>
   );
 };

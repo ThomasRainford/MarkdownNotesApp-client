@@ -3,10 +3,6 @@ import ResizeablePanel from "../resizeable-panel/ResizablePanel";
 import CollectionsPane from "./collections-pane/CollectionsPane";
 import ListsPane from "./lists-pane/ListsPane";
 
-// TODO: Refactor Collections component to be 'CollectionPane' and Lists to
-// 'ListsPane'. These components will render a Collections and Lists components
-// that will only render out the list of collections or lists.
-
 const LeftPane = () => {
   return <CollectionsPane />;
 };
@@ -24,7 +20,7 @@ const RightPane = () => {
             <div>Note Editor</div>
           </Box>
         }
-        mineSize={150}
+        minSize={150}
         maxSize={400}
         defaultSize={270}
       />
@@ -37,9 +33,9 @@ const CollectionView = (): JSX.Element => {
     <ResizeablePanel
       panel={<LeftPane />}
       content={<RightPane />}
-      mineSize={150}
+      minSize={260}
       maxSize={400}
-      defaultSize={275}
+      defaultSize={300}
     />
   );
 };
