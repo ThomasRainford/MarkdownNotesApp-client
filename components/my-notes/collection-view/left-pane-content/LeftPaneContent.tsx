@@ -1,5 +1,11 @@
 import { AddIcon, ArrowBackIcon } from "@chakra-ui/icons";
-import { Box, Heading, IconButton, useColorMode } from "@chakra-ui/react";
+import {
+  Box,
+  Heading,
+  IconButton,
+  Tooltip,
+  useColorMode,
+} from "@chakra-ui/react";
 import { ReactNode, useEffect, useState } from "react";
 import { SelectedCollectionContext } from "../../../../contexts/SelectedCollectionContext";
 import { SelectedListContext } from "../../../../contexts/SelectedListContext";
@@ -50,15 +56,17 @@ const LeftPaneContent = (): JSX.Element => {
         px={"1em"}
         py={"1em"}
       >
-        <Box>
-          <IconButton
-            aria-label={"left-pane-back-button"}
-            variant="outline"
-            colorScheme="blue"
-            icon={<ArrowBackIcon />}
-            onClick={() => setSelectedList("")}
-          />
-        </Box>
+        {selectedList !== "" ? (
+          <Box visibility={selectedList !== "" ? "visible" : "hidden"}>
+            <IconButton
+              aria-label={"left-pane-back-button"}
+              variant="outline"
+              colorScheme="blue"
+              icon={<ArrowBackIcon />}
+              onClick={() => setSelectedList("")}
+            />
+          </Box>
+        ) : null}
         <Box>
           {selectedList === "" ? (
             <Heading
@@ -83,19 +91,26 @@ const LeftPaneContent = (): JSX.Element => {
           )}
         </Box>
         <Box display={"flex"} alignItems={"center"}>
-          <IconButton
-            colorScheme="teal"
-            variant={"ghost"}
-            aria-label="Search database"
-            icon={<AddIcon boxSize={5} />}
-            onClick={() => {
-              if (selectedList === "") {
-                // Add new collection
-              } else {
-                // Add new list
-              }
-            }}
-          />
+          <Tooltip
+            hasArrow
+            placement="top"
+            label={selectedList === "" ? "Add Collection" : "Add List"}
+            aria-label="add-cl"
+          >
+            <IconButton
+              colorScheme="teal"
+              variant={"ghost"}
+              aria-label="Search database"
+              icon={<AddIcon boxSize={5} />}
+              onClick={() => {
+                if (selectedList === "") {
+                  // Add new collection
+                } else {
+                  // Add new list
+                }
+              }}
+            />
+          </Tooltip>
         </Box>
       </Box>
       {content}
