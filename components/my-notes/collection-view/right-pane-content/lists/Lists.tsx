@@ -46,7 +46,7 @@ const Lists = (): JSX.Element => {
               >
                 <Box display={"flex"}>
                   <Heading
-                    id="list-heading"
+                    id={`list-heading-${list._id}`}
                     as="h4"
                     size={"md"}
                     pr={"1em"}

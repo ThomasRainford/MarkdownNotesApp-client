@@ -22,8 +22,6 @@ const ListPaneHeader = ({ collection, selectedList }: any) => {
   const { colorMode } = useColorMode();
 
   const list = selectedList === "" ? "" : getLocalStorageValue(selectedList);
-  console.log("list", list, selectedList);
-  console.log("collection", collection);
 
   return (
     <>
@@ -69,7 +67,7 @@ const ListPaneHeader = ({ collection, selectedList }: any) => {
   );
 };
 
-const ListsPane = (): JSX.Element => {
+const RightPaneContent = (): JSX.Element => {
   const [selectedCollection] = useLocalStorageValue(
     SelectedCollectionContext,
     LocalStorageKeys.SELECTED_COLLECTION
@@ -129,4 +127,4 @@ const ListsPane = (): JSX.Element => {
   );
 };
 
-export default ListsPane;
+export default RightPaneContent;

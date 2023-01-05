@@ -4,9 +4,9 @@ import { SelectedCollectionProvider } from "../../../../../contexts/SelectedColl
 import { SelectedListProvider } from "../../../../../contexts/SelectedListContext";
 import { testCollections } from "../../../../../test-utils/testData";
 import { LocalStorageKeys } from "../../../../../utils/types/types";
-import ListsPane from "../ListsPane";
+import RightPaneContent from "../RightPaneContent";
 
-describe("ListsPane component", () => {
+describe("RightPaneContent component", () => {
   test("Displays Lists", () => {
     localStorage.setItem(
       LocalStorageKeys.SELECTED_COLLECTION,
@@ -15,15 +15,15 @@ describe("ListsPane component", () => {
     render(
       <SelectedCollectionProvider>
         <SelectedListProvider>
-          <ListsPane />
+          <RightPaneContent />
         </SelectedListProvider>
       </SelectedCollectionProvider>
     );
 
-    const listPanelHeader = screen.getByText(/collection 1/i);
+    const rightPaneContentlHeader = screen.getByText(/collection 1/i);
     const listInList = screen.getByText(/list 1/i);
 
-    expect(listPanelHeader).toBeInTheDocument();
+    expect(rightPaneContentlHeader).toBeInTheDocument();
     expect(listInList).toBeInTheDocument();
   });
 
@@ -31,7 +31,7 @@ describe("ListsPane component", () => {
     render(
       <SelectedCollectionProvider>
         <SelectedListProvider>
-          <ListsPane />
+          <RightPaneContent />
         </SelectedListProvider>
       </SelectedCollectionProvider>
     );
@@ -49,5 +49,25 @@ describe("ListsPane component", () => {
 
     expect(list).not.toBeNull();
     expect(JSON.parse(list).title).toBe(title);
+  });
+
+  test("Selecting a list displays the lists notes", async () => {
+    render(
+      <SelectedCollectionProvider>
+        <SelectedListProvider>
+          <RightPaneContent />
+        </SelectedListProvider>
+      </SelectedCollectionProvider>
+    );
+
+    const title = "List 1";
+    const listList = screen.getByText(title);
+    await act(async () => {
+      fireEvent.click(listList);
+    });
+
+    const tempContent = screen.getByText(/notes here/i);
+
+    expect(tempContent).toBeInTheDocument();
   });
 });

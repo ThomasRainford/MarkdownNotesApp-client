@@ -4,9 +4,9 @@ import { SelectedCollectionProvider } from "../../../../../contexts/SelectedColl
 import { SelectedListProvider } from "../../../../../contexts/SelectedListContext";
 import { testCollections } from "../../../../../test-utils/testData";
 import { LocalStorageKeys } from "../../../../../utils/types/types";
-import CollectionsPane from "../CollectionsPane";
+import LeftPaneContent from "../LeftPaneContent";
 
-describe("CollectionsPane component", () => {
+describe("LeftPaneContent component", () => {
   test("Displays Collections", () => {
     localStorage.setItem(
       LocalStorageKeys.SELECTED_COLLECTION,
@@ -16,14 +16,14 @@ describe("CollectionsPane component", () => {
     render(
       <SelectedCollectionProvider>
         <SelectedListProvider>
-          <CollectionsPane />
+          <LeftPaneContent />
         </SelectedListProvider>
       </SelectedCollectionProvider>
     );
 
-    const collectionPanelHeader = screen.getByText(/collections/i);
+    const leftPaneContentlHeader = screen.getByText(/collections/i);
 
-    expect(collectionPanelHeader).toBeInTheDocument();
+    expect(leftPaneContentlHeader).toBeInTheDocument();
   });
 
   test("Displays the list of collections", () => {
@@ -35,7 +35,7 @@ describe("CollectionsPane component", () => {
     render(
       <SelectedCollectionProvider>
         <SelectedListProvider>
-          <CollectionsPane />
+          <LeftPaneContent />
         </SelectedListProvider>
       </SelectedCollectionProvider>
     );
@@ -53,7 +53,7 @@ describe("CollectionsPane component", () => {
     render(
       <SelectedCollectionProvider>
         <SelectedListProvider>
-          <CollectionsPane />
+          <LeftPaneContent />
         </SelectedListProvider>
       </SelectedCollectionProvider>
     );
@@ -73,5 +73,31 @@ describe("CollectionsPane component", () => {
 
     expect(collection).not.toBeNull();
     expect(JSON.parse(collection).title).toBe(title);
+  });
+
+  test("Selecting a list displays the lists in the right pane", async () => {
+    localStorage.setItem(
+      LocalStorageKeys.SELECTED_COLLECTION,
+      JSON.stringify(testCollections[0])
+    );
+    localStorage.setItem(
+      LocalStorageKeys.SELECTED_LIST,
+      JSON.stringify(testCollections[0].lists[0])
+    );
+    render(
+      <SelectedCollectionProvider>
+        <SelectedListProvider>
+          <LeftPaneContent />
+        </SelectedListProvider>
+      </SelectedCollectionProvider>
+    );
+
+    const listsElements = screen.getAllByRole("heading", { name: /list/i });
+
+    const lists = listsElements.filter((c, i) => {
+      return c.id === `list-heading-${i + 1}`;
+    });
+
+    expect(lists).toHaveLength(1);
   });
 });

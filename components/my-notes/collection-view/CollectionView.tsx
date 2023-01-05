@@ -1,17 +1,17 @@
 import { Box, useColorModeValue } from "@chakra-ui/react";
 import ResizeablePanel from "../resizeable-panel/ResizablePanel";
-import CollectionsPane from "./collections-pane/CollectionsPane";
-import ListsPane from "./lists-pane/ListsPane";
+import LeftPaneContent from "./left-pane-content/LeftPaneContent";
+import RightPaneContent from "./right-pane-content/RightPaneContent";
 
 const LeftPane = () => {
-  return <CollectionsPane />;
+  return <LeftPaneContent />;
 };
 
 const RightPane = () => {
   return (
     <Box h={"100%"} backgroundColor={useColorModeValue("gray.300", "gray.700")}>
       <ResizeablePanel
-        panel={<ListsPane />}
+        panel={<RightPaneContent />}
         content={
           <Box
             h={"100%"}

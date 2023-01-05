@@ -9,10 +9,10 @@ import {
   LocalStorageContextType,
   LocalStorageKeys,
 } from "../../../../utils/types/types";
-import Lists from "../lists-pane/lists/Lists";
+import Lists from "../right-pane-content/lists/Lists";
 import Collections from "./collections/Collections";
 
-const CollectionsPane = (): JSX.Element => {
+const LeftPaneContent = (): JSX.Element => {
   const [selectedCollection] = useLocalStorageValue(
     SelectedCollectionContext,
     LocalStorageKeys.SELECTED_COLLECTION
@@ -23,9 +23,7 @@ const CollectionsPane = (): JSX.Element => {
   ) as LocalStorageContextType;
 
   const collection = getLocalStorageValue(selectedCollection);
-  console.log("collection", collection);
 
-  console.log("selectedList", selectedList);
   const [content, setContent] = useState<ReactNode | null>(
     selectedList === "" ? <Collections /> : <Lists />
   );
@@ -105,4 +103,4 @@ const CollectionsPane = (): JSX.Element => {
   );
 };
 
-export default CollectionsPane;
+export default LeftPaneContent;

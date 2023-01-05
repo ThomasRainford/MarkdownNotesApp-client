@@ -16,9 +16,9 @@ describe("CollectionView component", () => {
       </SelectedCollectionProvider>
     );
 
-    const collectionPanelHeader = screen.getByText(/collections/i);
+    const leftPaneContentlHeader = screen.getByText(/collections/i);
 
-    expect(collectionPanelHeader).toBeInTheDocument();
+    expect(leftPaneContentlHeader).toBeInTheDocument();
   });
 
   test("clicking collection displays correct collection title", async () => {

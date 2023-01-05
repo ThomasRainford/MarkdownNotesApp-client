@@ -1,17 +1,17 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
-import CollectionsPane from "./CollectionsPane";
-import { mockCollectionsProps } from "./CollectionsPane.mocks";
+import RightPaneContent from "./LeftPaneContent";
+import { mockCollectionsProps } from "./LeftPaneContent.mocks";
 
 export default {
-  title: "my-notes/collection-view/CollectionsPane",
-  component: CollectionsPane,
+  title: "my-notes/collection-view/RightPaneContent",
+  component: RightPaneContent,
   // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
   argTypes: {},
-} as ComponentMeta<typeof CollectionsPane>;
+} as ComponentMeta<typeof RightPaneContent>;
 
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
-const Template: ComponentStory<typeof CollectionsPane> = () => (
-  <CollectionsPane />
+const Template: ComponentStory<typeof RightPaneContent> = () => (
+  <RightPaneContent />
 );
 
 export const Base = Template.bind({});
