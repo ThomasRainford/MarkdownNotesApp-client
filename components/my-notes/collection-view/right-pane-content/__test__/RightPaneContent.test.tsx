@@ -7,11 +7,14 @@ import { LocalStorageKeys } from "../../../../../utils/types/types";
 import RightPaneContent from "../RightPaneContent";
 
 describe("RightPaneContent component", () => {
-  test("Displays Lists", () => {
+  beforeAll(() => {
     localStorage.setItem(
       LocalStorageKeys.SELECTED_COLLECTION,
       JSON.stringify(testCollections[0])
     );
+  });
+
+  test("Displays Lists", () => {
     render(
       <SelectedCollectionProvider>
         <SelectedListProvider>
@@ -66,8 +69,8 @@ describe("RightPaneContent component", () => {
       fireEvent.click(listList);
     });
 
-    const tempContent = screen.getByText(/notes here/i);
+    const note = screen.getByText(/note 1/i);
 
-    expect(tempContent).toBeInTheDocument();
+    expect(note).toBeInTheDocument();
   });
 });

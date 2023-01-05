@@ -17,6 +17,7 @@ import {
   LocalStorageKeys,
 } from "../../../../utils/types/types";
 import Lists from "../lists/Lists";
+import Notes from "../notes/Notes";
 
 const ListPaneHeader = ({ collection, selectedList }: any) => {
   const { colorMode } = useColorMode();
@@ -89,7 +90,7 @@ const RightPaneContent = (): JSX.Element => {
     if (selectedList === "") {
       setContent(<Lists />);
     } else {
-      setContent(<div>Notes here</div>);
+      setContent(<Notes />);
     }
   }, [selectedList]);
 
