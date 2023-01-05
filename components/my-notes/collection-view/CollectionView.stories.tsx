@@ -5,7 +5,7 @@ import CollectionView from "./CollectionView";
 import { mockCollectionViewProps } from "./CollectionView.mocks";
 
 export default {
-  title: "my-notes/CollectionView",
+  title: "my-notes/collection-view/CollectionView",
   component: CollectionView,
   // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
   argTypes: {},

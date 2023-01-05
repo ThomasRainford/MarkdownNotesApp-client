@@ -16,7 +16,7 @@ import {
   LocalStorageContextType,
   LocalStorageKeys,
 } from "../../../../utils/types/types";
-import Lists from "./lists/Lists";
+import Lists from "../lists/Lists";
 
 const ListPaneHeader = ({ collection, selectedList }: any) => {
   const { colorMode } = useColorMode();

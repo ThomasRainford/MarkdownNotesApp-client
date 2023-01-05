@@ -3,7 +3,7 @@ import RegisterForm, { Props } from "./RegisterForm";
 import { mockBaseTemplateProps } from "./RegisterForm.mocks";
 
 export default {
-  title: "login/register-form",
+  title: "register/register-form/RegisterForm",
   component: RegisterForm,
   // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
   argTypes: {},

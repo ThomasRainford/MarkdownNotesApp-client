@@ -1,8 +1,8 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { act } from "react-dom/test-utils";
-import { SelectedCollectionProvider } from "../../../../../../contexts/SelectedCollectionContext";
-import { testCollections } from "../../../../../../test-utils/testData";
-import { LocalStorageKeys } from "../../../../../../utils/types/types";
+import { SelectedCollectionProvider } from "../../../../../contexts/SelectedCollectionContext";
+import { testCollections } from "../../../../../test-utils/testData";
+import { LocalStorageKeys } from "../../../../../utils/types/types";
 import Collections from "../Collections";
 
 describe("Collections tests", () => {

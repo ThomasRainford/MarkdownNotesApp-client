@@ -1,13 +1,13 @@
 import { Box, Heading, Tag, useColorMode } from "@chakra-ui/react";
 import { useState } from "react";
-import { SelectedCollectionContext } from "../../../../../contexts/SelectedCollectionContext";
-import { SelectedListContext } from "../../../../../contexts/SelectedListContext";
-import { testCollections } from "../../../../../test-utils/testData";
-import { useLocalStorageValue } from "../../../../../utils/hooks/useLocalStorageValue";
+import { SelectedCollectionContext } from "../../../../contexts/SelectedCollectionContext";
+import { SelectedListContext } from "../../../../contexts/SelectedListContext";
+import { testCollections } from "../../../../test-utils/testData";
+import { useLocalStorageValue } from "../../../../utils/hooks/useLocalStorageValue";
 import {
   LocalStorageContextType,
   LocalStorageKeys,
-} from "../../../../../utils/types/types";
+} from "../../../../utils/types/types";
 
 const Collections = (): JSX.Element => {
   const [collections] = useState(testCollections);

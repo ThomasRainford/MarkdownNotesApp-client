@@ -1,12 +1,12 @@
 import { ArrowForwardIcon } from "@chakra-ui/icons";
 import { Box, Heading, Tag, useColorMode } from "@chakra-ui/react";
-import { SelectedCollectionContext } from "../../../../../contexts/SelectedCollectionContext";
-import { SelectedListContext } from "../../../../../contexts/SelectedListContext";
-import { useLocalStorageValue } from "../../../../../utils/hooks/useLocalStorageValue";
+import { SelectedCollectionContext } from "../../../../contexts/SelectedCollectionContext";
+import { SelectedListContext } from "../../../../contexts/SelectedListContext";
+import { useLocalStorageValue } from "../../../../utils/hooks/useLocalStorageValue";
 import {
   LocalStorageContextType,
   LocalStorageKeys,
-} from "../../../../../utils/types/types";
+} from "../../../../utils/types/types";
 
 const Lists = (): JSX.Element => {
   const { colorMode } = useColorMode();

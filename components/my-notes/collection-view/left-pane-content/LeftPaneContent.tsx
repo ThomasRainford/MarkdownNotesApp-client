@@ -9,8 +9,8 @@ import {
   LocalStorageContextType,
   LocalStorageKeys,
 } from "../../../../utils/types/types";
-import Lists from "../right-pane-content/lists/Lists";
-import Collections from "./collections/Collections";
+import Collections from "../collections/Collections";
+import Lists from "../lists/Lists";
 
 const LeftPaneContent = (): JSX.Element => {
   const [selectedCollection] = useLocalStorageValue(

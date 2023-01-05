@@ -3,7 +3,7 @@ import ResizeablePanel, { Props } from "./ResizablePanel";
 import { mockResizeablePanelProps } from "./ResizablePanel.mocks";
 
 export default {
-  title: "my-notes/ResizablePanel",
+  title: "my-notes/resizable-panel/ResizablePanel",
   component: ResizeablePanel,
   // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
   argTypes: {},

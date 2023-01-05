@@ -1,5 +1,5 @@
 import { Box, useColorModeValue } from "@chakra-ui/react";
-import ResizeablePanel from "../resizeable-panel/ResizablePanel";
+import ResizeablePanel from "../resizable-panel/ResizablePanel";
 import LeftPaneContent from "./left-pane-content/LeftPaneContent";
 import RightPaneContent from "./right-pane-content/RightPaneContent";
 
