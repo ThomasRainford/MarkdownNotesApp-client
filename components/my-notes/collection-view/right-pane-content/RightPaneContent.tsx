@@ -1,6 +1,7 @@
-import { CheckCircleIcon, TriangleUpIcon } from "@chakra-ui/icons";
+import { AddIcon, CheckCircleIcon, TriangleUpIcon } from "@chakra-ui/icons";
 import {
   Box,
+  Button,
   Heading,
   Input,
   InputGroup,
@@ -52,15 +53,28 @@ const ListPaneHeader = ({ collection, selectedList }: any) => {
         </>
       ) : (
         <>
-          <Box mr={"2em"}>
-            <Heading
-              id="list-collection-heading"
-              as="h3"
-              size={"md"}
-              textColor={colorMode === "light" ? "gray.600" : "gray.300"}
-            >
-              {list.title}
-            </Heading>
+          <Box display={"flex"} justifyContent="space-between" w="100%">
+            <Box display={"flex"} alignItems="center">
+              <Heading
+                id="list-collection-heading"
+                as="h3"
+                size={"md"}
+                textColor={colorMode === "light" ? "gray.600" : "gray.300"}
+              >
+                {list.title}
+              </Heading>
+            </Box>
+            <Box>
+              <Button
+                size={"sm"}
+                leftIcon={<AddIcon />}
+                onClick={() => {
+                  // Add new note
+                }}
+              >
+                New Note
+              </Button>
+            </Box>
           </Box>
         </>
       )}

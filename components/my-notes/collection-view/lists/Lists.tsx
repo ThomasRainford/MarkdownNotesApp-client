@@ -2,6 +2,7 @@ import { ArrowForwardIcon } from "@chakra-ui/icons";
 import { Box, Heading, Tag, useColorMode } from "@chakra-ui/react";
 import { SelectedCollectionContext } from "../../../../contexts/SelectedCollectionContext";
 import { SelectedListContext } from "../../../../contexts/SelectedListContext";
+import { getLocalStorageValue } from "../../../../utils/getLocalStorageValue";
 import { useLocalStorageValue } from "../../../../utils/hooks/useLocalStorageValue";
 import {
   LocalStorageContextType,
@@ -14,25 +15,23 @@ const Lists = (): JSX.Element => {
     SelectedCollectionContext,
     LocalStorageKeys.SELECTED_COLLECTION
   ) as LocalStorageContextType;
-  const [, setSelectedList] = useLocalStorageValue(
+  const [selectedList, setSelectedList] = useLocalStorageValue(
     SelectedListContext,
     LocalStorageKeys.SELECTED_LIST
   ) as LocalStorageContextType;
-  const collection =
-    typeof selectedCollection === "string" && selectedCollection !== ""
-      ? JSON.parse(selectedCollection)
-      : selectedCollection;
+  const collection = getLocalStorageValue(selectedCollection);
+  const list = getLocalStorageValue(selectedList);
   const lists = collection?.lists;
 
   return (
     <Box>
       {!lists ? null : (
         <>
-          {lists.map((list: any) => {
-            const notes = list.notes;
+          {lists.map((_list: any) => {
+            const notes = _list.notes;
             return (
               <Box
-                key={list._id}
+                key={_list._id}
                 display={"flex"}
                 justifyContent={"space-between"}
                 pl={"1.5em"}
@@ -42,17 +41,19 @@ const Lists = (): JSX.Element => {
                 _hover={{
                   bg: colorMode === "light" ? "gray.200" : "gray.600",
                 }}
-                onClick={() => setSelectedList(JSON.stringify(list))}
+                border={_list._id === list?._id ? "1px" : ""}
+                borderColor={_list._id === list?._id ? "gray.200" : "gray.800"}
+                onClick={() => setSelectedList(JSON.stringify(_list))}
               >
                 <Box display={"flex"}>
                   <Heading
-                    id={`list-heading-${list._id}`}
+                    id={`list-heading-${_list._id}`}
                     as="h4"
                     size={"md"}
                     pr={"1em"}
                     color={colorMode === "light" ? "gray.600" : "gray.300"}
                   >
-                    {list.title}
+                    {_list.title}
                   </Heading>
                   <Tag>{notes.length}</Tag>
                 </Box>

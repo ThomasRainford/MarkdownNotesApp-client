@@ -3,6 +3,7 @@ import { useState } from "react";
 import { SelectedCollectionContext } from "../../../../contexts/SelectedCollectionContext";
 import { SelectedListContext } from "../../../../contexts/SelectedListContext";
 import { testCollections } from "../../../../test-utils/testData";
+import { getLocalStorageValue } from "../../../../utils/getLocalStorageValue";
 import { useLocalStorageValue } from "../../../../utils/hooks/useLocalStorageValue";
 import {
   LocalStorageContextType,
@@ -12,7 +13,7 @@ import {
 const Collections = (): JSX.Element => {
   const [collections] = useState(testCollections);
   const { colorMode } = useColorMode();
-  const [, setSelectedCollection] = useLocalStorageValue(
+  const [selectedCollection, setSelectedCollection] = useLocalStorageValue(
     SelectedCollectionContext,
     LocalStorageKeys.SELECTED_COLLECTION
   ) as LocalStorageContextType;
@@ -20,14 +21,15 @@ const Collections = (): JSX.Element => {
     SelectedListContext,
     LocalStorageKeys.SELECTED_LIST
   ) as LocalStorageContextType;
+  const collection = getLocalStorageValue(selectedCollection);
 
   return (
     <Box>
-      {collections.map((collection) => {
-        const lists = collection.lists;
+      {collections.map((_collection) => {
+        const lists = _collection.lists;
         return (
           <Box
-            key={collection._id}
+            key={_collection._id}
             display={"flex"}
             justifyContent="space-between"
             pl={"1.5em"}
@@ -37,18 +39,22 @@ const Collections = (): JSX.Element => {
             _hover={{
               bg: colorMode === "light" ? "gray.200" : "gray.600",
             }}
+            border={"1px"}
+            borderColor={
+              _collection._id === collection?._id ? "gray.200" : "gray.800"
+            }
             onClick={() => {
-              setSelectedCollection(JSON.stringify(collection));
+              setSelectedCollection(JSON.stringify(_collection));
               setSelectedList("");
             }}
           >
             <Heading
-              id={`collection-header-${collection._id}`}
+              id={`collection-header-${_collection._id}`}
               as="h4"
               size={"md"}
               color={colorMode === "light" ? "gray.700" : "gray.300"}
             >
-              {collection.title}
+              {_collection.title}
             </Heading>
             <Tag>{lists.length}</Tag>
           </Box>
