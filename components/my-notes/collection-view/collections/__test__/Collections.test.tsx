@@ -20,7 +20,7 @@ describe("Collections tests", () => {
     const collections = screen.getAllByRole("heading", { name: /collection/i });
 
     const collectionInList = collections.filter(
-      (c, i) => c.id === `collection-header-${i + 1}`
+      (c, i) => c.id === `collection-heading-${i + 1}`
     );
 
     expect(collectionInList).toHaveLength(3);

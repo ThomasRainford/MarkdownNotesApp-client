@@ -41,8 +41,7 @@ describe("CollectionView component", () => {
     });
 
     expect(
-      collectionTitle.find((ct) => ct.id === "list-collection-heading")
-        ?.textContent
+      collectionTitle.find((ct) => ct.id === "right-pane-heading")?.textContent
     ).toBe(title);
   });
 

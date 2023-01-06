@@ -49,7 +49,7 @@ const Collections = (): JSX.Element => {
             }}
           >
             <Heading
-              id={`collection-header-${_collection._id}`}
+              id={`collection-heading-${_collection._id}`}
               as="h4"
               size={"md"}
               color={colorMode === "light" ? "gray.700" : "gray.300"}

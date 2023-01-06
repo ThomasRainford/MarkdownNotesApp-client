@@ -31,7 +31,7 @@ const ListPaneHeader = ({ collection, selectedList }: any) => {
         <>
           <Box mr={"2em"}>
             <Heading
-              id="list-collection-heading"
+              id="right-pane-heading"
               as="h3"
               size={"md"}
               textColor={colorMode === "light" ? "gray.600" : "gray.300"}
@@ -56,7 +56,7 @@ const ListPaneHeader = ({ collection, selectedList }: any) => {
           <Box display={"flex"} justifyContent="space-between" w="100%">
             <Box display={"flex"} alignItems="center">
               <Heading
-                id="list-collection-heading"
+                id="right-pane-heading"
                 as="h3"
                 size={"md"}
                 textColor={colorMode === "light" ? "gray.600" : "gray.300"}

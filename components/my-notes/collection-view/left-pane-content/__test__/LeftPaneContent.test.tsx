@@ -43,7 +43,7 @@ describe("LeftPaneContent component", () => {
     const collections = screen.getAllByRole("heading", { name: /collection/i });
 
     const collectionInList = collections.filter(
-      (c, i) => c.id === `collection-header-${i}`
+      (c, i) => c.id === `collection-heading-${i}`
     );
 
     expect(collectionInList).toHaveLength(3);
