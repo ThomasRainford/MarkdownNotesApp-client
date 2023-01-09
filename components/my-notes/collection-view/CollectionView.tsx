@@ -1,6 +1,7 @@
 import { Box, useColorModeValue } from "@chakra-ui/react";
 import ResizeablePanel from "../resizable-panel/ResizablePanel";
 import LeftPaneContent from "./left-pane-content/LeftPaneContent";
+import NoteContent from "./note-content/NoteContent";
 import RightPaneContent from "./right-pane-content/RightPaneContent";
 
 const LeftPane = () => {
@@ -17,7 +18,7 @@ const RightPane = () => {
             h={"100%"}
             backgroundColor={useColorModeValue("gray.200", "gray.600")}
           >
-            <div>Note Editor</div>
+            <NoteContent />
           </Box>
         }
         minSize={150}

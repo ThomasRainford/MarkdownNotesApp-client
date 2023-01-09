@@ -1,4 +1,5 @@
 import { Box, Heading, Tag, Text, useColorMode } from "@chakra-ui/react";
+import { SelectedCollectionContext } from "../../../../contexts/SelectedCollectionContext";
 import { SelectedListContext } from "../../../../contexts/SelectedListContext";
 import { SelectedNoteContext } from "../../../../contexts/SelectedNoteContext";
 import { getLocalStorageValue } from "../../../../utils/getLocalStorageValue";
@@ -11,6 +12,10 @@ import {
 
 const Notes = (): JSX.Element => {
   const { colorMode } = useColorMode();
+  const [selectedCollection] = useLocalStorageValue(
+    SelectedCollectionContext,
+    LocalStorageKeys.SELECTED_COLLECTION
+  ) as LocalStorageContextType;
   const [selectedList] = useLocalStorageValue(
     SelectedListContext,
     LocalStorageKeys.SELECTED_LIST
@@ -20,6 +25,8 @@ const Notes = (): JSX.Element => {
     LocalStorageKeys.SELECTED_NOTE
   ) as LocalStorageContextType;
   const notes = getLocalStorageValue(selectedList).notes;
+  const list = getLocalStorageValue(selectedList);
+  const collection = getLocalStorageValue(selectedCollection);
 
   return (
     <Box>
@@ -39,7 +46,13 @@ const Notes = (): JSX.Element => {
               }}
               onClick={() => {
                 console.log("clicked note ", note);
-                setSelecteNote(JSON.stringify(note));
+                setSelecteNote(
+                  JSON.stringify({
+                    note,
+                    list,
+                    collection,
+                  })
+                );
               }}
             >
               <Box>

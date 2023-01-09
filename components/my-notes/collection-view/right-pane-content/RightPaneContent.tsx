@@ -96,9 +96,7 @@ const RightPaneContent = (): JSX.Element => {
       ? JSON.parse(selectedCollection)
       : selectedCollection;
 
-  const [content, setContent] = useState<ReactNode | null>(
-    selectedList === "" ? <Lists /> : <div>Notes here</div>
-  );
+  const [content, setContent] = useState<ReactNode | null>(<Lists />);
 
   useEffect(() => {
     if (selectedList === "") {
