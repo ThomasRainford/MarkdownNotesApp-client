@@ -1,5 +1,6 @@
 import { Box, Heading, Tag, Text, useColorMode } from "@chakra-ui/react";
 import { SelectedListContext } from "../../../../contexts/SelectedListContext";
+import { SelectedNoteContext } from "../../../../contexts/SelectedNoteContext";
 import { getLocalStorageValue } from "../../../../utils/getLocalStorageValue";
 import { getTimeSince } from "../../../../utils/getTimeSince";
 import { useLocalStorageValue } from "../../../../utils/hooks/useLocalStorageValue";
@@ -13,6 +14,10 @@ const Notes = (): JSX.Element => {
   const [selectedList] = useLocalStorageValue(
     SelectedListContext,
     LocalStorageKeys.SELECTED_LIST
+  ) as LocalStorageContextType;
+  const [, setSelecteNote] = useLocalStorageValue(
+    SelectedNoteContext,
+    LocalStorageKeys.SELECTED_NOTE
   ) as LocalStorageContextType;
   const notes = getLocalStorageValue(selectedList).notes;
 
@@ -31,6 +36,10 @@ const Notes = (): JSX.Element => {
               pb={"0.5em"}
               _hover={{
                 bg: colorMode === "light" ? "gray.200" : "gray.600",
+              }}
+              onClick={() => {
+                console.log("clicked note ", note);
+                setSelecteNote(JSON.stringify(note));
               }}
             >
               <Box>

@@ -5,20 +5,20 @@ import {
   LocalStorageKeys,
 } from "../utils/types/types";
 
-export const SelectedCollectionContext = createContext<
+export const SelectedNoteContext = createContext<
   LocalStorageContextType | undefined
 >(undefined);
 
-export function SelectedCollectionProvider({
+export function SelectedNoteProvider({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const value = useLocalStorage(LocalStorageKeys.SELECTED_COLLECTION, null);
+  const value = useLocalStorage(LocalStorageKeys.SELECTED_NOTE, null);
 
   return (
-    <SelectedCollectionContext.Provider value={value}>
+    <SelectedNoteContext.Provider value={value}>
       {children}
-    </SelectedCollectionContext.Provider>
+    </SelectedNoteContext.Provider>
   );
 }

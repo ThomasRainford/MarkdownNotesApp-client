@@ -1,9 +1,8 @@
 import { withUrqlClient } from "next-urql";
+import SelectedDataProvider from "../../components/helper/SelectedDataProvider";
 import PrimaryLayout from "../../components/layouts/PrimaryLayout";
 import CollectionView from "../../components/my-notes/collection-view/CollectionView";
 import NavBar from "../../components/navbar/NavBar";
-import { SelectedCollectionProvider } from "../../contexts/SelectedCollectionContext";
-import { SelectedListProvider } from "../../contexts/SelectedListContext";
 import { useMeQuery } from "../../generated/graphql";
 import { createUrqlClient } from "../../utils/createUrqlClient";
 import { useIsAuth } from "../../utils/hooks/useIsAuth";
@@ -18,11 +17,9 @@ const MyNotes: NextPageWithLayout = () => {
     <>
       <NavBar user={meResult} />
       {!meResult.fetching && meResult.data ? (
-        <SelectedCollectionProvider>
-          <SelectedListProvider>
-            <CollectionView />
-          </SelectedListProvider>
-        </SelectedCollectionProvider>
+        <SelectedDataProvider>
+          <CollectionView />
+        </SelectedDataProvider>
       ) : null}
     </>
   );
