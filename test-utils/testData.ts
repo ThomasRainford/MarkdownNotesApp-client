@@ -103,3 +103,9 @@ export const testUser = {
   upvoted: [],
   __typename: "User" as "User",
 };
+
+export const testSelectedNote = {
+  note: testCollections[0].lists[0].notes[0],
+  list: testCollections[0].lists[0],
+  collection: testCollections[0],
+};
