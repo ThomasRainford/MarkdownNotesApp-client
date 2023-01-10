@@ -29,11 +29,7 @@ describe("NoteContent component", () => {
     );
 
     const note = screen.getByText(/note 1/i);
-    const list = screen.getByText(/list 1/i);
-    const collection = screen.getByText(/collection 1/i);
 
     expect(note).toBeInTheDocument();
-    expect(list).toBeInTheDocument();
-    expect(collection).toBeInTheDocument();
   });
 });

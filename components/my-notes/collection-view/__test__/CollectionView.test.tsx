@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { act } from "react-dom/test-utils";
-import { SelectedCollectionProvider } from "../../../../contexts/SelectedCollectionContext";
 import { LocalStorageKeys } from "../../../../utils/types/types";
+import SelectedDataProvider from "../../../helper/SelectedDataProvider";
 import CollectionView from "../CollectionView";
 
 describe("CollectionView component", () => {
@@ -11,21 +11,25 @@ describe("CollectionView component", () => {
 
   test("Displays CollectionView", async () => {
     render(
-      <SelectedCollectionProvider>
+      <SelectedDataProvider>
         <CollectionView />
-      </SelectedCollectionProvider>
+      </SelectedDataProvider>
     );
 
     const leftPaneContentlHeader = screen.getByText(/collections/i);
+    const rightPaneContentHeader = screen.getByText(/select a collection/i);
+    const noteContentHeader = screen.getByText(/no note selected/i);
 
     expect(leftPaneContentlHeader).toBeInTheDocument();
+    expect(rightPaneContentHeader).toBeInTheDocument();
+    expect(noteContentHeader).toBeInTheDocument();
   });
 
   test("clicking collection displays correct collection title", async () => {
     render(
-      <SelectedCollectionProvider>
+      <SelectedDataProvider>
         <CollectionView />
-      </SelectedCollectionProvider>
+      </SelectedDataProvider>
     );
 
     const title = "Collection 1";
@@ -47,9 +51,9 @@ describe("CollectionView component", () => {
 
   test("clicking collection displays the correct lists", async () => {
     render(
-      <SelectedCollectionProvider>
+      <SelectedDataProvider>
         <CollectionView />
-      </SelectedCollectionProvider>
+      </SelectedDataProvider>
     );
 
     const title = "Collection 1";
