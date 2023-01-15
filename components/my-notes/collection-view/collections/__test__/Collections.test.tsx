@@ -9,7 +9,7 @@ describe("Collections tests", () => {
   test("Displays the list of collections", () => {
     localStorage.setItem(
       LocalStorageKeys.SELECTED_COLLECTION,
-      JSON.stringify(testCollections)
+      JSON.stringify(testCollections[0])
     );
     render(
       <SelectedCollectionProvider>
