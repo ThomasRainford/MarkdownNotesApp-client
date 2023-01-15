@@ -20,7 +20,9 @@ const NoteContentHeader = ({
       {selectedNote && (
         <Box>
           <Box>
-            <Heading size={"lg"}>{note.title}</Heading>
+            <Heading id="note-header-note-title" size={"lg"}>
+              {note.title}
+            </Heading>
           </Box>
           <Box display={"flex"} alignItems="center" mt="1em">
             <Box mr={"0.5em"}>
@@ -28,6 +30,7 @@ const NoteContentHeader = ({
             </Box>
             <Box mr={"0.5em"}>
               <Tag
+                id="note-header-last-modified"
                 variant={"outline"}
                 size={"md"}
                 mt="3px"

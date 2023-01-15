@@ -43,6 +43,10 @@ test.describe("test my-notes page", () => {
     // Click [aria-label="left-pane-back-button"]
     await page.locator('[aria-label="left-pane-back-button"]').click();
     //
+    expect(page.locator("#note-header-note-title")).toBeTruthy();
+    //
+    expect(page.locator("#note-header-last-modified")).toBeTruthy();
+    //
     expect(page.locator('h3:has-text("Collections")')).toBeTruthy();
   });
 });
