@@ -1,26 +1,27 @@
 import { Box, useColorModeValue } from "@chakra-ui/react";
-import ResizeablePanel from "../resizeable-panel/ResizablePanel";
-import Collections from "./collections/Collections";
-import Lists from "./lists/Lists";
+import ResizeablePanel from "../resizable-panel/ResizablePanel";
+import LeftPaneContent from "./left-pane-content/LeftPaneContent";
+import NoteContent from "./note-content/NoteContent";
+import RightPaneContent from "./right-pane-content/RightPaneContent";
 
-const Panel = () => {
-  return <Collections />;
+const LeftPane = () => {
+  return <LeftPaneContent />;
 };
 
-const Content = () => {
+const RightPane = () => {
   return (
-    <Box h={"100%"} backgroundColor={useColorModeValue("gray.200", "gray.700")}>
+    <Box h={"100%"} backgroundColor={useColorModeValue("gray.300", "gray.700")}>
       <ResizeablePanel
-        panel={<Lists />}
+        panel={<RightPaneContent />}
         content={
           <Box
             h={"100%"}
-            backgroundColor={useColorModeValue("gray.100", "gray.600")}
+            backgroundColor={useColorModeValue("gray.200", "gray.600")}
           >
-            <div>Note Editor</div>
+            <NoteContent />
           </Box>
         }
-        mineSize={150}
+        minSize={150}
         maxSize={400}
         defaultSize={270}
       />
@@ -31,11 +32,11 @@ const Content = () => {
 const CollectionView = (): JSX.Element => {
   return (
     <ResizeablePanel
-      panel={<Panel />}
-      content={<Content />}
-      mineSize={150}
+      panel={<LeftPane />}
+      content={<RightPane />}
+      minSize={260}
       maxSize={400}
-      defaultSize={275}
+      defaultSize={300}
     />
   );
 };

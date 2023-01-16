@@ -4,24 +4,29 @@ import { SelectedCollectionProvider } from "../../../../../contexts/SelectedColl
 import { SelectedListProvider } from "../../../../../contexts/SelectedListContext";
 import { testCollections } from "../../../../../test-utils/testData";
 import { LocalStorageKeys } from "../../../../../utils/types/types";
-import Lists from "../Lists";
+import RightPaneContent from "../RightPaneContent";
 
-describe("Lists component", () => {
-  test("Displays Lists", () => {
+describe("RightPaneContent component", () => {
+  beforeAll(() => {
     localStorage.setItem(
       LocalStorageKeys.SELECTED_COLLECTION,
       JSON.stringify(testCollections[0])
     );
+  });
+
+  test("Displays Lists", () => {
     render(
       <SelectedCollectionProvider>
         <SelectedListProvider>
-          <Lists />
+          <RightPaneContent />
         </SelectedListProvider>
       </SelectedCollectionProvider>
     );
 
+    const rightPaneContentlHeader = screen.getByText(/collection 1/i);
     const listInList = screen.getByText(/list 1/i);
 
+    expect(rightPaneContentlHeader).toBeInTheDocument();
     expect(listInList).toBeInTheDocument();
   });
 
@@ -29,7 +34,7 @@ describe("Lists component", () => {
     render(
       <SelectedCollectionProvider>
         <SelectedListProvider>
-          <Lists />
+          <RightPaneContent />
         </SelectedListProvider>
       </SelectedCollectionProvider>
     );
@@ -47,5 +52,25 @@ describe("Lists component", () => {
 
     expect(list).not.toBeNull();
     expect(JSON.parse(list).title).toBe(title);
+  });
+
+  test("Selecting a list displays the lists notes", async () => {
+    render(
+      <SelectedCollectionProvider>
+        <SelectedListProvider>
+          <RightPaneContent />
+        </SelectedListProvider>
+      </SelectedCollectionProvider>
+    );
+
+    const title = "List 1";
+    const listList = screen.getByText(title);
+    await act(async () => {
+      fireEvent.click(listList);
+    });
+
+    const note = screen.getByText(/note 1/i);
+
+    expect(note).toBeInTheDocument();
   });
 });

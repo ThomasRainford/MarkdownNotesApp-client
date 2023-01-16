@@ -2,7 +2,7 @@ import { ComponentMeta, ComponentStory } from "@storybook/react";
 import LoginForm from "./LoginForm";
 
 export default {
-  title: "login/login-form/LoginForm",
+  title: "login-form/LoginForm",
   component: LoginForm,
   // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
   argTypes: {},

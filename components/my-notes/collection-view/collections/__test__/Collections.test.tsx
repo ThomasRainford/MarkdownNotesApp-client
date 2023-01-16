@@ -5,8 +5,8 @@ import { testCollections } from "../../../../../test-utils/testData";
 import { LocalStorageKeys } from "../../../../../utils/types/types";
 import Collections from "../Collections";
 
-describe("Collections component", () => {
-  test("Displays Collections", () => {
+describe("Collections tests", () => {
+  test("Displays the list of collections", () => {
     localStorage.setItem(
       LocalStorageKeys.SELECTED_COLLECTION,
       JSON.stringify(testCollections[0])
@@ -17,26 +17,10 @@ describe("Collections component", () => {
       </SelectedCollectionProvider>
     );
 
-    const collectionPanelHeader = screen.getByText(/collections/i);
-
-    expect(collectionPanelHeader).toBeInTheDocument();
-  });
-
-  test("Displays the list of collections", () => {
-    localStorage.setItem(
-      LocalStorageKeys.SELECTED_COLLECTION,
-      JSON.stringify(testCollections)
-    );
-    render(
-      <SelectedCollectionProvider>
-        <Collections />
-      </SelectedCollectionProvider>
-    );
-
     const collections = screen.getAllByRole("heading", { name: /collection/i });
 
     const collectionInList = collections.filter(
-      (c, i) => c.id === `collection-header-${i}`
+      (c, i) => c.id === `collection-heading-${i + 1}`
     );
 
     expect(collectionInList).toHaveLength(3);

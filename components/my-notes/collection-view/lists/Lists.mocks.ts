@@ -1,5 +1,5 @@
 const base = {};
 
-export const mockListsProps = {
+export const mockBaseTemplateProps = {
   base,
 };

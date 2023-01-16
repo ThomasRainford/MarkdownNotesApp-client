@@ -7,7 +7,7 @@ const base: Props = {
   content: (
     <div style={{ height: "100%", backgroundColor: "#2D3748" }}>Content</div>
   ),
-  mineSize: 150,
+  minSize: 150,
   maxSize: 400,
   defaultSize: 250,
 };

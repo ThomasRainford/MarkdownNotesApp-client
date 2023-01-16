@@ -1,20 +1,22 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
-import RegisterForm, { Props } from "./RegisterForm";
-import { mockBaseTemplateProps } from "./RegisterForm.mocks";
+import ResizeablePanel, { Props } from "./ResizablePanel";
+import { mockResizeablePanelProps } from "./ResizablePanel.mocks";
 
 export default {
-  title: "register/register-form/RegisterForm",
-  component: RegisterForm,
+  title: "my-notes/resizable-panel/ResizablePanel",
+  component: ResizeablePanel,
   // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
   argTypes: {},
-} as ComponentMeta<typeof RegisterForm>;
+} as ComponentMeta<typeof ResizeablePanel>;
 
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
-const Template: ComponentStory<typeof RegisterForm> = () => <RegisterForm />;
+const Template: ComponentStory<typeof ResizeablePanel> = (args) => (
+  <ResizeablePanel {...args} />
+);
 
 export const Base = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 
 Base.args = {
-  ...mockBaseTemplateProps.base,
+  ...mockResizeablePanelProps.base,
 } as Props;

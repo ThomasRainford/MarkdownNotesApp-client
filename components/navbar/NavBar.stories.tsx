@@ -3,7 +3,7 @@ import Navbar, { Props } from "./NavBar";
 import { mockBaseTemplateProps } from "./NavBar.mocks";
 
 export default {
-  title: "home/Navbar",
+  title: "navbar/Navbar",
   component: Navbar,
   // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
   argTypes: {},

@@ -1,14 +1,8 @@
-import { CheckCircleIcon, TriangleUpIcon } from "@chakra-ui/icons";
-import {
-  Box,
-  Heading,
-  Input,
-  InputGroup,
-  InputLeftAddon,
-  Tag,
-} from "@chakra-ui/react";
+import { ArrowForwardIcon } from "@chakra-ui/icons";
+import { Box, Heading, Tag, useColorMode } from "@chakra-ui/react";
 import { SelectedCollectionContext } from "../../../../contexts/SelectedCollectionContext";
 import { SelectedListContext } from "../../../../contexts/SelectedListContext";
+import { getLocalStorageValue } from "../../../../utils/getLocalStorageValue";
 import { useLocalStorageValue } from "../../../../utils/hooks/useLocalStorageValue";
 import {
   LocalStorageContextType,
@@ -16,87 +10,59 @@ import {
 } from "../../../../utils/types/types";
 
 const Lists = (): JSX.Element => {
+  const { colorMode } = useColorMode();
   const [selectedCollection] = useLocalStorageValue(
     SelectedCollectionContext,
     LocalStorageKeys.SELECTED_COLLECTION
   ) as LocalStorageContextType;
-  const [, setSelectedList] = useLocalStorageValue(
+  const [selectedList, setSelectedList] = useLocalStorageValue(
     SelectedListContext,
     LocalStorageKeys.SELECTED_LIST
   ) as LocalStorageContextType;
-  const collection =
-    typeof selectedCollection === "string"
-      ? JSON.parse(selectedCollection)
-      : selectedCollection;
+  const collection = getLocalStorageValue(selectedCollection);
+  const list = getLocalStorageValue(selectedList);
   const lists = collection?.lists;
 
   return (
-    <Box h={"100%"}>
-      <Box
-        h={"122px"}
-        display={"flex"}
-        justifyContent="space-between"
-        px={"1em"}
-        py={"1em"}
-      >
-        {!collection ? (
-          <p>Select a collection</p>
-        ) : (
-          <Box>
-            <Box display={"flex"}>
-              <Box mr={"2em"}>
-                <Heading
-                  id="list-collection-heading"
-                  as="h3"
-                  size={"md"}
-                  textColor={"gray.300"}
-                >
-                  {collection.title}
-                </Heading>
-              </Box>
-              <Box display={"flex"} justifyContent="space-between">
-                <CheckCircleIcon
-                  color={"blue.400"}
-                  boxSize={4}
-                  mt={"4px"}
-                  mr="0.25em"
-                />
-                <Heading as={"h6"} size="sm" mt={"2px"}>
-                  {collection.upvotes}
-                </Heading>
-              </Box>
-            </Box>
-            <Box mt={"1.75em"}>
-              <InputGroup>
-                {/* eslint-disable-next-line */}
-                <InputLeftAddon children={<TriangleUpIcon />} />
-                <Input type="text" placeholder="Filter Lists..." />
-              </InputGroup>
-            </Box>
-          </Box>
-        )}
-      </Box>
+    <Box>
       {!lists ? null : (
         <>
-          {lists.map((list: any) => {
-            const notes = list.notes;
+          {lists.map((_list: any) => {
+            const notes = _list.notes;
             return (
               <Box
-                key={list._id}
+                key={_list._id}
                 display={"flex"}
+                justifyContent={"space-between"}
                 pl={"1.5em"}
                 pr={"1em"}
                 pt={"1em"}
                 pb={"1em"}
                 _hover={{
-                  bg: "gray.600",
+                  bg: colorMode === "light" ? "gray.200" : "gray.600",
                 }}
-                onClick={() => setSelectedList(JSON.stringify(list))}
+                border={_list._id === list?._id ? "1px" : ""}
+                borderColor={_list._id === list?._id ? "gray.200" : "gray.800"}
+                onClick={() => setSelectedList(JSON.stringify(_list))}
               >
-                <Heading id="list-heading" as="h4" size={"md"} pr={"1em"}>
-                  {list.title}
-                </Heading>
-                <Tag>{notes.length}</Tag>
+                <Box display={"flex"}>
+                  <Heading
+                    id={`list-heading-${_list._id}`}
+                    as="h4"
+                    size={"md"}
+                    pr={"1em"}
+                    color={colorMode === "light" ? "gray.600" : "gray.300"}
+                  >
+                    {_list.title}
+                  </Heading>
+                  <Tag>{notes.length}</Tag>
+                </Box>
+                <Box>
+                  <ArrowForwardIcon
+                    boxSize={6}
+                    color={colorMode === "light" ? "gray.700" : "gray.500"}
+                  />
+                </Box>
               </Box>
             );
           })}

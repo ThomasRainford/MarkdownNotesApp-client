@@ -1,9 +1,9 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
 import Collections from "./Collections";
-import { mockCollectionsProps } from "./Collections.mocks";
+import { mockBaseTemplateProps } from "./Collections.mocks";
 
 export default {
-  title: "my-notes/collection-view/Collections",
+  title: "my-notes/collection-view/collections/Collections",
   component: Collections,
   // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
   argTypes: {},
@@ -16,5 +16,5 @@ export const Base = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 
 Base.args = {
-  ...mockCollectionsProps.base,
+  ...mockBaseTemplateProps.base,
 };
