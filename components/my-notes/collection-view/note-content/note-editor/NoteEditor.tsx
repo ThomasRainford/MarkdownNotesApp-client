@@ -1,3 +1,4 @@
+import { useColorMode } from "@chakra-ui/react";
 import "@uiw/react-markdown-preview/markdown.css";
 import "@uiw/react-md-editor/markdown-editor.css";
 import dynamic from "next/dynamic";
@@ -12,8 +13,10 @@ export interface Props {
 const NoteEditor = ({ markdownText }: Props): JSX.Element => {
   const [value, setValue] = useState<string | undefined>(markdownText);
 
+  const { colorMode } = useColorMode();
+
   return (
-    <div data-color-mode="dark">
+    <div data-color-mode={colorMode}>
       <div className="wmde-markdown-var">
         <MDEditor value={value} onChange={setValue} />
       </div>
