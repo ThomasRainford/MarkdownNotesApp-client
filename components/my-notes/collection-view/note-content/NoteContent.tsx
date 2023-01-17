@@ -7,6 +7,7 @@ import {
   LocalStorageContextType,
   LocalStorageKeys,
 } from "../../../../utils/types/types";
+import NoteEditor from "./note-editor/NoteEditor";
 
 const NoteContentHeader = ({
   selectedNote,
@@ -63,7 +64,7 @@ const NoteContent = (): JSX.Element => {
         <Box pt={"1em"} px={"1em"}>
           <NoteContentHeader selectedNote={_selectedNote} note={note} />
           <Box mt="1.5em">
-            <p>{note.body}</p>
+            <NoteEditor markdownText={note.body} />
           </Box>
         </Box>
       )}

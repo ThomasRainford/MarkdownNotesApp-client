@@ -45,7 +45,6 @@ const Notes = (): JSX.Element => {
                 bg: colorMode === "light" ? "gray.200" : "gray.600",
               }}
               onClick={() => {
-                console.log("clicked note ", note);
                 setSelecteNote(
                   JSON.stringify({
                     note,
