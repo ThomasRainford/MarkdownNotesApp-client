@@ -1,26 +1,18 @@
-import { useColorMode } from "@chakra-ui/react";
+import { Box, useColorMode } from "@chakra-ui/react";
 import "@uiw/react-markdown-preview/markdown.css";
 import "@uiw/react-md-editor/markdown-editor.css";
-import dynamic from "next/dynamic";
-import { useState } from "react";
-
-const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: false });
 
 export interface Props {
   markdownText: string;
 }
 
 const NoteEditor = ({ markdownText }: Props): JSX.Element => {
-  const [value, setValue] = useState<string | undefined>(markdownText);
-
   const { colorMode } = useColorMode();
 
   return (
-    <div data-color-mode={colorMode}>
-      <div className="wmde-markdown-var">
-        <MDEditor value={value} onChange={setValue} />
-      </div>
-    </div>
+    <Box height={"100%"} data-color-mode={colorMode}>
+      <Box height={"100%"}>{markdownText}</Box>
+    </Box>
   );
 };
 
