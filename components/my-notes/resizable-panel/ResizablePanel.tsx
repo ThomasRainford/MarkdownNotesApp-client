@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { CSSProperties, ReactNode } from "react";
 import SplitPane, { Size } from "react-split-pane";
 
 export interface Props {
@@ -7,6 +7,7 @@ export interface Props {
   minSize?: Size;
   maxSize?: Size;
   defaultSize?: Size;
+  style?: CSSProperties;
 }
 
 const ResizeablePanel = ({
@@ -15,11 +16,13 @@ const ResizeablePanel = ({
   minSize,
   maxSize,
   defaultSize,
+  style,
 }: Props): JSX.Element => {
   return (
     // @ts-ignore
     <SplitPane
-      style={{ height: "100vh" }}
+      className="split-pane"
+      style={style}
       minSize={minSize}
       maxSize={maxSize}
       defaultSize={defaultSize}

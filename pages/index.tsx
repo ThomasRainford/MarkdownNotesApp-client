@@ -15,8 +15,8 @@ const Home: NextPageWithLayout = () => {
   );
 };
 
-export default withUrqlClient(createUrqlClient)(Home);
-
 Home.getLayout = (page) => {
   return <PrimaryLayout>{page}</PrimaryLayout>;
 };
+
+export default withUrqlClient(createUrqlClient)(Home);

@@ -16,6 +16,7 @@ const RightPane = () => {
         content={
           <Box
             h={"100%"}
+            className="note-content-container"
             backgroundColor={useColorModeValue("gray.200", "gray.600")}
           >
             <NoteContent />
@@ -24,6 +25,18 @@ const RightPane = () => {
         minSize={150}
         maxSize={400}
         defaultSize={270}
+        style={{
+          display: "flex",
+          flex: "1 1 0%",
+          height: "100%",
+          position: "absolute",
+          outline: "none",
+          overflow: "hidden",
+          userSelect: "text",
+          flexDirection: "row",
+          left: "0px",
+          right: "0px",
+        }}
       />
     </Box>
   );
@@ -31,13 +44,32 @@ const RightPane = () => {
 
 const CollectionView = (): JSX.Element => {
   return (
-    <ResizeablePanel
-      panel={<LeftPane />}
-      content={<RightPane />}
-      minSize={260}
-      maxSize={400}
-      defaultSize={300}
-    />
+    <Box
+      className="collection-view"
+      h={"calc(100% - 64px)"}
+      overflowY={"hidden"}
+    >
+      <ResizeablePanel
+        panel={<LeftPane />}
+        content={<RightPane />}
+        minSize={260}
+        maxSize={400}
+        defaultSize={300}
+        style={{
+          display: "flex",
+          flex: "1 1 0%",
+          height: "calc(100% - 64px)",
+          position: "absolute",
+          outline: "none",
+          overflow: "hidden",
+          overflowY: "hidden",
+          userSelect: "text",
+          flexDirection: "row",
+          left: "0px",
+          right: "0px",
+        }}
+      />
+    </Box>
   );
 };
 

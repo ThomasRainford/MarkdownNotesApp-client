@@ -20,8 +20,8 @@ const Login: NextPageWithLayout = () => {
   );
 };
 
-export default withUrqlClient(createUrqlClient)(Login);
-
 Login.getLayout = (page) => {
   return <PrimaryLayout>{page}</PrimaryLayout>;
 };
+
+export default withUrqlClient(createUrqlClient)(Login);
