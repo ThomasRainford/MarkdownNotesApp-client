@@ -57,13 +57,13 @@ const NoteContent = (): JSX.Element => {
   const note = _selectedNote.note;
 
   return (
-    <Box h={"100%"}>
+    <Box className="note-content" h={"100%"}>
       {!note ? (
         <Box>No Note Selected...</Box>
       ) : (
         <Box pt={"1em"} px={"1em"} h={"100%"}>
           <NoteContentHeader selectedNote={_selectedNote} note={note} />
-          <Box mt="1.5em" h={"100%"}>
+          <Box className="node-editor-container" height={"100%"} mt="1.5em">
             <NoteEditor markdownText={note.body} />
           </Box>
         </Box>

@@ -1,13 +1,11 @@
 import { defaultKeymap } from "@codemirror/commands";
-import { highlightActiveLineGutter, lineNumbers } from "@codemirror/gutter";
-import {
-  defaultHighlightStyle,
-  HighlightStyle,
-  tags,
-} from "@codemirror/highlight";
 import { history, historyKeymap } from "@codemirror/history";
 import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
-import { indentOnInput } from "@codemirror/language";
+import {
+  HighlightStyle,
+  indentOnInput,
+  syntaxHighlighting,
+} from "@codemirror/language";
 import { languages } from "@codemirror/language-data";
 import { bracketMatching } from "@codemirror/matchbrackets";
 import { EditorState } from "@codemirror/state";
@@ -15,19 +13,23 @@ import { oneDark } from "@codemirror/theme-one-dark";
 import {
   EditorView,
   highlightActiveLine,
+  highlightActiveLineGutter,
   KeyBinding,
   keymap,
+  lineNumbers,
 } from "@codemirror/view";
+import { tags } from "@lezer/highlight";
 import { useEffect, useRef, useState } from "react";
 
 export const transparentTheme = EditorView.theme({
   "&": {
     backgroundColor: "transparent !important",
-    height: "100%",
+    fontSize: "1.25em",
   },
+  ".cm-scroller": { overflow: "auto" },
 });
 
-const syntaxHighlighting = HighlightStyle.define([
+const mySyntaxHighlighting = HighlightStyle.define([
   {
     tag: tags.heading1,
     fontSize: "1.6em",
@@ -44,8 +46,6 @@ const syntaxHighlighting = HighlightStyle.define([
     fontWeight: "bold",
   },
 ]);
-
-import type React from "react";
 
 interface Props {
   initialDoc: string;
@@ -71,7 +71,6 @@ const useCodeMirror = <T extends Element>(
         history(),
         indentOnInput(),
         bracketMatching(),
-        defaultHighlightStyle.fallback,
         highlightActiveLine(),
         markdown({
           base: markdownLanguage,
@@ -80,7 +79,7 @@ const useCodeMirror = <T extends Element>(
         }),
         oneDark,
         transparentTheme,
-        syntaxHighlighting,
+        syntaxHighlighting(mySyntaxHighlighting),
         EditorView.lineWrapping,
         EditorView.updateListener.of((update) => {
           if (update.changes) {
@@ -95,6 +94,8 @@ const useCodeMirror = <T extends Element>(
       parent: refContainer.current,
     });
     setEditorView(view);
+
+    return () => view.destroy();
   }, [refContainer]);
 
   return [refContainer, editorView];

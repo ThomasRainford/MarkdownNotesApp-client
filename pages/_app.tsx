@@ -1,5 +1,6 @@
 import { ChakraProvider } from "@chakra-ui/react";
 import type { AppProps } from "next/app";
+import "../styles/editor.css";
 import "../styles/globals.css";
 import "../styles/resizablepanel.css";
 import { theme } from "../styles/theme";
