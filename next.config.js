@@ -3,13 +3,10 @@ const path = require("path");
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  webpack: (
-    config,
-    { buildId, dev, isServer, defaultLoaders, nextRuntime, webpack }
-  ) => {
+  webpack: (config) => {
     config.resolve.alias["@codemirror/state"] = path.resolve(
       __dirname,
-      "node_modules/@codemirror/state"
+      "/node_modules/@codemirror/state/dist/index.cjs"
     );
     return config;
   },

@@ -1,13 +1,12 @@
-import { defaultKeymap } from "@codemirror/commands";
-import { history, historyKeymap } from "@codemirror/history";
+import { defaultKeymap, history, historyKeymap } from "@codemirror/commands";
 import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
 import {
+  bracketMatching,
   HighlightStyle,
   indentOnInput,
   syntaxHighlighting,
 } from "@codemirror/language";
 import { languages } from "@codemirror/language-data";
-import { bracketMatching } from "@codemirror/matchbrackets";
 import { EditorState } from "@codemirror/state";
 import { oneDark } from "@codemirror/theme-one-dark";
 import {
