@@ -25,8 +25,22 @@ const NoteEditor = ({ markdownText }: Props): JSX.Element => {
   useEffect(() => {
     if (editorView) {
       // Do nothing for now
+      replaceEditorContent(markdownText);
     }
-  }, [editorView]);
+  }, [editorView, markdownText]);
+
+  const replaceEditorContent = (text: string) => {
+    const transaction = editorView?.state.update({
+      changes: {
+        from: 0,
+        to: editorView?.state?.doc.length,
+        insert: text,
+      },
+    });
+    if (transaction) {
+      editorView?.dispatch(transaction);
+    }
+  };
 
   return (
     <Box
