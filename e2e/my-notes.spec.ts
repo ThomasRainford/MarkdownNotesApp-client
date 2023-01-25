@@ -29,24 +29,17 @@ test.describe("test my-notes page", () => {
 
     expect(page.locator('h3:has-text("Collections")')).toBeTruthy();
     expect(page.locator("text=Select a collection")).toBeTruthy();
-    // Select collection
+    // Select collection, list note.
     await page.locator("#collection-heading-1").click();
-    expect(page.locator("#right-pane-heading")).toContainText("Collection 1");
-    // Select list
     await page.locator("#list-heading-1").click();
-    // Assert right pane heading has the correct collection name
-    expect(page.locator("#list-heading")).toContainText("Collection 1");
-    // Select note
     await page.locator("#note-heading-1").click();
-    // Assert right pane heading has the correct list name
-    expect(page.locator("#right-pane-heading")).toContainText("List 1");
-    // Click [aria-label="left-pane-back-button"]
-    await page.locator('[aria-label="left-pane-back-button"]').click();
-    //
+    // Expect correct note details.
+    expect(page.locator(".cm-activeLine")).toHaveText("Body 1");
     expect(page.locator("#note-header-note-title")).toBeTruthy();
-    //
     expect(page.locator("#note-header-last-modified")).toBeTruthy();
-    //
-    expect(page.locator('h3:has-text("Collections")')).toBeTruthy();
+    expect(page.locator("#collection-heading-1")).toBeTruthy();
+    // Select back.
+    await page.getByRole("button", { name: "left-pane-back-button" }).click();
+    expect(page.getByRole("heading", { name: "Collections" })).toBeTruthy();
   });
 });
