@@ -1,4 +1,9 @@
-import { defaultKeymap, history, historyKeymap } from "@codemirror/commands";
+import {
+  defaultKeymap,
+  history,
+  historyKeymap,
+  indentWithTab,
+} from "@codemirror/commands";
 import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
 import {
   bracketMatching,
@@ -64,7 +69,11 @@ const useCodeMirror = <T extends Element>(
     const startState = EditorState.create({
       doc: props.initialDoc,
       extensions: [
-        keymap.of([...defaultKeymap, ...historyKeymap] as KeyBinding[]),
+        keymap.of([
+          ...defaultKeymap,
+          ...historyKeymap,
+          indentWithTab,
+        ] as KeyBinding[]),
         lineNumbers(),
         highlightActiveLineGutter(),
         history(),
