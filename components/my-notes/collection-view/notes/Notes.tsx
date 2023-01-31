@@ -111,7 +111,7 @@ const Notes = (): JSX.Element => {
               {
                 _id: !notes ? 1 : notes[notes.length - 1]._id + 1,
                 title,
-                body: "",
+                body: "# New note",
                 updatedAt: new Date().toISOString(),
               },
             ]);
