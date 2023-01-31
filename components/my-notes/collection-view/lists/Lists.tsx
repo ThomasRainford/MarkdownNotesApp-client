@@ -8,6 +8,7 @@ import {
   LocalStorageContextType,
   LocalStorageKeys,
 } from "../../../../utils/types/types";
+import Create from "../../create/Create";
 
 const Lists = (): JSX.Element => {
   const { colorMode } = useColorMode();
@@ -25,49 +26,54 @@ const Lists = (): JSX.Element => {
 
   return (
     <Box>
-      {!lists ? null : (
-        <>
-          {lists.map((_list: any) => {
-            const notes = _list.notes;
-            return (
-              <Box
-                key={_list._id}
-                display={"flex"}
-                justifyContent={"space-between"}
-                pl={"1.5em"}
-                pr={"1em"}
-                pt={"1em"}
-                pb={"1em"}
-                _hover={{
-                  bg: colorMode === "light" ? "gray.200" : "gray.600",
-                }}
-                border={_list._id === list?._id ? "1px" : ""}
-                borderColor={_list._id === list?._id ? "gray.200" : "gray.800"}
-                onClick={() => setSelectedList(JSON.stringify(_list))}
-              >
-                <Box display={"flex"}>
-                  <Heading
-                    id={`list-heading-${_list._id}`}
-                    as="h4"
-                    size={"md"}
-                    pr={"1em"}
-                    color={colorMode === "light" ? "gray.600" : "gray.300"}
-                  >
-                    {_list.title}
-                  </Heading>
-                  <Tag>{notes.length}</Tag>
+      <Box>
+        {!lists ? null : (
+          <>
+            {lists.map((_list: any) => {
+              const notes = _list.notes;
+              return (
+                <Box
+                  key={_list._id}
+                  display={"flex"}
+                  justifyContent={"space-between"}
+                  pl={"1.5em"}
+                  pr={"1em"}
+                  pt={"1em"}
+                  pb={"1em"}
+                  _hover={{
+                    bg: colorMode === "light" ? "gray.200" : "gray.600",
+                  }}
+                  border={_list._id === list?._id ? "1px" : ""}
+                  borderColor={
+                    _list._id === list?._id ? "gray.200" : "gray.800"
+                  }
+                  onClick={() => setSelectedList(JSON.stringify(_list))}
+                >
+                  <Box display={"flex"}>
+                    <Heading
+                      id={`list-heading-${_list._id}`}
+                      as="h4"
+                      size={"md"}
+                      pr={"1em"}
+                      color={colorMode === "light" ? "gray.600" : "gray.300"}
+                    >
+                      {_list.title}
+                    </Heading>
+                    <Tag>{notes.length}</Tag>
+                  </Box>
+                  <Box>
+                    <ArrowForwardIcon
+                      boxSize={6}
+                      color={colorMode === "light" ? "gray.700" : "gray.500"}
+                    />
+                  </Box>
                 </Box>
-                <Box>
-                  <ArrowForwardIcon
-                    boxSize={6}
-                    color={colorMode === "light" ? "gray.700" : "gray.500"}
-                  />
-                </Box>
-              </Box>
-            );
-          })}
-        </>
-      )}
+              );
+            })}
+          </>
+        )}
+      </Box>
+      <Create type={"list"} tooltipLabel={"Add List"} onClick={() => {}} />
     </Box>
   );
 };

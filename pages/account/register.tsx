@@ -20,8 +20,8 @@ const Register: NextPageWithLayout = () => {
   );
 };
 
-export default withUrqlClient(createUrqlClient)(Register);
-
 Register.getLayout = (page) => {
   return <PrimaryLayout>{page}</PrimaryLayout>;
 };
+
+export default withUrqlClient(createUrqlClient)(Register);

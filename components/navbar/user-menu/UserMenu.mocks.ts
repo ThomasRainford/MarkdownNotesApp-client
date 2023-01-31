@@ -18,6 +18,6 @@ const base: Props = {
   },
 };
 
-export const mockBaseTemplateProps = {
+export const mockUserMenuProps = {
   base,
 };

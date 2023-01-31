@@ -2,6 +2,6 @@ import { Props } from "./RegisterForm";
 
 const base: Props = {};
 
-export const mockBaseTemplateProps = {
+export const mockRegisterFormProps = {
   base,
 };

@@ -1,20 +1,20 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
-import NoteContent from "./NoteContent";
-import { mockNoteContentProps } from "./NoteContent.mocks";
+import Create, { Props } from "./Create";
+import { mockCreateProps } from "./Create.mocks";
 
 export default {
-  title: "my-notes/collection-view/note-content/NoteContent",
-  component: NoteContent,
+  title: "my-notes/create/Create",
+  component: Create,
   // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
   argTypes: {},
-} as ComponentMeta<typeof NoteContent>;
+} as ComponentMeta<typeof Create>;
 
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
-const Template: ComponentStory<typeof NoteContent> = () => <NoteContent />;
+const Template: ComponentStory<typeof Create> = (args) => <Create {...args} />;
 
 export const Base = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 
 Base.args = {
-  ...mockNoteContentProps.base,
-};
+  ...mockCreateProps.base,
+} as Props;

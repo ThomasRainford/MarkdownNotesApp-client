@@ -17,6 +17,6 @@ const base: Props = {
   },
 };
 
-export const mockBaseTemplateProps = {
+export const mockNavBarProps = {
   base,
 };

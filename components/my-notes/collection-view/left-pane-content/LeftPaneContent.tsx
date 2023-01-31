@@ -1,11 +1,5 @@
-import { AddIcon, ArrowBackIcon } from "@chakra-ui/icons";
-import {
-  Box,
-  Heading,
-  IconButton,
-  Tooltip,
-  useColorMode,
-} from "@chakra-ui/react";
+import { ArrowBackIcon } from "@chakra-ui/icons";
+import { Box, Heading, IconButton, useColorMode } from "@chakra-ui/react";
 import { ReactNode, useEffect, useState } from "react";
 import { SelectedCollectionContext } from "../../../../contexts/SelectedCollectionContext";
 import { SelectedListContext } from "../../../../contexts/SelectedListContext";
@@ -50,12 +44,7 @@ const LeftPaneContent = (): JSX.Element => {
       backgroundColor={colorMode === "light" ? "gray.400" : "gray.800"}
     >
       <Box h={"50px"} />
-      <Box
-        display={"flex"}
-        justifyContent="space-between"
-        px={"1em"}
-        py={"1em"}
-      >
+      <Box display={"flex"} px={"1em"} py={"1em"}>
         {selectedList !== "" ? (
           <Box visibility={selectedList !== "" ? "visible" : "hidden"}>
             <IconButton
@@ -81,36 +70,15 @@ const LeftPaneContent = (): JSX.Element => {
           ) : (
             <Heading
               id="list-heading"
-              as="h3"
+              as="h5"
               size={"lg"}
               fontWeight="normal"
               textColor={colorMode === "light" ? "gray.700" : "gray.400"}
+              pl={"1em"}
             >
               {collection.title}
             </Heading>
           )}
-        </Box>
-        <Box display={"flex"} alignItems={"center"}>
-          <Tooltip
-            hasArrow
-            placement="top"
-            label={selectedList === "" ? "Add Collection" : "Add List"}
-            aria-label="add-cl"
-          >
-            <IconButton
-              colorScheme="teal"
-              variant={"ghost"}
-              aria-label="Search database"
-              icon={<AddIcon boxSize={5} />}
-              onClick={() => {
-                if (selectedList === "") {
-                  // Add new collection
-                } else {
-                  // Add new list
-                }
-              }}
-            />
-          </Tooltip>
         </Box>
       </Box>
       {content}

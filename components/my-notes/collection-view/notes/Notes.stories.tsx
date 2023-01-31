@@ -2,7 +2,7 @@ import { ComponentMeta, ComponentStory } from "@storybook/react";
 import { testCollections } from "../../../../test-utils/testData";
 import { LocalStorageKeys } from "../../../../utils/types/types";
 import Notes from "./Notes";
-import { mockBaseTemplateProps } from "./Notes.mocks";
+import { mockNotesProps } from "./Notes.mocks";
 
 export default {
   title: "my-notes/collection-view/notes/Notes",
@@ -27,5 +27,5 @@ export const Base = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 
 Base.args = {
-  ...mockBaseTemplateProps.base,
+  ...mockNotesProps.base,
 };

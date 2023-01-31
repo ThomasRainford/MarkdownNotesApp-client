@@ -1,6 +1,6 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
 import RegisterForm, { Props } from "./RegisterForm";
-import { mockBaseTemplateProps } from "./RegisterForm.mocks";
+import { mockRegisterFormProps } from "./RegisterForm.mocks";
 
 export default {
   title: "register/register-form/RegisterForm",
@@ -16,5 +16,5 @@ export const Base = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 
 Base.args = {
-  ...mockBaseTemplateProps.base,
+  ...mockRegisterFormProps.base,
 } as Props;
