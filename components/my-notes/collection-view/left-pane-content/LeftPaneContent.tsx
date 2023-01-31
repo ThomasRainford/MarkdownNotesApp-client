@@ -64,6 +64,7 @@ const LeftPaneContent = (): JSX.Element => {
               size={"lg"}
               fontWeight="normal"
               textColor={colorMode === "light" ? "gray.700" : "gray.400"}
+              h={"40px"}
             >
               Collections
             </Heading>

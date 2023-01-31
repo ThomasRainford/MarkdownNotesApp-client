@@ -22,7 +22,7 @@ const RightPane = () => {
             <NoteContent />
           </Box>
         }
-        minSize={150}
+        minSize={210}
         maxSize={400}
         defaultSize={270}
         style={{

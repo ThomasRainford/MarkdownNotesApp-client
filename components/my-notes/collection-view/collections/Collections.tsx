@@ -10,9 +10,12 @@ import {
   LocalStorageKeys,
 } from "../../../../utils/types/types";
 import Create from "../../create/Create";
+import NewItemInput from "../../new-item-input/NewItemInput";
 
 const Collections = (): JSX.Element => {
-  const [collections] = useState(testCollections);
+  // TODO: Should get Collections from API.
+  const [collections, setCollections] = useState(testCollections);
+  const [isAddingNewCollection, setIsAddingNewCollection] = useState(false);
   const { colorMode } = useColorMode();
   const [selectedCollection, setSelectedCollection] = useLocalStorageValue(
     SelectedCollectionContext,
@@ -63,11 +66,34 @@ const Collections = (): JSX.Element => {
           );
         })}
       </Box>
-      <Create
-        type={"collection"}
-        tooltipLabel={"Add Collection"}
-        onClick={() => {}}
-      />
+      {/* Display new collection input when adding new collection */}
+      {isAddingNewCollection && (
+        <NewItemInput
+          type="collection"
+          confirmAdd={(title: string) => {
+            setIsAddingNewCollection(false);
+            setCollections([
+              ...collections,
+              {
+                _id: collections[collections.length - 1]._id + 1,
+                title,
+                upvotes: 0,
+                lists: [],
+              },
+            ]);
+          }}
+        />
+      )}
+      {/* Display add collection button when not adding new collection */}
+      {!isAddingNewCollection && (
+        <Create
+          type={"collection"}
+          tooltipLabel={"Add Collection"}
+          onClick={() => {
+            setIsAddingNewCollection(true);
+          }}
+        />
+      )}
     </Box>
   );
 };

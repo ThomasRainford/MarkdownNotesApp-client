@@ -1,7 +1,9 @@
 import { ArrowForwardIcon } from "@chakra-ui/icons";
 import { Box, Heading, Tag, useColorMode } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
 import { SelectedCollectionContext } from "../../../../contexts/SelectedCollectionContext";
 import { SelectedListContext } from "../../../../contexts/SelectedListContext";
+import { testCollections } from "../../../../test-utils/testData";
 import { getLocalStorageValue } from "../../../../utils/getLocalStorageValue";
 import { useLocalStorageValue } from "../../../../utils/hooks/useLocalStorageValue";
 import {
@@ -9,8 +11,10 @@ import {
   LocalStorageKeys,
 } from "../../../../utils/types/types";
 import Create from "../../create/Create";
+import NewItemInput from "../../new-item-input/NewItemInput";
 
 const Lists = (): JSX.Element => {
+  const [isAddingNewList, setIsAddingNewList] = useState(false);
   const { colorMode } = useColorMode();
   const [selectedCollection] = useLocalStorageValue(
     SelectedCollectionContext,
@@ -22,7 +26,14 @@ const Lists = (): JSX.Element => {
   ) as LocalStorageContextType;
   const collection = getLocalStorageValue(selectedCollection);
   const list = getLocalStorageValue(selectedList);
-  const lists = collection?.lists;
+
+  // TODO: Should get Lists from API.
+  const [lists, setLists] = useState(
+    testCollections.find((c) => c._id === collection._id)?.lists
+  );
+  useEffect(() => {
+    setLists(testCollections.find((c) => c._id === collection._id)?.lists);
+  }, [JSON.stringify(collection)]);
 
   return (
     <Box>
@@ -73,7 +84,31 @@ const Lists = (): JSX.Element => {
           </>
         )}
       </Box>
-      <Create type={"list"} tooltipLabel={"Add List"} onClick={() => {}} />
+      {isAddingNewList && (
+        <NewItemInput
+          type="list"
+          confirmAdd={(title: string) => {
+            setIsAddingNewList(false);
+            setLists([
+              ...(lists || []),
+              {
+                _id: !lists ? 1 : lists[lists.length - 1]._id + 1,
+                title,
+                notes: [],
+              },
+            ]);
+          }}
+        />
+      )}
+      {!isAddingNewList && (
+        <Create
+          type={"list"}
+          tooltipLabel={"Add List"}
+          onClick={() => {
+            setIsAddingNewList(true);
+          }}
+        />
+      )}
     </Box>
   );
 };
