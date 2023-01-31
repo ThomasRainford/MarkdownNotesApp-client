@@ -27,7 +27,7 @@ const NoteEditor = ({ markdownText }: Props): JSX.Element => {
       // Do nothing for now
       replaceEditorContent(markdownText);
     }
-  }, [editorView, markdownText]);
+  }, [editorView, markdownText, replaceEditorContent]);
 
   const replaceEditorContent = (text: string) => {
     const transaction = editorView?.state.update({

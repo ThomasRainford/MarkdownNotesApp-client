@@ -33,7 +33,7 @@ const Lists = (): JSX.Element => {
   );
   useEffect(() => {
     setLists(testCollections.find((c) => c._id === collection._id)?.lists);
-  }, [JSON.stringify(collection)]);
+  }, [JSON.stringify(collection), collection._id]);
 
   return (
     <Box>

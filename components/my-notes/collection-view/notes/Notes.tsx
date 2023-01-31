@@ -44,7 +44,7 @@ const Notes = (): JSX.Element => {
         .find((c) => c._id === collection._id)
         ?.lists.find((l) => l._id === list._id)?.notes
     );
-  }, [JSON.stringify(list)]);
+  }, [JSON.stringify(list), collection._id]);
 
   return (
     <Box>
