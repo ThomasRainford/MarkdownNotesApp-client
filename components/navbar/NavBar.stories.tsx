@@ -1,6 +1,6 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
 import Navbar, { Props } from "./NavBar";
-import { mockBaseTemplateProps } from "./NavBar.mocks";
+import { mockNavBarProps } from "./NavBar.mocks";
 
 export default {
   title: "navbar/Navbar",
@@ -16,5 +16,5 @@ export const Base = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 
 Base.args = {
-  ...mockBaseTemplateProps.base,
+  ...mockNavBarProps.base,
 } as Props;

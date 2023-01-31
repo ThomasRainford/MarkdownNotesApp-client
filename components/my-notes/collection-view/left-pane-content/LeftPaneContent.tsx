@@ -1,11 +1,5 @@
-import { AddIcon, ArrowBackIcon } from "@chakra-ui/icons";
-import {
-  Box,
-  Heading,
-  IconButton,
-  Tooltip,
-  useColorMode,
-} from "@chakra-ui/react";
+import { ArrowBackIcon } from "@chakra-ui/icons";
+import { Box, Heading, IconButton, useColorMode } from "@chakra-ui/react";
 import { ReactNode, useEffect, useState } from "react";
 import { SelectedCollectionContext } from "../../../../contexts/SelectedCollectionContext";
 import { SelectedListContext } from "../../../../contexts/SelectedListContext";
@@ -88,34 +82,6 @@ const LeftPaneContent = (): JSX.Element => {
         </Box>
       </Box>
       {content}
-      <Box
-        display={"flex"}
-        alignItems={"center"}
-        justifyContent="center"
-        mt={"1em"}
-      >
-        <Tooltip
-          hasArrow
-          placement="top"
-          label={selectedList === "" ? "Add Collection" : "Add List"}
-          aria-label="add-cl"
-        >
-          <IconButton
-            colorScheme="teal"
-            variant={"ghost"}
-            aria-label="Search database"
-            icon={<AddIcon boxSize={5} />}
-            w={"100%"}
-            onClick={() => {
-              if (selectedList === "") {
-                // Add new collection
-              } else {
-                // Add new list
-              }
-            }}
-          />
-        </Tooltip>
-      </Box>
     </Box>
   );
 };

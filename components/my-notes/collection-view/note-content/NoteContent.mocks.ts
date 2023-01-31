@@ -1,5 +1,5 @@
 const base = {};
 
-export const mockBaseTemplateProps = {
+export const mockNoteContentProps = {
   base,
 };

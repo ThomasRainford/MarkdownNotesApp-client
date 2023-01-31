@@ -1,6 +1,6 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
 import NoteEditor, { Props } from "./NoteEditor";
-import { mockBaseTemplateProps } from "./NoteEditor.mocks";
+import { mockNoteEditorProps } from "./NoteEditor.mocks";
 
 export default {
   title: "my-notes/collection-view/note-content/note-editor/NoteEditor",
@@ -18,5 +18,5 @@ export const Base = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 
 Base.args = {
-  ...mockBaseTemplateProps.base,
+  ...mockNoteEditorProps.base,
 } as Props;

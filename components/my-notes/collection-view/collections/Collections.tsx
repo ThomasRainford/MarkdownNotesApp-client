@@ -9,6 +9,7 @@ import {
   LocalStorageContextType,
   LocalStorageKeys,
 } from "../../../../utils/types/types";
+import Create from "../../create/Create";
 
 const Collections = (): JSX.Element => {
   const [collections] = useState(testCollections);
@@ -25,41 +26,48 @@ const Collections = (): JSX.Element => {
 
   return (
     <Box>
-      {collections.map((_collection) => {
-        const lists = _collection.lists;
-        return (
-          <Box
-            key={_collection._id}
-            display={"flex"}
-            justifyContent="space-between"
-            pl={"1.5em"}
-            pr={"1em"}
-            pt={"1em"}
-            pb={"1em"}
-            _hover={{
-              bg: colorMode === "light" ? "gray.200" : "gray.600",
-            }}
-            border={"1px"}
-            borderColor={
-              _collection._id === collection?._id ? "gray.200" : "gray.800"
-            }
-            onClick={() => {
-              setSelectedCollection(JSON.stringify(_collection));
-              setSelectedList("");
-            }}
-          >
-            <Heading
-              id={`collection-heading-${_collection._id}`}
-              as="h4"
-              size={"md"}
-              color={colorMode === "light" ? "gray.700" : "gray.300"}
+      <Box>
+        {collections.map((_collection) => {
+          const lists = _collection.lists;
+          return (
+            <Box
+              key={_collection._id}
+              display={"flex"}
+              justifyContent="space-between"
+              pl={"1.5em"}
+              pr={"1em"}
+              pt={"1em"}
+              pb={"1em"}
+              _hover={{
+                bg: colorMode === "light" ? "gray.200" : "gray.600",
+              }}
+              border={"1px"}
+              borderColor={
+                _collection._id === collection?._id ? "gray.200" : "gray.800"
+              }
+              onClick={() => {
+                setSelectedCollection(JSON.stringify(_collection));
+                setSelectedList("");
+              }}
             >
-              {_collection.title}
-            </Heading>
-            <Tag>{lists.length}</Tag>
-          </Box>
-        );
-      })}
+              <Heading
+                id={`collection-heading-${_collection._id}`}
+                as="h4"
+                size={"md"}
+                color={colorMode === "light" ? "gray.700" : "gray.300"}
+              >
+                {_collection.title}
+              </Heading>
+              <Tag>{lists.length}</Tag>
+            </Box>
+          );
+        })}
+      </Box>
+      <Create
+        type={"collection"}
+        tooltipLabel={"Add Collection"}
+        onClick={() => {}}
+      />
     </Box>
   );
 };

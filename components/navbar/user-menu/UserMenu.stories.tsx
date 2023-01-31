@@ -1,6 +1,6 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
 import BaseTemplate, { Props } from "./UserMenu";
-import { mockBaseTemplateProps } from "./UserMenu.mocks";
+import { mockUserMenuProps } from "./UserMenu.mocks";
 
 export default {
   title: "home/user-menu",
@@ -18,5 +18,5 @@ export const Base = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 
 Base.args = {
-  ...mockBaseTemplateProps.base,
+  ...mockUserMenuProps.base,
 } as Props;
