@@ -1,7 +1,10 @@
 import { Props } from "./NewItemInput";
 
 const base: Props = {
-  children: "Hello World!",
+  type: "collection",
+  confirmAdd: (title: string): void => {
+    return;
+  },
 };
 
 export const mockNewItemInputProps = {
