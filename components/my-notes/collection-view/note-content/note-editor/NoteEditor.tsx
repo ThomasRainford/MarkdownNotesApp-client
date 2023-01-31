@@ -22,25 +22,28 @@ const NoteEditor = ({ markdownText }: Props): JSX.Element => {
     onChange: handleChange,
   });
 
+  const replaceEditorContent = useCallback(
+    (text: string) => {
+      const transaction = editorView?.state.update({
+        changes: {
+          from: 0,
+          to: editorView?.state?.doc.length,
+          insert: text,
+        },
+      });
+      if (transaction) {
+        editorView?.dispatch(transaction);
+      }
+    },
+    [editorView]
+  );
+
   useEffect(() => {
     if (editorView) {
       // Do nothing for now
       replaceEditorContent(markdownText);
     }
   }, [editorView, markdownText, replaceEditorContent]);
-
-  const replaceEditorContent = (text: string) => {
-    const transaction = editorView?.state.update({
-      changes: {
-        from: 0,
-        to: editorView?.state?.doc.length,
-        insert: text,
-      },
-    });
-    if (transaction) {
-      editorView?.dispatch(transaction);
-    }
-  };
 
   return (
     <Box
