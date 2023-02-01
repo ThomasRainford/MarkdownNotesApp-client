@@ -9,7 +9,7 @@ import {
   LocalStorageContextType,
   LocalStorageKeys,
 } from "../../../../utils/types/types";
-import Create from "../../create/Create";
+import AddOrCancelAddItem from "../../add-or-cancel-add-item/AddOrCancelAddItem";
 import NewItemInput from "../../new-item-input/NewItemInput";
 
 const Collections = (): JSX.Element => {
@@ -85,13 +85,23 @@ const Collections = (): JSX.Element => {
         />
       )}
       {/* Display add collection button when not adding new collection */}
-      {!isAddingNewCollection && (
-        <Create
+      {!isAddingNewCollection ? (
+        <AddOrCancelAddItem
           type={"collection"}
           tooltipLabel={"Add Collection"}
           onClick={() => {
             setIsAddingNewCollection(true);
           }}
+          iconType={"add"}
+        />
+      ) : (
+        <AddOrCancelAddItem
+          type={"collection"}
+          tooltipLabel={"Cancel"}
+          onClick={() => {
+            setIsAddingNewCollection(false);
+          }}
+          iconType={"cancel"}
         />
       )}
     </Box>

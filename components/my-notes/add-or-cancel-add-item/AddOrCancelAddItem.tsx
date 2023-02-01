@@ -1,4 +1,4 @@
-import { AddIcon } from "@chakra-ui/icons";
+import { AddIcon, CloseIcon } from "@chakra-ui/icons";
 import { Box, IconButton, Tooltip } from "@chakra-ui/react";
 import { MouseEventHandler } from "react";
 
@@ -6,9 +6,15 @@ export interface Props {
   type: "collection" | "list" | "note";
   tooltipLabel: string;
   onClick: MouseEventHandler<HTMLButtonElement> | undefined;
+  iconType: "add" | "cancel";
 }
 
-const Create = ({ type, tooltipLabel, onClick }: Props): JSX.Element => {
+const AddOrCancelAddItem = ({
+  type,
+  tooltipLabel,
+  onClick,
+  iconType,
+}: Props): JSX.Element => {
   return (
     <Box
       display={"flex"}
@@ -26,7 +32,13 @@ const Create = ({ type, tooltipLabel, onClick }: Props): JSX.Element => {
           colorScheme="teal"
           variant={"ghost"}
           aria-label={`add-${type}`}
-          icon={<AddIcon boxSize={5} />}
+          icon={
+            iconType === "add" ? (
+              <AddIcon boxSize={5} />
+            ) : (
+              <CloseIcon boxSize={5} />
+            )
+          }
           w={"100%"}
           onClick={onClick}
         />
@@ -35,4 +47,4 @@ const Create = ({ type, tooltipLabel, onClick }: Props): JSX.Element => {
   );
 };
 
-export default Create;
+export default AddOrCancelAddItem;

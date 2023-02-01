@@ -10,7 +10,7 @@ import {
   LocalStorageContextType,
   LocalStorageKeys,
 } from "../../../../utils/types/types";
-import Create from "../../create/Create";
+import AddOrCancelAddItem from "../../add-or-cancel-add-item/AddOrCancelAddItem";
 import NewItemInput from "../../new-item-input/NewItemInput";
 
 const Lists = (): JSX.Element => {
@@ -100,13 +100,23 @@ const Lists = (): JSX.Element => {
           }}
         />
       )}
-      {!isAddingNewList && (
-        <Create
+      {!isAddingNewList ? (
+        <AddOrCancelAddItem
           type={"list"}
           tooltipLabel={"Add List"}
           onClick={() => {
             setIsAddingNewList(true);
           }}
+          iconType={"add"}
+        />
+      ) : (
+        <AddOrCancelAddItem
+          type={"list"}
+          tooltipLabel={"Canel"}
+          onClick={() => {
+            setIsAddingNewList(false);
+          }}
+          iconType={"cancel"}
         />
       )}
     </Box>

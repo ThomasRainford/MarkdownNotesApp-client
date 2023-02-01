@@ -11,7 +11,7 @@ import {
   LocalStorageContextType,
   LocalStorageKeys,
 } from "../../../../utils/types/types";
-import Create from "../../create/Create";
+import AddOrCancelAddItem from "../../add-or-cancel-add-item/AddOrCancelAddItem";
 import NewItemInput from "../../new-item-input/NewItemInput";
 
 const Notes = (): JSX.Element => {
@@ -119,7 +119,7 @@ const Notes = (): JSX.Element => {
         />
       )}
       {!isAddingNewNote && (
-        <Create
+        <AddOrCancelAddItem
           type={"note"}
           tooltipLabel={"Add Note"}
           onClick={() => {

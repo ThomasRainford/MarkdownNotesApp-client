@@ -1,5 +1,5 @@
 import { render } from "@testing-library/react";
-import Create from "../Create";
+import AddOrCancelAddItem from "../AddOrCancelAddItem";
 
 describe("Create component", () => {
   test("Displays the Create component", () => {
@@ -8,7 +8,11 @@ describe("Create component", () => {
     const onClick = jest.fn();
 
     render(
-      <Create type={type} tooltipLabel={tooltipLabel} onClick={onClick} />
+      <AddOrCancelAddItem
+        type={type}
+        tooltipLabel={tooltipLabel}
+        onClick={onClick}
+      />
     );
   });
 });
