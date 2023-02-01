@@ -118,13 +118,23 @@ const Notes = (): JSX.Element => {
           }}
         />
       )}
-      {!isAddingNewNote && (
+      {!isAddingNewNote ? (
         <AddOrCancelAddItem
           type={"note"}
           tooltipLabel={"Add Note"}
           onClick={() => {
             setIsAddingNewNote(true);
           }}
+          iconType={"add"}
+        />
+      ) : (
+        <AddOrCancelAddItem
+          type={"note"}
+          tooltipLabel={"Cancel"}
+          onClick={() => {
+            setIsAddingNewNote(false);
+          }}
+          iconType={"cancel"}
         />
       )}
     </Box>

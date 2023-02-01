@@ -4,7 +4,7 @@ import { useState } from "react";
 
 export interface Props {
   type: "collection" | "list" | "note";
-  confirmAdd: (title: string) => void;
+  confirmAdd: (_: string) => void;
 }
 
 const NewItemInput = ({ type, confirmAdd }: Props) => {

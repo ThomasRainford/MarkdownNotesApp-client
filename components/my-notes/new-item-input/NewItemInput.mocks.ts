@@ -2,7 +2,7 @@ import { Props } from "./NewItemInput";
 
 const base: Props = {
   type: "collection",
-  confirmAdd: (title: string): void => {
+  confirmAdd: (_: string): void => {
     return;
   },
 };
