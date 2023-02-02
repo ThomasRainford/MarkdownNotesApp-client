@@ -1,4 +1,15 @@
-import { Box, Heading, Tag, Text } from "@chakra-ui/react";
+import { AddIcon } from "@chakra-ui/icons";
+import {
+  Box,
+  Heading,
+  Icon,
+  IconButton,
+  Input,
+  Tag,
+  Text,
+} from "@chakra-ui/react";
+import { useState } from "react";
+import { MdModeEditOutline } from "react-icons/md";
 import { SelectedNoteContext } from "../../../../contexts/SelectedNoteContext";
 import { getLocalStorageValue } from "../../../../utils/getLocalStorageValue";
 import { getTimeSince } from "../../../../utils/getTimeSince";
@@ -8,6 +19,59 @@ import {
   LocalStorageKeys,
 } from "../../../../utils/types/types";
 import NoteEditor from "./note-editor/NoteEditor";
+
+const NoteContentHeaderTitle = ({ title }: { title: string }) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [editingValue, setEditingValue] = useState(title);
+
+  return (
+    <Box>
+      {!isEditing ? (
+        <Box display="flex">
+          <Heading id="note-header-note-title" size={"lg"} mr="0.75em">
+            {editingValue}
+          </Heading>
+          <IconButton
+            mt="2px"
+            colorScheme="blue"
+            size={"sm"}
+            variant={"outline"}
+            aria-label={`update-note-title`}
+            icon={<Icon as={MdModeEditOutline} boxSize={4} />}
+            onClick={() => {
+              setIsEditing(true);
+            }}
+          />
+        </Box>
+      ) : (
+        <Box display={"flex"}>
+          <Input
+            value={editingValue}
+            size="md"
+            onChange={(e) => {
+              setEditingValue(e.target.value);
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                setIsEditing(false);
+              }
+            }}
+          />
+          <IconButton
+            colorScheme="blue"
+            size={"md"}
+            variant={"outline"}
+            aria-label={`update-note-title`}
+            icon={<AddIcon boxSize={3} />}
+            onClick={() => {
+              setIsEditing(false);
+            }}
+          />
+        </Box>
+      )}
+    </Box>
+  );
+};
 
 const NoteContentHeader = ({
   selectedNote,
@@ -20,11 +84,7 @@ const NoteContentHeader = ({
     <Box>
       {selectedNote && (
         <Box>
-          <Box>
-            <Heading id="note-header-note-title" size={"lg"}>
-              {note.title}
-            </Heading>
-          </Box>
+          <NoteContentHeaderTitle title={note.title} />
           <Box display={"flex"} alignItems="center" mt="1em">
             <Box mr={"0.5em"}>
               <Text>Last Modified</Text>

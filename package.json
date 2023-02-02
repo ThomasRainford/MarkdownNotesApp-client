@@ -41,7 +41,7 @@
     "next-urql": "4.0.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-icons": "^4.4.0",
+    "react-icons": "^4.7.1",
     "react-split-pane": "^0.1.92",
     "shelljs": "^0.8.5",
     "urql": "3.0.3",
