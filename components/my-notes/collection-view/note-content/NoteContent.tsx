@@ -27,25 +27,29 @@ const NoteContentHeaderTitle = ({ title }: { title: string }) => {
   return (
     <Box>
       {!isEditing ? (
-        <Box display="flex">
-          <Heading id="note-header-note-title" size={"lg"} mr="0.75em">
-            {editingValue}
-          </Heading>
-          <IconButton
-            mt="2px"
-            colorScheme="blue"
-            size={"sm"}
-            variant={"outline"}
-            aria-label={`update-note-title`}
-            icon={<Icon as={MdModeEditOutline} boxSize={4} />}
-            onClick={() => {
-              setIsEditing(true);
-            }}
-          />
+        <Box display="flex" justifyContent={"space-between"}>
+          <Box display="flex">
+            <Heading id="note-header-note-title" size={"lg"} mr="0.75em">
+              {editingValue}
+            </Heading>
+          </Box>
+          <Box display="flex">
+            <IconButton
+              colorScheme="blue"
+              size={"md"}
+              variant={"outline"}
+              aria-label={`update-note-title`}
+              icon={<Icon as={MdModeEditOutline} boxSize={4} />}
+              onClick={() => {
+                setIsEditing(true);
+              }}
+            />
+          </Box>
         </Box>
       ) : (
         <Box display={"flex"}>
           <Input
+            mr="0.5em"
             value={editingValue}
             size="md"
             onChange={(e) => {
@@ -94,7 +98,7 @@ const NoteContentHeader = ({
                 id="note-header-last-modified"
                 variant={"outline"}
                 size={"md"}
-                mt="3px"
+                mt="1px"
                 colorScheme={"teal"}
               >
                 {getTimeSince(new Date(note.updatedAt))}

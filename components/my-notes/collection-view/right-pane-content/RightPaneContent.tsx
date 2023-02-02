@@ -56,7 +56,6 @@ const ListPaneHeaderTitle = ({
             }}
             onDoubleClick={() => {
               setIsEditing(!isEditing);
-              setEditingValue("");
             }}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
@@ -70,7 +69,9 @@ const ListPaneHeaderTitle = ({
             variant={"outline"}
             aria-label={`update-${type}-title`}
             icon={<AddIcon boxSize={3} />}
-            onClick={() => {}}
+            onClick={() => {
+              setIsEditing(false);
+            }}
           />
         </Box>
       )}
