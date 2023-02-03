@@ -1,4 +1,21 @@
-import { Box, Heading, Tag, useColorMode } from "@chakra-ui/react";
+import { ArrowForwardIcon, DeleteIcon } from "@chakra-ui/icons";
+import {
+  Box,
+  Button,
+  Heading,
+  IconButton,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Tag,
+  Text,
+  useColorMode,
+  useDisclosure,
+} from "@chakra-ui/react";
 import { useState } from "react";
 import { SelectedCollectionContext } from "../../../../contexts/SelectedCollectionContext";
 import { SelectedListContext } from "../../../../contexts/SelectedListContext";
@@ -11,6 +28,47 @@ import {
 } from "../../../../utils/types/types";
 import AddOrCancelAddItem from "../../add-or-cancel-add-item/AddOrCancelAddItem";
 import NewItemInput from "../../new-item-input/NewItemInput";
+
+const CollectionDeleteButton = ({ collection }: { collection: any }) => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  return (
+    <>
+      <IconButton
+        mr={"0.75em"}
+        mb="1px"
+        colorScheme="red"
+        variant={"outline"}
+        size={"xs"}
+        aria-label={`delete-collection`}
+        icon={<DeleteIcon boxSize={3} />}
+        onClick={onOpen}
+      />
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Delete Collection?</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Text>
+              Are you sure you want to delete{" "}
+              <Text as="b">{collection.title}</Text>
+            </Text>
+          </ModalBody>
+
+          <ModalFooter>
+            <Button colorScheme="blue" mr={3} onClick={onClose}>
+              Cancel
+            </Button>
+            <Button variant="solid" colorScheme={"red"} onClick={() => {}}>
+              Delete
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </>
+  );
+};
 
 const Collections = (): JSX.Element => {
   // TODO: Should get Collections from API.
@@ -36,7 +94,6 @@ const Collections = (): JSX.Element => {
             <Box
               key={_collection._id}
               display={"flex"}
-              justifyContent="space-between"
               pl={"1.5em"}
               pr={"1em"}
               pt={"1em"}
@@ -53,15 +110,30 @@ const Collections = (): JSX.Element => {
                 setSelectedList("");
               }}
             >
-              <Heading
-                id={`collection-heading-${_collection._id}`}
-                as="h4"
-                size={"md"}
-                color={colorMode === "light" ? "gray.700" : "gray.300"}
-              >
-                {_collection.title}
-              </Heading>
-              <Tag>{lists.length}</Tag>
+              <Box display={"flex"} justifyContent="space-between" w={"100%"}>
+                <Heading
+                  id={`collection-heading-${_collection._id}`}
+                  as="h4"
+                  size={"md"}
+                  color={colorMode === "light" ? "gray.700" : "gray.300"}
+                >
+                  {_collection.title}
+                </Heading>
+                <Box display={"flex"}>
+                  <Box mr="0.5em">
+                    {_collection._id === collection?._id && (
+                      <CollectionDeleteButton collection={collection} />
+                    )}
+                    <Tag mt="1px">{lists.length}</Tag>
+                  </Box>
+                  <Box display={"flex"}>
+                    <ArrowForwardIcon
+                      boxSize={6}
+                      color={colorMode === "light" ? "gray.700" : "gray.500"}
+                    />
+                  </Box>
+                </Box>
+              </Box>
             </Box>
           );
         })}

@@ -1,5 +1,21 @@
-import { ArrowForwardIcon } from "@chakra-ui/icons";
-import { Box, Heading, Tag, useColorMode } from "@chakra-ui/react";
+import { ArrowForwardIcon, DeleteIcon } from "@chakra-ui/icons";
+import {
+  Box,
+  Button,
+  Heading,
+  IconButton,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Tag,
+  Text,
+  useColorMode,
+  useDisclosure,
+} from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { SelectedCollectionContext } from "../../../../contexts/SelectedCollectionContext";
 import { SelectedListContext } from "../../../../contexts/SelectedListContext";
@@ -12,6 +28,46 @@ import {
 } from "../../../../utils/types/types";
 import AddOrCancelAddItem from "../../add-or-cancel-add-item/AddOrCancelAddItem";
 import NewItemInput from "../../new-item-input/NewItemInput";
+
+const ListDeleteButton = ({ list }: { list: any }) => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  return (
+    <>
+      <IconButton
+        mr={"0.75em"}
+        mb="1px"
+        colorScheme="red"
+        variant={"outline"}
+        size={"xs"}
+        aria-label={`delete-list`}
+        icon={<DeleteIcon boxSize={3} />}
+        onClick={onOpen}
+      />
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Delete List?</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Text>
+              Are you sure you want to delete <Text as="b">{list.title}</Text>
+            </Text>
+          </ModalBody>
+
+          <ModalFooter>
+            <Button colorScheme="blue" mr={3} onClick={onClose}>
+              Cancel
+            </Button>
+            <Button variant="solid" colorScheme={"red"} onClick={() => {}}>
+              Delete
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </>
+  );
+};
 
 const Lists = (): JSX.Element => {
   const [isAddingNewList, setIsAddingNewList] = useState(false);
@@ -46,7 +102,6 @@ const Lists = (): JSX.Element => {
                 <Box
                   key={_list._id}
                   display={"flex"}
-                  justifyContent={"space-between"}
                   pl={"1.5em"}
                   pr={"1em"}
                   pt={"1em"}
@@ -60,7 +115,7 @@ const Lists = (): JSX.Element => {
                   }
                   onClick={() => setSelectedList(JSON.stringify(_list))}
                 >
-                  <Box display={"flex"}>
+                  <Box display={"flex"} justifyContent="space-between" w="100%">
                     <Heading
                       id={`list-heading-${_list._id}`}
                       as="h4"
@@ -70,13 +125,22 @@ const Lists = (): JSX.Element => {
                     >
                       {_list.title}
                     </Heading>
-                    <Tag>{notes.length}</Tag>
-                  </Box>
-                  <Box>
-                    <ArrowForwardIcon
-                      boxSize={6}
-                      color={colorMode === "light" ? "gray.700" : "gray.500"}
-                    />
+                    <Box display={"flex"}>
+                      <Box mr="0.5em">
+                        {_list._id === list?._id && (
+                          <ListDeleteButton list={list} />
+                        )}
+                        <Tag mt="1px">{notes.length}</Tag>
+                      </Box>
+                      <Box>
+                        <ArrowForwardIcon
+                          boxSize={6}
+                          color={
+                            colorMode === "light" ? "gray.700" : "gray.500"
+                          }
+                        />
+                      </Box>
+                    </Box>
                   </Box>
                 </Box>
               );
@@ -112,7 +176,7 @@ const Lists = (): JSX.Element => {
       ) : (
         <AddOrCancelAddItem
           type={"list"}
-          tooltipLabel={"Canel"}
+          tooltipLabel={"Cancel"}
           onClick={() => {
             setIsAddingNewList(false);
           }}

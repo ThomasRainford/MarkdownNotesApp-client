@@ -1,15 +1,6 @@
-import { AddIcon } from "@chakra-ui/icons";
-import {
-  Box,
-  Heading,
-  Icon,
-  IconButton,
-  Input,
-  Tag,
-  Text,
-} from "@chakra-ui/react";
+import { AddIcon, CloseIcon, EditIcon } from "@chakra-ui/icons";
+import { Box, Heading, IconButton, Input, Tag, Text } from "@chakra-ui/react";
 import { useState } from "react";
-import { MdModeEditOutline } from "react-icons/md";
 import { SelectedNoteContext } from "../../../../contexts/SelectedNoteContext";
 import { getLocalStorageValue } from "../../../../utils/getLocalStorageValue";
 import { getTimeSince } from "../../../../utils/getTimeSince";
@@ -39,7 +30,7 @@ const NoteContentHeaderTitle = ({ title }: { title: string }) => {
               size={"md"}
               variant={"outline"}
               aria-label={`update-note-title`}
-              icon={<Icon as={MdModeEditOutline} boxSize={4} />}
+              icon={<EditIcon boxSize={4} />}
               onClick={() => {
                 setIsEditing(true);
               }}
@@ -59,6 +50,17 @@ const NoteContentHeaderTitle = ({ title }: { title: string }) => {
               if (e.key === "Enter") {
                 setIsEditing(false);
               }
+            }}
+          />
+          <IconButton
+            mr="0.5em"
+            colorScheme="red"
+            size={"md"}
+            variant={"ghost"}
+            aria-label={`close-update-note-title`}
+            icon={<CloseIcon boxSize={3} />}
+            onClick={() => {
+              setIsEditing(false);
             }}
           />
           <IconButton

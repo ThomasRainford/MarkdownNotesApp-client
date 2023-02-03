@@ -21,7 +21,10 @@ export const getTimeSince = (date: Date): string => {
   if (interval >= 1) {
     return interval + (interval > 1 ? " minutes" : " minute");
   }
-  return (
-    Math.floor(seconds) + (Math.floor(seconds) > 1 ? " seconds" : " second")
-  );
+  const floorSeconds = Math.floor(seconds);
+  return floorSeconds === 0
+    ? "Just now"
+    : floorSeconds > 1
+    ? `${floorSeconds} seconds`
+    : `${floorSeconds} second`;
 };

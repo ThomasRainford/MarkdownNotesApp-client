@@ -36,4 +36,10 @@ describe("getTimeSince", () => {
     date.setSeconds(date.getSeconds() - 1);
     expect(getTimeSince(date)).toEqual("1 second");
   });
+
+  it('returns "Just now" for a date that is equal in seconds to the date now', () => {
+    const date = new Date();
+    date.setSeconds(date.getSeconds());
+    expect(getTimeSince(date)).toEqual("Just now");
+  });
 });

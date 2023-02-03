@@ -1,4 +1,21 @@
-import { Box, Heading, Tag, Text, useColorMode } from "@chakra-ui/react";
+import { DeleteIcon } from "@chakra-ui/icons";
+import {
+  Box,
+  Button,
+  Heading,
+  IconButton,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Tag,
+  Text,
+  useColorMode,
+  useDisclosure,
+} from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { SelectedCollectionContext } from "../../../../contexts/SelectedCollectionContext";
 import { SelectedListContext } from "../../../../contexts/SelectedListContext";
@@ -13,6 +30,44 @@ import {
 } from "../../../../utils/types/types";
 import AddOrCancelAddItem from "../../add-or-cancel-add-item/AddOrCancelAddItem";
 import NewItemInput from "../../new-item-input/NewItemInput";
+
+const NoteDeleteButton = ({ note }: { note: any }) => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  return (
+    <>
+      <IconButton
+        colorScheme="red"
+        variant={"outline"}
+        size={"xs"}
+        aria-label={`delete-note`}
+        icon={<DeleteIcon boxSize={3} />}
+        onClick={onOpen}
+      />
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Delete Note?</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Text>
+              Are you sure you want to delete <Text as="b">{note.title}</Text>
+            </Text>
+          </ModalBody>
+
+          <ModalFooter>
+            <Button colorScheme="blue" mr={3} onClick={onClose}>
+              Cancel
+            </Button>
+            <Button variant="solid" colorScheme={"red"} onClick={() => {}}>
+              Delete
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </>
+  );
+};
 
 const Notes = (): JSX.Element => {
   const [isAddingNewNote, setIsAddingNewNote] = useState(false);
@@ -95,6 +150,9 @@ const Notes = (): JSX.Element => {
                       {(note.body as string).substring(0, 15)}
                     </Text>
                   </Box>
+                </Box>
+                <Box>
+                  <NoteDeleteButton note={note} />
                 </Box>
               </Box>
             ))}
