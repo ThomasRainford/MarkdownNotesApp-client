@@ -1,0 +1,17 @@
+query NotesLists($collectionId: String!) {
+  notesLists(collectionId: $collectionId) {
+    _id
+    title
+    createdAt
+    updatedAt
+    collection {
+      id
+    }
+    notes {
+      id
+      title
+      createdAt
+      updatedAt
+    }
+  }
+}

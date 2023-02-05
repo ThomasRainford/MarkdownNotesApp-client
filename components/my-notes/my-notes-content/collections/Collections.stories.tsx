@@ -1,20 +1,20 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
-import Lists from "./Lists";
-import { mockListsProps } from "./Lists.mocks";
+import Collections from "./Collections";
+import { mockCollectionsProps } from "./Collections.mocks";
 
 export default {
-  title: "my-notes/collection-view/lists/Lists",
-  component: Lists,
+  title: "my-notes/my-notes-content/collections/Collections",
+  component: Collections,
   // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
   argTypes: {},
-} as ComponentMeta<typeof Lists>;
+} as ComponentMeta<typeof Collections>;
 
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
-const Template: ComponentStory<typeof Lists> = () => <Lists />;
+const Template: ComponentStory<typeof Collections> = () => <Collections />;
 
 export const Base = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 
 Base.args = {
-  ...mockListsProps.base,
+  ...mockCollectionsProps.base,
 };

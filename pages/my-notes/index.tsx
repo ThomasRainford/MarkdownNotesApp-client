@@ -2,7 +2,7 @@ import { Box } from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
 import SelectedDataProvider from "../../components/helper/SelectedDataProvider";
 import PrimaryLayout from "../../components/layouts/PrimaryLayout";
-import CollectionView from "../../components/my-notes/collection-view/CollectionView";
+import MyNotesContent from "../../components/my-notes/my-notes-content/MyNotesContent";
 import NavBar from "../../components/navbar/NavBar";
 import { useMeQuery } from "../../generated/graphql";
 import { createUrqlClient } from "../../utils/createUrqlClient";
@@ -19,7 +19,7 @@ const MyNotes: NextPageWithLayout = () => {
       <NavBar user={meResult} />
       {!meResult.fetching && meResult.data ? (
         <SelectedDataProvider>
-          <CollectionView />
+          <MyNotesContent />
         </SelectedDataProvider>
       ) : null}
     </Box>

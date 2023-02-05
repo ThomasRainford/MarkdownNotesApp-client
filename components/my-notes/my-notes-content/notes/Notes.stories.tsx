@@ -5,7 +5,7 @@ import Notes from "./Notes";
 import { mockNotesProps } from "./Notes.mocks";
 
 export default {
-  title: "my-notes/collection-view/notes/Notes",
+  title: "my-notes/my-notes-content/notes/Notes",
   component: Notes,
   // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
   argTypes: {},

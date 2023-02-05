@@ -3,19 +3,19 @@ import { act } from "react-dom/test-utils";
 import { testCollections } from "../../../../test-utils/testData";
 import { LocalStorageKeys } from "../../../../utils/types/types";
 import SelectedDataProvider from "../../../helper/SelectedDataProvider";
-import CollectionView from "../CollectionView";
+import MyNotesContent from "../MyNotesContent";
 
-describe("CollectionView component", () => {
+describe("MyNotesContent component", () => {
   beforeEach(() => {
     localStorage.removeItem(LocalStorageKeys.SELECTED_COLLECTION);
     localStorage.removeItem(LocalStorageKeys.SELECTED_LIST);
     localStorage.removeItem(LocalStorageKeys.SELECTED_NOTE);
   });
 
-  test("Displays CollectionView", async () => {
+  test("Displays MyNotesContent", async () => {
     render(
       <SelectedDataProvider>
-        <CollectionView />
+        <MyNotesContent />
       </SelectedDataProvider>
     );
 
@@ -31,7 +31,7 @@ describe("CollectionView component", () => {
   test("clicking collection displays correct collection title", async () => {
     render(
       <SelectedDataProvider>
-        <CollectionView />
+        <MyNotesContent />
       </SelectedDataProvider>
     );
 
@@ -55,7 +55,7 @@ describe("CollectionView component", () => {
   test("clicking collection displays the correct lists", async () => {
     render(
       <SelectedDataProvider>
-        <CollectionView />
+        <MyNotesContent />
       </SelectedDataProvider>
     );
 
@@ -80,7 +80,7 @@ describe("CollectionView component", () => {
     );
     render(
       <SelectedDataProvider>
-        <CollectionView />
+        <MyNotesContent />
       </SelectedDataProvider>
     );
 
@@ -108,7 +108,7 @@ describe("CollectionView component", () => {
     );
     render(
       <SelectedDataProvider>
-        <CollectionView />
+        <MyNotesContent />
       </SelectedDataProvider>
     );
 
@@ -133,7 +133,7 @@ describe("CollectionView component", () => {
     );
     render(
       <SelectedDataProvider>
-        <CollectionView />
+        <MyNotesContent />
       </SelectedDataProvider>
     );
 

@@ -42,10 +42,10 @@ const RightPane = () => {
   );
 };
 
-const CollectionView = (): JSX.Element => {
+const MyNotesContent = (): JSX.Element => {
   return (
     <Box
-      className="collection-view"
+      className="my-notes-content"
       h={"calc(100% - 64px)"}
       overflowY={"hidden"}
     >
@@ -73,4 +73,4 @@ const CollectionView = (): JSX.Element => {
   );
 };
 
-export default CollectionView;
+export default MyNotesContent;

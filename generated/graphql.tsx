@@ -338,10 +338,22 @@ export type RegisterMutationVariables = Exact<{
 
 export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserResponse', user?: { __typename?: 'User', id: string, username: string, email: string } | null, errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null } };
 
+export type CollectionsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type CollectionsQuery = { __typename?: 'Query', collections: Array<{ __typename?: 'Collection', id: string, title: string, visibility: string, upvotes: number, createdAt: any, updatedAt: any, owner: { __typename?: 'User', id: string, username: string }, lists: Array<{ __typename?: 'NotesList', id: string, title: string }> }> };
+
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', _id: string, email: string, username: string, following: Array<string>, followers: Array<string>, upvoted: Array<string> } | null };
+
+export type NotesListsQueryVariables = Exact<{
+  collectionId: Scalars['String'];
+}>;
+
+
+export type NotesListsQuery = { __typename?: 'Query', notesLists?: Array<{ __typename?: 'NotesList', _id: string, title: string, createdAt: any, updatedAt: any, collection: { __typename?: 'Collection', id: string }, notes: Array<{ __typename?: 'Note', id: string, title: string, createdAt: any, updatedAt: any }> }> | null };
 
 
 export const LoginDocument = gql`
@@ -393,6 +405,30 @@ export const RegisterDocument = gql`
 export function useRegisterMutation() {
   return Urql.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument);
 };
+export const CollectionsDocument = gql`
+    query collections {
+  collections {
+    id
+    title
+    visibility
+    upvotes
+    createdAt
+    updatedAt
+    owner {
+      id
+      username
+    }
+    lists {
+      id
+      title
+    }
+  }
+}
+    `;
+
+export function useCollectionsQuery(options?: Omit<Urql.UseQueryArgs<CollectionsQueryVariables>, 'query'>) {
+  return Urql.useQuery<CollectionsQuery, CollectionsQueryVariables>({ query: CollectionsDocument, ...options });
+};
 export const MeDocument = gql`
     query Me {
   me {
@@ -407,5 +443,28 @@ export const MeDocument = gql`
     `;
 
 export function useMeQuery(options?: Omit<Urql.UseQueryArgs<MeQueryVariables>, 'query'>) {
-  return Urql.useQuery<MeQuery>({ query: MeDocument, ...options });
+  return Urql.useQuery<MeQuery, MeQueryVariables>({ query: MeDocument, ...options });
+};
+export const NotesListsDocument = gql`
+    query NotesLists($collectionId: String!) {
+  notesLists(collectionId: $collectionId) {
+    _id
+    title
+    createdAt
+    updatedAt
+    collection {
+      id
+    }
+    notes {
+      id
+      title
+      createdAt
+      updatedAt
+    }
+  }
+}
+    `;
+
+export function useNotesListsQuery(options: Omit<Urql.UseQueryArgs<NotesListsQueryVariables>, 'query'>) {
+  return Urql.useQuery<NotesListsQuery, NotesListsQueryVariables>({ query: NotesListsDocument, ...options });
 };
