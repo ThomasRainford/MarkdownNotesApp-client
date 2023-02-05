@@ -19,7 +19,7 @@ import {
 import { useState } from "react";
 import { SelectedCollectionContext } from "../../../../contexts/SelectedCollectionContext";
 import { SelectedListContext } from "../../../../contexts/SelectedListContext";
-import { testCollections } from "../../../../test-utils/testData";
+import { useCollectionsQuery } from "../../../../generated/graphql";
 import { getLocalStorageValue } from "../../../../utils/getLocalStorageValue";
 import { useLocalStorageValue } from "../../../../utils/hooks/useLocalStorageValue";
 import {
@@ -71,8 +71,7 @@ const CollectionDeleteButton = ({ collection }: { collection: any }) => {
 };
 
 const Collections = (): JSX.Element => {
-  // TODO: Should get Collections from API.
-  const [collections, setCollections] = useState(testCollections);
+  const [collectionsResult] = useCollectionsQuery();
   const [isAddingNewCollection, setIsAddingNewCollection] = useState(false);
   const { colorMode } = useColorMode();
   const [selectedCollection, setSelectedCollection] = useLocalStorageValue(
@@ -85,14 +84,16 @@ const Collections = (): JSX.Element => {
   ) as LocalStorageContextType;
   const collection = getLocalStorageValue(selectedCollection);
 
+  const collections = collectionsResult.data?.collections;
+
   return (
     <Box>
       <Box>
-        {collections.map((_collection) => {
+        {collections?.map((_collection) => {
           const lists = _collection.lists;
           return (
             <Box
-              key={_collection._id}
+              key={_collection.id}
               display={"flex"}
               pl={"1.5em"}
               pr={"1em"}
@@ -103,7 +104,7 @@ const Collections = (): JSX.Element => {
               }}
               border={"1px"}
               borderColor={
-                _collection._id === collection?._id ? "gray.200" : "gray.800"
+                _collection.id === collection?.id ? "gray.200" : "gray.800"
               }
               onClick={() => {
                 setSelectedCollection(JSON.stringify(_collection));
@@ -112,7 +113,7 @@ const Collections = (): JSX.Element => {
             >
               <Box display={"flex"} justifyContent="space-between" w={"100%"}>
                 <Heading
-                  id={`collection-heading-${_collection._id}`}
+                  id={`collection-heading-${_collection.id}`}
                   as="h4"
                   size={"md"}
                   color={colorMode === "light" ? "gray.700" : "gray.300"}
@@ -121,7 +122,7 @@ const Collections = (): JSX.Element => {
                 </Heading>
                 <Box display={"flex"}>
                   <Box mr="0.5em">
-                    {_collection._id === collection?._id && (
+                    {_collection.id === collection?._id && (
                       <CollectionDeleteButton collection={collection} />
                     )}
                     <Tag mt="1px">{lists.length}</Tag>
@@ -144,15 +145,6 @@ const Collections = (): JSX.Element => {
           type="collection"
           confirmAdd={(title: string) => {
             setIsAddingNewCollection(false);
-            setCollections([
-              ...collections,
-              {
-                _id: collections[collections.length - 1]._id + 1,
-                title,
-                upvotes: 0,
-                lists: [],
-              },
-            ]);
           }}
         />
       )}

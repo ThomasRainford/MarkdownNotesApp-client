@@ -16,10 +16,10 @@ import {
   useColorMode,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { SelectedCollectionContext } from "../../../../contexts/SelectedCollectionContext";
 import { SelectedListContext } from "../../../../contexts/SelectedListContext";
-import { testCollections } from "../../../../test-utils/testData";
+import { useNotesListsQuery } from "../../../../generated/graphql";
 import { getLocalStorageValue } from "../../../../utils/getLocalStorageValue";
 import { useLocalStorageValue } from "../../../../utils/hooks/useLocalStorageValue";
 import {
@@ -83,13 +83,10 @@ const Lists = (): JSX.Element => {
   const collection = getLocalStorageValue(selectedCollection);
   const list = getLocalStorageValue(selectedList);
 
-  // TODO: Should get Lists from API.
-  const [lists, setLists] = useState(
-    testCollections.find((c) => c._id === collection._id)?.lists
-  );
-  useEffect(() => {
-    setLists(testCollections.find((c) => c._id === collection._id)?.lists);
-  }, [JSON.stringify(collection), collection._id]);
+  const [notesListsResult] = useNotesListsQuery({
+    variables: { collectionId: collection?.id || "" },
+  });
+  const lists = notesListsResult.data?.notesLists;
 
   return (
     <Box>
@@ -100,7 +97,7 @@ const Lists = (): JSX.Element => {
               const notes = _list.notes;
               return (
                 <Box
-                  key={_list._id}
+                  key={_list.id}
                   display={"flex"}
                   pl={"1.5em"}
                   pr={"1em"}
@@ -109,7 +106,7 @@ const Lists = (): JSX.Element => {
                   _hover={{
                     bg: colorMode === "light" ? "gray.200" : "gray.600",
                   }}
-                  border={_list._id === list?._id ? "1px" : ""}
+                  border={_list.id === list?.id ? "1px" : ""}
                   borderColor={
                     _list._id === list?._id ? "gray.200" : "gray.800"
                   }
@@ -117,7 +114,7 @@ const Lists = (): JSX.Element => {
                 >
                   <Box display={"flex"} justifyContent="space-between" w="100%">
                     <Heading
-                      id={`list-heading-${_list._id}`}
+                      id={`list-heading-${_list.id}`}
                       as="h4"
                       size={"md"}
                       pr={"1em"}
@@ -127,7 +124,7 @@ const Lists = (): JSX.Element => {
                     </Heading>
                     <Box display={"flex"}>
                       <Box mr="0.5em">
-                        {_list._id === list?._id && (
+                        {_list.id === list?._id && (
                           <ListDeleteButton list={list} />
                         )}
                         <Tag mt="1px">{notes.length}</Tag>
@@ -153,14 +150,6 @@ const Lists = (): JSX.Element => {
           type="list"
           confirmAdd={(title: string) => {
             setIsAddingNewList(false);
-            setLists([
-              ...(lists || []),
-              {
-                _id: !lists ? 1 : lists[lists.length - 1]._id + 1,
-                title,
-                notes: [],
-              },
-            ]);
           }}
         />
       )}

@@ -353,7 +353,14 @@ export type NotesListsQueryVariables = Exact<{
 }>;
 
 
-export type NotesListsQuery = { __typename?: 'Query', notesLists?: Array<{ __typename?: 'NotesList', _id: string, title: string, createdAt: any, updatedAt: any, collection: { __typename?: 'Collection', id: string }, notes: Array<{ __typename?: 'Note', id: string, title: string, createdAt: any, updatedAt: any }> }> | null };
+export type NotesListsQuery = { __typename?: 'Query', notesLists?: Array<{ __typename?: 'NotesList', id: string, title: string, createdAt: any, updatedAt: any, collection: { __typename?: 'Collection', id: string }, notes: Array<{ __typename?: 'Note', id: string, title: string, body: string, createdAt: any, updatedAt: any }> }> | null };
+
+export type NotesListQueryVariables = Exact<{
+  listLocation: ListLocationInput;
+}>;
+
+
+export type NotesListQuery = { __typename?: 'Query', notesList?: { __typename?: 'NotesList', id: string, title: string, createdAt: any, updatedAt: any, collection: { __typename?: 'Collection', id: string }, notes: Array<{ __typename?: 'Note', id: string, title: string, body: string, createdAt: any, updatedAt: any }> } | null };
 
 
 export const LoginDocument = gql`
@@ -448,7 +455,7 @@ export function useMeQuery(options?: Omit<Urql.UseQueryArgs<MeQueryVariables>, '
 export const NotesListsDocument = gql`
     query NotesLists($collectionId: String!) {
   notesLists(collectionId: $collectionId) {
-    _id
+    id
     title
     createdAt
     updatedAt
@@ -458,6 +465,7 @@ export const NotesListsDocument = gql`
     notes {
       id
       title
+      body
       createdAt
       updatedAt
     }
@@ -467,4 +475,28 @@ export const NotesListsDocument = gql`
 
 export function useNotesListsQuery(options: Omit<Urql.UseQueryArgs<NotesListsQueryVariables>, 'query'>) {
   return Urql.useQuery<NotesListsQuery, NotesListsQueryVariables>({ query: NotesListsDocument, ...options });
+};
+export const NotesListDocument = gql`
+    query NotesList($listLocation: ListLocationInput!) {
+  notesList(listLocation: $listLocation) {
+    id
+    title
+    createdAt
+    updatedAt
+    collection {
+      id
+    }
+    notes {
+      id
+      title
+      body
+      createdAt
+      updatedAt
+    }
+  }
+}
+    `;
+
+export function useNotesListQuery(options: Omit<Urql.UseQueryArgs<NotesListQueryVariables>, 'query'>) {
+  return Urql.useQuery<NotesListQuery, NotesListQueryVariables>({ query: NotesListDocument, ...options });
 };

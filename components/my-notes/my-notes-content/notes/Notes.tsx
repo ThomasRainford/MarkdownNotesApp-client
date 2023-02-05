@@ -14,19 +14,19 @@ import {
   Tag,
   Text,
   useColorMode,
-  useDisclosure,
+  useDisclosure
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { SelectedCollectionContext } from "../../../../contexts/SelectedCollectionContext";
 import { SelectedListContext } from "../../../../contexts/SelectedListContext";
 import { SelectedNoteContext } from "../../../../contexts/SelectedNoteContext";
-import { testCollections } from "../../../../test-utils/testData";
+import { useNotesListQuery } from "../../../../generated/graphql";
 import { getLocalStorageValue } from "../../../../utils/getLocalStorageValue";
 import { getTimeSince } from "../../../../utils/getTimeSince";
 import { useLocalStorageValue } from "../../../../utils/hooks/useLocalStorageValue";
 import {
   LocalStorageContextType,
-  LocalStorageKeys,
+  LocalStorageKeys
 } from "../../../../utils/types/types";
 import AddOrCancelAddItem from "../../add-or-cancel-add-item/AddOrCancelAddItem";
 import NewItemInput from "../../new-item-input/NewItemInput";
@@ -87,28 +87,21 @@ const Notes = (): JSX.Element => {
   const collection = getLocalStorageValue(selectedCollection);
   const list = getLocalStorageValue(selectedList);
 
-  // TODO: Should get Lists from API.
-  const [notes, setNotes] = useState(
-    testCollections
-      .find((c) => c._id === collection._id)
-      ?.lists.find((l) => l._id === list._id)?.notes
-  );
-  useEffect(() => {
-    setNotes(
-      testCollections
-        .find((c) => c._id === collection._id)
-        ?.lists.find((l) => l._id === list._id)?.notes
-    );
-  }, [JSON.stringify(list), collection._id, list._id]);
+  const [notesListResult] = useNotesListQuery({
+    variables: {
+      listLocation: { collectionId: collection.id, listId: list.id },
+    },
+  });
+  const notes = notesListResult.data?.notesList?.notes;
 
   return (
     <Box>
       <Box>
         {!notes ? null : (
           <>
-            {notes.map((note: any) => (
+            {notes.map((note) => (
               <Box
-                key={note._id}
+                key={note.id}
                 display={"flex"}
                 justifyContent={"space-between"}
                 pl={"1em"}
@@ -131,7 +124,7 @@ const Notes = (): JSX.Element => {
                 <Box>
                   <Box mb={"0.95em"}>
                     <Heading
-                      id={`note-heading-${note._id}`}
+                      id={`note-heading-${note.id}`}
                       as="h4"
                       size={"md"}
                       pr={"1em"}
@@ -164,15 +157,6 @@ const Notes = (): JSX.Element => {
           type="note"
           confirmAdd={(title: string) => {
             setIsAddingNewNote(false);
-            setNotes([
-              ...(notes || []),
-              {
-                _id: !notes ? 1 : notes[notes.length - 1]._id + 1,
-                title,
-                body: "# New note",
-                updatedAt: new Date().toISOString(),
-              },
-            ]);
           }}
         />
       )}
