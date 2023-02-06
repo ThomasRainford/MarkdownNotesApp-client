@@ -1,23 +1,50 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { act } from "react-dom/test-utils";
+import { Client, Provider } from "urql";
+import { fromValue } from "wonka";
+import { sourceT } from "wonka/dist/types/src/Wonka_types.gen";
 import { SelectedCollectionProvider } from "../../../../../contexts/SelectedCollectionContext";
 import { SelectedListProvider } from "../../../../../contexts/SelectedListContext";
-import { testCollections } from "../../../../../test-utils/testData";
+import {
+  NotesListsQuery,
+  NotesListsQueryVariables,
+} from "../../../../../generated/graphql";
+import { createMockUrqlClient } from "../../../../../test-utils/createMockUrqlClient";
+import {
+  testNotesLists,
+  _testCollections,
+} from "../../../../../test-utils/testData";
 import { LocalStorageKeys } from "../../../../../utils/types/types";
 import Lists from "../Lists";
 
 describe("Lists component", () => {
   test("Displays Lists", () => {
+    // Local storage.
     localStorage.setItem(
       LocalStorageKeys.SELECTED_COLLECTION,
-      JSON.stringify(testCollections[0])
+      JSON.stringify(_testCollections[0])
     );
+    // Mock URQL client.
+    const mockClient = createMockUrqlClient<
+      NotesListsQueryVariables,
+      sourceT<{ data: NotesListsQuery }>
+    >({
+      executeQuery: () => {
+        return fromValue({
+          data: {
+            notesLists: testNotesLists.collection1,
+          },
+        });
+      },
+    });
     render(
-      <SelectedCollectionProvider>
-        <SelectedListProvider>
-          <Lists />
-        </SelectedListProvider>
-      </SelectedCollectionProvider>
+      <Provider value={mockClient as unknown as Client}>
+        <SelectedCollectionProvider>
+          <SelectedListProvider>
+            <Lists />
+          </SelectedListProvider>
+        </SelectedCollectionProvider>
+      </Provider>
     );
 
     const listInList = screen.getByText(/list 1/i);
@@ -26,12 +53,32 @@ describe("Lists component", () => {
   });
 
   test("Selects a list that is stored in local storage", async () => {
+    // Local storage.
+    localStorage.setItem(
+      LocalStorageKeys.SELECTED_COLLECTION,
+      JSON.stringify(_testCollections[0])
+    );
+    // Mock URQL client.
+    const mockClient = createMockUrqlClient<
+      NotesListsQueryVariables,
+      sourceT<{ data: NotesListsQuery }>
+    >({
+      executeQuery: () => {
+        return fromValue({
+          data: {
+            notesLists: testNotesLists.collection1,
+          },
+        });
+      },
+    });
     render(
-      <SelectedCollectionProvider>
-        <SelectedListProvider>
-          <Lists />
-        </SelectedListProvider>
-      </SelectedCollectionProvider>
+      <Provider value={mockClient as unknown as Client}>
+        <SelectedCollectionProvider>
+          <SelectedListProvider>
+            <Lists />
+          </SelectedListProvider>
+        </SelectedCollectionProvider>
+      </Provider>
     );
 
     const title = "List 1";
