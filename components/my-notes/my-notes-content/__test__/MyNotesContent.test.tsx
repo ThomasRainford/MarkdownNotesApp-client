@@ -40,6 +40,7 @@ describe("MyNotesContent component", () => {
         });
       },
     });
+    // Render
     render(
       <Provider value={mockClient as unknown as Client}>
         <SelectedDataProvider>

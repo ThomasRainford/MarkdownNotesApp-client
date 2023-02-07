@@ -3,8 +3,6 @@ import { act } from "react-dom/test-utils";
 import { Client, Provider } from "urql";
 import { fromValue } from "wonka";
 import { sourceT } from "wonka/dist/types/src/Wonka_types.gen";
-import { SelectedCollectionProvider } from "../../../../../contexts/SelectedCollectionContext";
-import { SelectedListProvider } from "../../../../../contexts/SelectedListContext";
 import {
   NotesListsQuery,
   NotesListsQueryVariables,
@@ -40,11 +38,9 @@ describe("Lists component", () => {
     });
     render(
       <Provider value={mockClient as unknown as Client}>
-        <SelectedCollectionProvider>
-          <SelectedListProvider>
-            <Lists />
-          </SelectedListProvider>
-        </SelectedCollectionProvider>
+        <SelectedDataProvider>
+          <Lists />
+        </SelectedDataProvider>
       </Provider>
     );
 

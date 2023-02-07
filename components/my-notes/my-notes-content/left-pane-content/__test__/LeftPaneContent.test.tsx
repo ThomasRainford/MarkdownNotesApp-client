@@ -1,24 +1,66 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { act } from "react-dom/test-utils";
-import { SelectedCollectionProvider } from "../../../../../contexts/SelectedCollectionContext";
-import { SelectedListProvider } from "../../../../../contexts/SelectedListContext";
-import { testCollections } from "../../../../../test-utils/testData";
+import { Client, Provider } from "urql";
+import { fromValue } from "wonka";
+import { sourceT } from "wonka/dist/types/src/Wonka_types.gen";
+import {
+  CollectionsQuery,
+  CollectionsQueryVariables,
+  NotesListQuery,
+  NotesListQueryVariables,
+  NotesListsQuery,
+  NotesListsQueryVariables,
+} from "../../../../../generated/graphql";
+import { createMockUrqlClient } from "../../../../../test-utils/createMockUrqlClient";
+import {
+  testNotesLists,
+  _testCollections,
+} from "../../../../../test-utils/testData";
 import { LocalStorageKeys } from "../../../../../utils/types/types";
+import SelectedDataProvider from "../../../../helper/SelectedDataProvider";
 import LeftPaneContent from "../LeftPaneContent";
 
 describe("LeftPaneContent component", () => {
   test("Displays Collections", () => {
     localStorage.setItem(
       LocalStorageKeys.SELECTED_COLLECTION,
-      JSON.stringify(testCollections[0])
+      JSON.stringify(_testCollections[0])
     );
     localStorage.setItem(LocalStorageKeys.SELECTED_LIST, "");
+    // Mock URQL client.
+    const mockClient = createMockUrqlClient<
+      CollectionsQueryVariables | NotesListsQueryVariables,
+      sourceT<{ data: CollectionsQuery | NotesListsQuery }>
+    >({
+      executeQuery: ({ query }) => {
+        const queryType = (
+          query.definitions[0].name.value as string
+        ).toLowerCase();
+        switch (queryType) {
+          case "collections":
+            return fromValue({
+              data: {
+                collections: _testCollections,
+              },
+            });
+          case "noteslists":
+            return fromValue({
+              data: {
+                notesLists: testNotesLists.collection1,
+              },
+            });
+          default:
+            break;
+        }
+      },
+    });
+    // Render
     render(
-      <SelectedCollectionProvider>
-        <SelectedListProvider>
+      <Provider value={mockClient as unknown as Client}>
+        <SelectedDataProvider>
           <LeftPaneContent />
-        </SelectedListProvider>
-      </SelectedCollectionProvider>
+        </SelectedDataProvider>
+      </Provider>
     );
 
     const leftPaneContentlHeader = screen.getByText(/collections/i);
@@ -29,15 +71,43 @@ describe("LeftPaneContent component", () => {
   test("Displays the list of collections", () => {
     localStorage.setItem(
       LocalStorageKeys.SELECTED_COLLECTION,
-      JSON.stringify(testCollections[0])
+      JSON.stringify(_testCollections[0])
     );
     localStorage.setItem(LocalStorageKeys.SELECTED_LIST, "");
+    // Mock URQL client.
+    const mockClient = createMockUrqlClient<
+      CollectionsQueryVariables | NotesListsQueryVariables,
+      sourceT<{ data: CollectionsQuery | NotesListsQuery }>
+    >({
+      executeQuery: ({ query }) => {
+        const queryType = (
+          query.definitions[0].name.value as string
+        ).toLowerCase();
+        switch (queryType) {
+          case "collections":
+            return fromValue({
+              data: {
+                collections: _testCollections,
+              },
+            });
+          case "noteslists":
+            return fromValue({
+              data: {
+                notesLists: testNotesLists.collection1,
+              },
+            });
+          default:
+            break;
+        }
+      },
+    });
+    // Render
     render(
-      <SelectedCollectionProvider>
-        <SelectedListProvider>
+      <Provider value={mockClient as unknown as Client}>
+        <SelectedDataProvider>
           <LeftPaneContent />
-        </SelectedListProvider>
-      </SelectedCollectionProvider>
+        </SelectedDataProvider>
+      </Provider>
     );
 
     const collections = screen.getAllByRole("heading", { name: /collection/i });
@@ -49,21 +119,55 @@ describe("LeftPaneContent component", () => {
     expect(collectionInList).toHaveLength(3);
   });
 
-  test("Selects a collection that is stored in local storage", async () => {
+  test("Selects a collection that is then stored in local storage", async () => {
+    // Mock URQL client.
+    const mockClient = createMockUrqlClient<
+      CollectionsQueryVariables | NotesListsQueryVariables,
+      sourceT<{ data: CollectionsQuery | NotesListsQuery }>
+    >({
+      executeQuery: ({ query }) => {
+        const queryType = (
+          query.definitions[0].name.value as string
+        ).toLowerCase();
+        switch (queryType) {
+          case "collections":
+            return fromValue({
+              data: {
+                collections: _testCollections,
+              },
+            });
+          case "noteslists":
+            return fromValue({
+              data: {
+                notesLists: testNotesLists.collection1,
+              },
+            });
+          default:
+            break;
+        }
+      },
+    });
+    // Render
     render(
-      <SelectedCollectionProvider>
-        <SelectedListProvider>
+      <Provider value={mockClient as unknown as Client}>
+        <SelectedDataProvider>
           <LeftPaneContent />
-        </SelectedListProvider>
-      </SelectedCollectionProvider>
+        </SelectedDataProvider>
+      </Provider>
     );
 
     const title = "Collection 1";
 
-    const collectionInList = screen.getByText(title);
+    const collectionInList = screen.getAllByRole("heading", {
+      name: title,
+    });
 
     await act(async () => {
-      fireEvent.click(collectionInList);
+      fireEvent.click(
+        collectionInList.find(
+          (ct) => ct.id === "collection-heading-1"
+        ) as Element
+      );
     });
 
     const collectionInStorage = localStorage.getItem(
@@ -78,20 +182,55 @@ describe("LeftPaneContent component", () => {
   test("Selecting a list displays the lists in the right pane", async () => {
     localStorage.setItem(
       LocalStorageKeys.SELECTED_COLLECTION,
-      JSON.stringify(testCollections[0])
+      JSON.stringify(_testCollections[0])
     );
     localStorage.setItem(
       LocalStorageKeys.SELECTED_LIST,
-      JSON.stringify(testCollections[0].lists[0])
+      JSON.stringify(testNotesLists.collection1[0])
     );
+    // Mock URQL client.
+    const mockClient = createMockUrqlClient<
+      | CollectionsQueryVariables
+      | NotesListsQueryVariables
+      | NotesListQueryVariables,
+      sourceT<{ data: CollectionsQuery | NotesListsQuery | NotesListQuery }>
+    >({
+      executeQuery: ({ query }) => {
+        const queryType = (
+          query.definitions[0].name.value as string
+        ).toLowerCase();
+        switch (queryType) {
+          case "collections":
+            return fromValue({
+              data: {
+                collections: _testCollections,
+              },
+            });
+          case "noteslists":
+            return fromValue({
+              data: {
+                notesLists: testNotesLists.collection1,
+              },
+            });
+          case "noteslist":
+            return fromValue({
+              data: {
+                notesList: testNotesLists.collection1[0],
+              },
+            });
+          default:
+            break;
+        }
+      },
+    });
+    // Render
     render(
-      <SelectedCollectionProvider>
-        <SelectedListProvider>
+      <Provider value={mockClient as unknown as Client}>
+        <SelectedDataProvider>
           <LeftPaneContent />
-        </SelectedListProvider>
-      </SelectedCollectionProvider>
+        </SelectedDataProvider>
+      </Provider>
     );
-
     const listsElements = screen.getAllByRole("heading", { name: /list/i });
 
     const lists = listsElements.filter((c, i) => {

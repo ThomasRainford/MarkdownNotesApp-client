@@ -1,26 +1,68 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { act } from "react-dom/test-utils";
-import { SelectedCollectionProvider } from "../../../../../contexts/SelectedCollectionContext";
-import { SelectedListProvider } from "../../../../../contexts/SelectedListContext";
-import { testCollections } from "../../../../../test-utils/testData";
+import { Client, Provider } from "urql";
+import { fromValue } from "wonka";
+import { sourceT } from "wonka/dist/types/src/Wonka_types.gen";
+import {
+  CollectionsQuery,
+  CollectionsQueryVariables,
+  NotesListQuery,
+  NotesListQueryVariables,
+  NotesListsQuery,
+  NotesListsQueryVariables,
+} from "../../../../../generated/graphql";
+import { createMockUrqlClient } from "../../../../../test-utils/createMockUrqlClient";
+import {
+  testNotesLists,
+  _testCollections,
+} from "../../../../../test-utils/testData";
 import { LocalStorageKeys } from "../../../../../utils/types/types";
+import SelectedDataProvider from "../../../../helper/SelectedDataProvider";
 import RightPaneContent from "../RightPaneContent";
 
 describe("RightPaneContent component", () => {
   beforeAll(() => {
     localStorage.setItem(
       LocalStorageKeys.SELECTED_COLLECTION,
-      JSON.stringify(testCollections[0])
+      JSON.stringify(_testCollections[0])
     );
   });
 
   test("Displays Lists", () => {
+    // Mock URQL client.
+    const mockClient = createMockUrqlClient<
+      CollectionsQueryVariables | NotesListsQueryVariables,
+      sourceT<{ data: CollectionsQuery | NotesListsQuery }>
+    >({
+      executeQuery: ({ query }) => {
+        const queryType = (
+          query.definitions[0].name.value as string
+        ).toLowerCase();
+        switch (queryType) {
+          case "collections":
+            return fromValue({
+              data: {
+                collections: _testCollections,
+              },
+            });
+          case "noteslists":
+            return fromValue({
+              data: {
+                notesLists: testNotesLists.collection1,
+              },
+            });
+          default:
+            break;
+        }
+      },
+    });
+    // Render
     render(
-      <SelectedCollectionProvider>
-        <SelectedListProvider>
+      <Provider value={mockClient as unknown as Client}>
+        <SelectedDataProvider>
           <RightPaneContent />
-        </SelectedListProvider>
-      </SelectedCollectionProvider>
+        </SelectedDataProvider>
+      </Provider>
     );
 
     const rightPaneContentlHeader = screen.getByText(/collection 1/i);
@@ -30,13 +72,49 @@ describe("RightPaneContent component", () => {
     expect(listInList).toBeInTheDocument();
   });
 
-  test("Selects a list that is stored in local storage", async () => {
+  test("Selects a list that is then stored in local storage", async () => {
+    // Mock URQL client.
+    const mockClient = createMockUrqlClient<
+      | CollectionsQueryVariables
+      | NotesListsQueryVariables
+      | NotesListQueryVariables,
+      sourceT<{ data: CollectionsQuery | NotesListsQuery | NotesListQuery }>
+    >({
+      executeQuery: ({ query }) => {
+        const queryType = (
+          query.definitions[0].name.value as string
+        ).toLowerCase();
+        switch (queryType) {
+          case "collections":
+            return fromValue({
+              data: {
+                collections: _testCollections,
+              },
+            });
+          case "noteslists":
+            return fromValue({
+              data: {
+                notesLists: testNotesLists.collection1,
+              },
+            });
+          case "noteslist":
+            return fromValue({
+              data: {
+                notesList: testNotesLists.collection1[0],
+              },
+            });
+          default:
+            break;
+        }
+      },
+    });
+    // Render
     render(
-      <SelectedCollectionProvider>
-        <SelectedListProvider>
+      <Provider value={mockClient as unknown as Client}>
+        <SelectedDataProvider>
           <RightPaneContent />
-        </SelectedListProvider>
-      </SelectedCollectionProvider>
+        </SelectedDataProvider>
+      </Provider>
     );
 
     const title = "List 1";
@@ -55,12 +133,48 @@ describe("RightPaneContent component", () => {
   });
 
   test("Selecting a list displays the lists notes", async () => {
+    // Mock URQL client.
+    const mockClient = createMockUrqlClient<
+      | CollectionsQueryVariables
+      | NotesListsQueryVariables
+      | NotesListQueryVariables,
+      sourceT<{ data: CollectionsQuery | NotesListsQuery | NotesListQuery }>
+    >({
+      executeQuery: ({ query }) => {
+        const queryType = (
+          query.definitions[0].name.value as string
+        ).toLowerCase();
+        switch (queryType) {
+          case "collections":
+            return fromValue({
+              data: {
+                collections: _testCollections,
+              },
+            });
+          case "noteslists":
+            return fromValue({
+              data: {
+                notesLists: testNotesLists.collection1,
+              },
+            });
+          case "noteslist":
+            return fromValue({
+              data: {
+                notesList: testNotesLists.collection1[0],
+              },
+            });
+          default:
+            break;
+        }
+      },
+    });
+    // Render
     render(
-      <SelectedCollectionProvider>
-        <SelectedListProvider>
+      <Provider value={mockClient as unknown as Client}>
+        <SelectedDataProvider>
           <RightPaneContent />
-        </SelectedListProvider>
-      </SelectedCollectionProvider>
+        </SelectedDataProvider>
+      </Provider>
     );
 
     const title = "List 1";
