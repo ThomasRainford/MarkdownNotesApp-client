@@ -3,7 +3,6 @@ import { act } from "react-dom/test-utils";
 import { Client, Provider } from "urql";
 import { fromValue } from "wonka";
 import { sourceT } from "wonka/dist/types/src/Wonka_types.gen";
-import { SelectedCollectionProvider } from "../../../../../contexts/SelectedCollectionContext";
 import {
   CollectionsQuery,
   CollectionsQueryVariables,
@@ -14,6 +13,7 @@ import {
   _testCollections,
 } from "../../../../../test-utils/testData";
 import { LocalStorageKeys } from "../../../../../utils/types/types";
+import SelectedDataProvider from "../../../../helper/SelectedDataProvider";
 import Collections from "../Collections";
 
 describe("Collections tests", () => {
@@ -39,9 +39,9 @@ describe("Collections tests", () => {
     // Render
     render(
       <Provider value={mockClient as unknown as Client}>
-        <SelectedCollectionProvider>
+        <SelectedDataProvider>
           <Collections />
-        </SelectedCollectionProvider>
+        </SelectedDataProvider>
       </Provider>
     );
 
@@ -75,9 +75,9 @@ describe("Collections tests", () => {
     // Render
     render(
       <Provider value={mockClient as unknown as Client}>
-        <SelectedCollectionProvider>
+        <SelectedDataProvider>
           <Collections />
-        </SelectedCollectionProvider>
+        </SelectedDataProvider>
       </Provider>
     );
 

@@ -15,6 +15,7 @@ import {
   _testCollections,
 } from "../../../../../test-utils/testData";
 import { LocalStorageKeys } from "../../../../../utils/types/types";
+import SelectedDataProvider from "../../../../helper/SelectedDataProvider";
 import Lists from "../Lists";
 
 describe("Lists component", () => {
@@ -73,11 +74,9 @@ describe("Lists component", () => {
     });
     render(
       <Provider value={mockClient as unknown as Client}>
-        <SelectedCollectionProvider>
-          <SelectedListProvider>
-            <Lists />
-          </SelectedListProvider>
-        </SelectedCollectionProvider>
+        <SelectedDataProvider>
+          <Lists />
+        </SelectedDataProvider>
       </Provider>
     );
 

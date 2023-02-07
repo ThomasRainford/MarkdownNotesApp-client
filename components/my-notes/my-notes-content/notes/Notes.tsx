@@ -14,7 +14,7 @@ import {
   Tag,
   Text,
   useColorMode,
-  useDisclosure
+  useDisclosure,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { SelectedCollectionContext } from "../../../../contexts/SelectedCollectionContext";
@@ -26,7 +26,7 @@ import { getTimeSince } from "../../../../utils/getTimeSince";
 import { useLocalStorageValue } from "../../../../utils/hooks/useLocalStorageValue";
 import {
   LocalStorageContextType,
-  LocalStorageKeys
+  LocalStorageKeys,
 } from "../../../../utils/types/types";
 import AddOrCancelAddItem from "../../add-or-cancel-add-item/AddOrCancelAddItem";
 import NewItemInput from "../../new-item-input/NewItemInput";
