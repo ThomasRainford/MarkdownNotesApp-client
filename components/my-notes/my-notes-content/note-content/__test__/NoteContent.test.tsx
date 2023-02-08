@@ -9,6 +9,7 @@ import NoteContent from "../NoteContent";
 
 describe("NoteContent component", () => {
   test("Displays correct collection, list and note", () => {
+    // Local storage
     localStorage.setItem(
       LocalStorageKeys.SELECTED_COLLECTION,
       JSON.stringify(testCollections[0])
@@ -21,7 +22,7 @@ describe("NoteContent component", () => {
       LocalStorageKeys.SELECTED_NOTE,
       JSON.stringify(testSelectedNote)
     );
-
+    // Render
     render(
       <SelectedDataProvider>
         <NoteContent />

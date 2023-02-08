@@ -1,17 +1,8 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { act } from "react-dom/test-utils";
 import { Client, Provider } from "urql";
-import { fromValue } from "wonka";
-import { sourceT } from "wonka/dist/types/src/Wonka_types.gen";
-import {
-  NotesListsQuery,
-  NotesListsQueryVariables,
-} from "../../../../../generated/graphql";
-import { createMockUrqlClient } from "../../../../../test-utils/createMockUrqlClient";
-import {
-  testNotesLists,
-  _testCollections,
-} from "../../../../../test-utils/testData";
+import { mockClient } from "../../../../../test-utils/mocks/gql-mocks";
+import { _testCollections } from "../../../../../test-utils/testData";
 import { LocalStorageKeys } from "../../../../../utils/types/types";
 import SelectedDataProvider from "../../../../helper/SelectedDataProvider";
 import Lists from "../Lists";
@@ -23,19 +14,7 @@ describe("Lists component", () => {
       LocalStorageKeys.SELECTED_COLLECTION,
       JSON.stringify(_testCollections[0])
     );
-    // Mock URQL client.
-    const mockClient = createMockUrqlClient<
-      NotesListsQueryVariables,
-      sourceT<{ data: NotesListsQuery }>
-    >({
-      executeQuery: () => {
-        return fromValue({
-          data: {
-            notesLists: testNotesLists.collection1,
-          },
-        });
-      },
-    });
+    // Render
     render(
       <Provider value={mockClient as unknown as Client}>
         <SelectedDataProvider>
@@ -55,19 +34,7 @@ describe("Lists component", () => {
       LocalStorageKeys.SELECTED_COLLECTION,
       JSON.stringify(_testCollections[0])
     );
-    // Mock URQL client.
-    const mockClient = createMockUrqlClient<
-      NotesListsQueryVariables,
-      sourceT<{ data: NotesListsQuery }>
-    >({
-      executeQuery: () => {
-        return fromValue({
-          data: {
-            notesLists: testNotesLists.collection1,
-          },
-        });
-      },
-    });
+    // Render
     render(
       <Provider value={mockClient as unknown as Client}>
         <SelectedDataProvider>

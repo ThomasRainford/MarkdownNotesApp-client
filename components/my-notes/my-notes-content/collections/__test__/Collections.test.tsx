@@ -1,13 +1,7 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { act } from "react-dom/test-utils";
 import { Client, Provider } from "urql";
-import { fromValue } from "wonka";
-import { sourceT } from "wonka/dist/types/src/Wonka_types.gen";
-import {
-  CollectionsQuery,
-  CollectionsQueryVariables,
-} from "../../../../../generated/graphql";
-import { createMockUrqlClient } from "../../../../../test-utils/createMockUrqlClient";
+import { mockClient } from "../../../../../test-utils/mocks/gql-mocks";
 import {
   testCollections,
   _testCollections,
@@ -23,19 +17,6 @@ describe("Collections tests", () => {
       LocalStorageKeys.SELECTED_COLLECTION,
       JSON.stringify(_testCollections[0])
     );
-    // Mock URQL client.
-    const mockClient = createMockUrqlClient<
-      CollectionsQueryVariables,
-      sourceT<{ data: CollectionsQuery }>
-    >({
-      executeQuery: () => {
-        return fromValue({
-          data: {
-            collections: _testCollections,
-          },
-        });
-      },
-    });
     // Render
     render(
       <Provider value={mockClient as unknown as Client}>
@@ -59,19 +40,6 @@ describe("Collections tests", () => {
       LocalStorageKeys.SELECTED_COLLECTION,
       JSON.stringify(testCollections[0])
     );
-    // Mock URQL client.
-    const mockClient = createMockUrqlClient<
-      CollectionsQueryVariables,
-      sourceT<{ data: CollectionsQuery }>
-    >({
-      executeQuery: () => {
-        return fromValue({
-          data: {
-            collections: _testCollections,
-          },
-        });
-      },
-    });
     // Render
     render(
       <Provider value={mockClient as unknown as Client}>

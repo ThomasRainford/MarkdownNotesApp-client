@@ -7,49 +7,14 @@ import { sourceT } from "wonka/dist/types/src/Wonka_types.gen";
 import {
   LoginMutation,
   LoginMutationVariables,
-  MeQuery,
 } from "../../../../generated/graphql";
 import { createMockRouter } from "../../../../test-utils/createMockRouter";
 import { createMockUrqlClient } from "../../../../test-utils/createMockUrqlClient";
+import { mockClient } from "../../../../test-utils/mocks/gql-mocks";
 import LoginForm from "../LoginForm";
 
 describe("LoginForm component", () => {
   test("Should login successfully", async () => {
-    const mockClient = createMockUrqlClient<
-      LoginMutationVariables,
-      sourceT<{ data: LoginMutation | MeQuery }>
-    >({
-      executeMutation: (query: { variables: LoginMutationVariables }) => {
-        const variables = query.variables;
-        return fromValue({
-          data: {
-            login: {
-              user: {
-                id: "62c112b482c8f5360ce6dfcb",
-                username: variables.usernameOrEmail,
-                email: "mail@test.com",
-              },
-              errors: null,
-            },
-          },
-        });
-      },
-      executeQuery: () => {
-        return fromValue({
-          data: {
-            me: {
-              _id: "id",
-              id: "id",
-              username: "User01",
-              email: "User01@mail.com",
-              followers: [] as string[],
-              following: [] as string[],
-              upvoted: [] as string[],
-            },
-          },
-        });
-      },
-    });
     const mockRouter = createMockRouter({});
     render(
       <RouterContext.Provider value={mockRouter}>
