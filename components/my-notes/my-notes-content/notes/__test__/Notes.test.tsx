@@ -19,7 +19,7 @@ describe("Notes component", () => {
     );
     // Render
     render(
-      <Provider value={mockClient as unknown as Client}>
+      <Provider value={mockClient() as unknown as Client}>
         <SelectedDataProvider>
           <Notes />
         </SelectedDataProvider>

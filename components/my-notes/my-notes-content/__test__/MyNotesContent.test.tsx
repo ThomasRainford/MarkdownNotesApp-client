@@ -16,7 +16,7 @@ describe("MyNotesContent component", () => {
   test("Displays MyNotesContent", async () => {
     // Render
     render(
-      <Provider value={mockClient as unknown as Client}>
+      <Provider value={mockClient() as unknown as Client}>
         <SelectedDataProvider>
           <MyNotesContent />
         </SelectedDataProvider>
@@ -35,7 +35,7 @@ describe("MyNotesContent component", () => {
   test("clicking collection displays correct collection title", async () => {
     // Render
     render(
-      <Provider value={mockClient as unknown as Client}>
+      <Provider value={mockClient() as unknown as Client}>
         <SelectedDataProvider>
           <MyNotesContent />
         </SelectedDataProvider>
@@ -62,7 +62,7 @@ describe("MyNotesContent component", () => {
   test("clicking collection displays the correct lists", async () => {
     // Render
     render(
-      <Provider value={mockClient as unknown as Client}>
+      <Provider value={mockClient() as unknown as Client}>
         <SelectedDataProvider>
           <MyNotesContent />
         </SelectedDataProvider>
@@ -91,7 +91,7 @@ describe("MyNotesContent component", () => {
     );
     // Render
     render(
-      <Provider value={mockClient as unknown as Client}>
+      <Provider value={mockClient() as unknown as Client}>
         <SelectedDataProvider>
           <MyNotesContent />
         </SelectedDataProvider>
@@ -123,7 +123,7 @@ describe("MyNotesContent component", () => {
     );
     // Render
     render(
-      <Provider value={mockClient as unknown as Client}>
+      <Provider value={mockClient() as unknown as Client}>
         <SelectedDataProvider>
           <MyNotesContent />
         </SelectedDataProvider>
@@ -152,7 +152,7 @@ describe("MyNotesContent component", () => {
     );
     // Render
     render(
-      <Provider value={mockClient as unknown as Client}>
+      <Provider value={mockClient() as unknown as Client}>
         <SelectedDataProvider>
           <MyNotesContent />
         </SelectedDataProvider>

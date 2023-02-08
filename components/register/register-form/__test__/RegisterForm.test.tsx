@@ -2,58 +2,18 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { RouterContext } from "next/dist/shared/lib/router-context";
 import { act } from "react-dom/test-utils";
 import { Client, Provider } from "urql";
-import { fromValue } from "wonka";
-import { sourceT } from "wonka/dist/types/src/Wonka_types.gen";
-import {
-  MeQuery,
-  RegisterMutation,
-  RegisterMutationVariables,
-} from "../../../../generated/graphql";
 import { createMockRouter } from "../../../../test-utils/createMockRouter";
-import { createMockUrqlClient } from "../../../../test-utils/createMockUrqlClient";
+import { mockClient } from "../../../../test-utils/mocks/gql-mocks";
 import RegisterForm from "../RegisterForm";
 
 describe("RegisterForm component", () => {
   test("Should register successfully", async () => {
-    const mockClient = createMockUrqlClient<
-      RegisterMutationVariables,
-      sourceT<{ data: RegisterMutation | MeQuery }>
-    >({
-      executeMutation: (query: { variables: RegisterMutationVariables }) => {
-        const variables = query.variables;
-        return fromValue({
-          data: {
-            register: {
-              user: {
-                id: "62c112b482c8f5360ce6dfcb",
-                username: variables.registerInput.username,
-                email: variables.registerInput.email,
-              },
-              errors: null,
-            },
-          },
-        });
-      },
-      executeQuery: () => {
-        return fromValue({
-          data: {
-            me: {
-              _id: "id",
-              id: "id",
-              username: "User01",
-              email: "User01@mail.com",
-              followers: [] as string[],
-              following: [] as string[],
-              upvoted: [] as string[],
-            },
-          },
-        });
-      },
-    });
     const mockRouter = createMockRouter({});
     render(
       <RouterContext.Provider value={mockRouter}>
-        <Provider value={mockClient as unknown as Client}>
+        <Provider
+          value={mockClient({ register: "success" }) as unknown as Client}
+        >
           <RegisterForm />
         </Provider>
       </RouterContext.Provider>
@@ -98,45 +58,12 @@ describe("RegisterForm component", () => {
   });
 
   test("Should fail to register", async () => {
-    const mockClient = createMockUrqlClient<
-      RegisterMutationVariables,
-      sourceT<{ data: RegisterMutation | MeQuery }>
-    >({
-      executeMutation: () => {
-        return fromValue({
-          data: {
-            register: {
-              user: null,
-              errors: [
-                {
-                  field: "email",
-                  message: "Invalid email address",
-                },
-              ],
-            },
-          },
-        });
-      },
-      executeQuery: () => {
-        return fromValue({
-          data: {
-            me: {
-              _id: "id",
-              id: "id",
-              username: "User01",
-              email: "User01@mail.com",
-              followers: [] as string[],
-              following: [] as string[],
-              upvoted: [] as string[],
-            },
-          },
-        });
-      },
-    });
     const mockRouter = createMockRouter({});
     render(
       <RouterContext.Provider value={mockRouter}>
-        <Provider value={mockClient as unknown as Client}>
+        <Provider
+          value={mockClient({ register: "error" }) as unknown as Client}
+        >
           <RegisterForm />
         </Provider>
       </RouterContext.Provider>
@@ -181,45 +108,12 @@ describe("RegisterForm component", () => {
   });
 
   test("Should fail to register with multiple validation errors", async () => {
-    const mockClient = createMockUrqlClient<
-      RegisterMutationVariables,
-      sourceT<{ data: RegisterMutation | MeQuery }>
-    >({
-      executeMutation: () => {
-        return fromValue({
-          data: {
-            register: {
-              user: null,
-              errors: [
-                {
-                  field: "email",
-                  message: "Invalid email address",
-                },
-              ],
-            },
-          },
-        });
-      },
-      executeQuery: () => {
-        return fromValue({
-          data: {
-            me: {
-              _id: "id",
-              id: "id",
-              username: "User01",
-              email: "User01@mail.com",
-              followers: [] as string[],
-              following: [] as string[],
-              upvoted: [] as string[],
-            },
-          },
-        });
-      },
-    });
     const mockRouter = createMockRouter({});
     render(
       <RouterContext.Provider value={mockRouter}>
-        <Provider value={mockClient as unknown as Client}>
+        <Provider
+          value={mockClient({ register: "error" }) as unknown as Client}
+        >
           <RegisterForm />
         </Provider>
       </RouterContext.Provider>

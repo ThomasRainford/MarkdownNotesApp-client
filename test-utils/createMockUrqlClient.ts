@@ -52,7 +52,10 @@ export type MockClient<Variables extends AnyVariables, Response> = {
     context?: Partial<OperationContext>
   ): jest.Mock;
 
-  executeMutation: (query: { query?: any; variables: any }) => Response;
+  executeMutation: (query: {
+    query: any;
+    variables: any;
+  }) => Response | undefined;
   executeQuery: (query: { query: any; variables: any }) => Response | undefined;
   executeSubscription: () => null;
 };

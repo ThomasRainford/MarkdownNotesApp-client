@@ -18,7 +18,7 @@ describe("RightPaneContent component", () => {
   test("Displays Lists", () => {
     // Render
     render(
-      <Provider value={mockClient as unknown as Client}>
+      <Provider value={mockClient() as unknown as Client}>
         <SelectedDataProvider>
           <RightPaneContent />
         </SelectedDataProvider>
@@ -35,7 +35,7 @@ describe("RightPaneContent component", () => {
   test("Selects a list that is then stored in local storage", async () => {
     // Render
     render(
-      <Provider value={mockClient as unknown as Client}>
+      <Provider value={mockClient() as unknown as Client}>
         <SelectedDataProvider>
           <RightPaneContent />
         </SelectedDataProvider>
@@ -60,7 +60,7 @@ describe("RightPaneContent component", () => {
   test("Selecting a list displays the lists notes", async () => {
     // Render
     render(
-      <Provider value={mockClient as unknown as Client}>
+      <Provider value={mockClient() as unknown as Client}>
         <SelectedDataProvider>
           <RightPaneContent />
         </SelectedDataProvider>

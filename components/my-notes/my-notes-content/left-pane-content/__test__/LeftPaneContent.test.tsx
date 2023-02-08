@@ -20,7 +20,7 @@ describe("LeftPaneContent component", () => {
     localStorage.setItem(LocalStorageKeys.SELECTED_LIST, "");
     // Render
     render(
-      <Provider value={mockClient as unknown as Client}>
+      <Provider value={mockClient() as unknown as Client}>
         <SelectedDataProvider>
           <LeftPaneContent />
         </SelectedDataProvider>
@@ -41,7 +41,7 @@ describe("LeftPaneContent component", () => {
     localStorage.setItem(LocalStorageKeys.SELECTED_LIST, "");
     // Render
     render(
-      <Provider value={mockClient as unknown as Client}>
+      <Provider value={mockClient() as unknown as Client}>
         <SelectedDataProvider>
           <LeftPaneContent />
         </SelectedDataProvider>
@@ -60,7 +60,7 @@ describe("LeftPaneContent component", () => {
   test("Selects a collection that is then stored in local storage", async () => {
     // Render
     render(
-      <Provider value={mockClient as unknown as Client}>
+      <Provider value={mockClient() as unknown as Client}>
         <SelectedDataProvider>
           <LeftPaneContent />
         </SelectedDataProvider>
@@ -102,7 +102,7 @@ describe("LeftPaneContent component", () => {
     );
     // Render
     render(
-      <Provider value={mockClient as unknown as Client}>
+      <Provider value={mockClient() as unknown as Client}>
         <SelectedDataProvider>
           <LeftPaneContent />
         </SelectedDataProvider>

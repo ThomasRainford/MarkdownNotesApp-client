@@ -279,6 +279,17 @@ export const testCollections = [
   },
 ];
 
+export const testUsers = [
+  {
+    id: "id",
+    username: "User01",
+    email: "User01@mail.com",
+    followers: [] as string[],
+    following: [] as string[],
+    upvoted: [] as string[],
+  },
+];
+
 export const testUser = {
   _id: "kdslfj34r89sdkflj02983kj",
   email: "user1@email.com",

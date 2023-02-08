@@ -16,7 +16,7 @@ describe("Lists component", () => {
     );
     // Render
     render(
-      <Provider value={mockClient as unknown as Client}>
+      <Provider value={mockClient() as unknown as Client}>
         <SelectedDataProvider>
           <Lists />
         </SelectedDataProvider>
@@ -36,7 +36,7 @@ describe("Lists component", () => {
     );
     // Render
     render(
-      <Provider value={mockClient as unknown as Client}>
+      <Provider value={mockClient() as unknown as Client}>
         <SelectedDataProvider>
           <Lists />
         </SelectedDataProvider>

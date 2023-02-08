@@ -19,7 +19,7 @@ describe("Collections tests", () => {
     );
     // Render
     render(
-      <Provider value={mockClient as unknown as Client}>
+      <Provider value={mockClient() as unknown as Client}>
         <SelectedDataProvider>
           <Collections />
         </SelectedDataProvider>
@@ -42,7 +42,7 @@ describe("Collections tests", () => {
     );
     // Render
     render(
-      <Provider value={mockClient as unknown as Client}>
+      <Provider value={mockClient() as unknown as Client}>
         <SelectedDataProvider>
           <Collections />
         </SelectedDataProvider>
