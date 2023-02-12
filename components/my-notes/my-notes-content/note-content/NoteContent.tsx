@@ -119,7 +119,7 @@ const NoteContent = (): JSX.Element => {
     SelectedNoteContext,
     LocalStorageKeys.SELECTED_NOTE
   ) as LocalStorageContextType;
-  const _selectedNote = getLocalStorageValue(selectedNote);
+  const _selectedNote = getLocalStorageValue(selectedNote) as any;
   const note = _selectedNote.note;
 
   return (
