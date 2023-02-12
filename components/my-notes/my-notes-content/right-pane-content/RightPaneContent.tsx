@@ -6,6 +6,7 @@ import {
   Input,
   InputGroup,
   InputLeftAddon,
+  Tooltip,
   useColorMode,
 } from "@chakra-ui/react";
 import { ReactNode, useEffect, useState } from "react";
@@ -34,18 +35,25 @@ const ListPaneHeaderTitle = ({
   return (
     <Box display={"flex"} mr={"2em"}>
       {!isEditing ? (
-        <Heading
-          id="right-pane-heading"
-          as="h3"
-          size={"md"}
-          textColor={colorMode === "light" ? "gray.600" : "gray.300"}
-          onDoubleClick={() => {
-            setIsEditing(!isEditing);
-            setEditingValue(title);
-          }}
+        <Tooltip
+          hasArrow
+          placement="top"
+          label={"Double click to edit"}
+          aria-label={`edit-${type}-tooltip`}
         >
-          {editingValue}
-        </Heading>
+          <Heading
+            id="right-pane-heading"
+            as="h3"
+            size={"md"}
+            textColor={colorMode === "light" ? "gray.600" : "gray.300"}
+            onDoubleClick={() => {
+              setIsEditing(!isEditing);
+              setEditingValue(title);
+            }}
+          >
+            {editingValue}
+          </Heading>
+        </Tooltip>
       ) : (
         <Box display={"flex"}>
           <Input
