@@ -338,6 +338,22 @@ export type RegisterMutationVariables = Exact<{
 
 export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserResponse', user?: { __typename?: 'User', id: string, username: string, email: string } | null, errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null } };
 
+export type UpdateCollectionMutationVariables = Exact<{
+  id: Scalars['String'];
+  collectionInput: CollectionUpdateInput;
+}>;
+
+
+export type UpdateCollectionMutation = { __typename?: 'Mutation', updateCollection: { __typename?: 'CollectionResponse', collection?: { __typename?: 'Collection', id: string, title: string, visibility: string, upvotes: number, createdAt: any, updatedAt: any, owner: { __typename?: 'User', id: string, username: string }, lists: Array<{ __typename?: 'NotesList', id: string, title: string }> } | null, error?: { __typename?: 'Error', property: string, message: string } | null } };
+
+export type UpdateNotesListMutationVariables = Exact<{
+  listLocation: ListLocationInput;
+  notesListInput: NotesListUpdateInput;
+}>;
+
+
+export type UpdateNotesListMutation = { __typename?: 'Mutation', updateNotesList: { __typename?: 'NotesListResponse', notesList?: { __typename?: 'NotesList', id: string, title: string, createdAt: any, updatedAt: any, collection: { __typename?: 'Collection', id: string }, notes: Array<{ __typename?: 'Note', id: string, title: string, body: string, createdAt: any, updatedAt: any }> } | null, error?: { __typename?: 'Error', property: string, message: string } | null } };
+
 export type CollectionsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -411,6 +427,66 @@ export const RegisterDocument = gql`
 
 export function useRegisterMutation() {
   return Urql.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument);
+};
+export const UpdateCollectionDocument = gql`
+    mutation UpdateCollection($id: String!, $collectionInput: CollectionUpdateInput!) {
+  updateCollection(id: $id, collectionInput: $collectionInput) {
+    collection {
+      id
+      title
+      visibility
+      upvotes
+      createdAt
+      updatedAt
+      owner {
+        id
+        username
+      }
+      lists {
+        id
+        title
+      }
+    }
+    error {
+      property
+      message
+    }
+  }
+}
+    `;
+
+export function useUpdateCollectionMutation() {
+  return Urql.useMutation<UpdateCollectionMutation, UpdateCollectionMutationVariables>(UpdateCollectionDocument);
+};
+export const UpdateNotesListDocument = gql`
+    mutation UpdateNotesList($listLocation: ListLocationInput!, $notesListInput: NotesListUpdateInput!) {
+  updateNotesList(listLocation: $listLocation, notesListInput: $notesListInput) {
+    notesList {
+      id
+      title
+      createdAt
+      updatedAt
+      collection {
+        id
+      }
+      notes {
+        id
+        title
+        body
+        createdAt
+        updatedAt
+      }
+    }
+    error {
+      property
+      message
+    }
+  }
+}
+    `;
+
+export function useUpdateNotesListMutation() {
+  return Urql.useMutation<UpdateNotesListMutation, UpdateNotesListMutationVariables>(UpdateNotesListDocument);
 };
 export const CollectionsDocument = gql`
     query collections {

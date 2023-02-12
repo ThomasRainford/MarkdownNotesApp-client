@@ -12,8 +12,16 @@ import {
 import { ReactNode, useEffect, useState } from "react";
 import { SelectedCollectionContext } from "../../../../contexts/SelectedCollectionContext";
 import { SelectedListContext } from "../../../../contexts/SelectedListContext";
+import {
+  Collection,
+  NotesList,
+  useUpdateCollectionMutation,
+  useUpdateNotesListMutation,
+} from "../../../../generated/graphql";
 import { getLocalStorageValue } from "../../../../utils/getLocalStorageValue";
+import { useAllLocalStorageValues } from "../../../../utils/hooks/useAllLocalStorageValues";
 import { useLocalStorageValue } from "../../../../utils/hooks/useLocalStorageValue";
+import { useUpdateItem } from "../../../../utils/hooks/useUpdateItem";
 import {
   LocalStorageContextType,
   LocalStorageKeys,
@@ -22,15 +30,55 @@ import Lists from "../lists/Lists";
 import Notes from "../notes/Notes";
 
 const ListPaneHeaderTitle = ({
+  selectedItem,
   title,
   type,
 }: {
+  selectedItem: Collection | NotesList;
   title: string;
   type: "collection" | "list";
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editingValue, setEditingValue] = useState(title);
   const { colorMode } = useColorMode();
+
+  const {
+    collection: { collection },
+    list: { list },
+  } = useAllLocalStorageValues();
+
+  const [, updateCollection] = useUpdateCollectionMutation();
+  const [, updateNotesList] = useUpdateNotesListMutation();
+  const [updateItem] = useUpdateItem();
+
+  const update = () => {
+    if (type === "collection") {
+      updateItem(
+        type,
+        {
+          id: selectedItem.id,
+          collectionInput: {
+            title: editingValue,
+          },
+        },
+        updateCollection
+      );
+    } else {
+      updateItem(
+        type,
+        {
+          listLocation: {
+            collectionId: collection.id,
+            listId: list.id,
+          },
+          notesListInput: {
+            title: editingValue,
+          },
+        },
+        updateNotesList
+      );
+    }
+  };
 
   return (
     <Box display={"flex"} mr={"2em"}>
@@ -68,6 +116,7 @@ const ListPaneHeaderTitle = ({
             onKeyDown={(e) => {
               if (e.key === "Enter") {
                 setIsEditing(false);
+                update();
               }
             }}
           />
@@ -79,6 +128,7 @@ const ListPaneHeaderTitle = ({
             icon={<AddIcon boxSize={3} />}
             onClick={() => {
               setIsEditing(false);
+              update();
             }}
           />
         </Box>
@@ -87,14 +137,27 @@ const ListPaneHeaderTitle = ({
   );
 };
 
-const ListPaneHeader = ({ collection, selectedList }: any) => {
-  const list = selectedList === "" ? "" : getLocalStorageValue(selectedList);
+const ListPaneHeader = ({
+  collection,
+  selectedList,
+}: {
+  collection: Collection;
+  selectedList: string;
+}) => {
+  const list: NotesList | string =
+    selectedList === ""
+      ? ""
+      : (getLocalStorageValue(selectedList) as NotesList);
 
   return (
     <>
       {selectedList === "" ? (
         <Box display={"flex"} justifyContent={"space-between"} w="100%">
-          <ListPaneHeaderTitle title={collection.title} type="collection" />
+          <ListPaneHeaderTitle
+            selectedItem={collection}
+            title={collection.title}
+            type="collection"
+          />
           <Box display={"flex"}>
             <CheckCircleIcon
               color={"blue.400"}
@@ -111,7 +174,11 @@ const ListPaneHeader = ({ collection, selectedList }: any) => {
         <>
           <Box display={"flex"} justifyContent="space-between" w="100%">
             <Box display={"flex"} alignItems="center">
-              <ListPaneHeaderTitle title={list.title} type="list" />
+              <ListPaneHeaderTitle
+                selectedItem={list as NotesList}
+                title={(list as NotesList).title}
+                type="list"
+              />
             </Box>
           </Box>
         </>
@@ -129,7 +196,7 @@ const RightPaneContent = (): JSX.Element => {
     SelectedListContext,
     LocalStorageKeys.SELECTED_LIST
   ) as LocalStorageContextType;
-  const collection = getLocalStorageValue(selectedCollection);
+  const collection = getLocalStorageValue(selectedCollection) as Collection;
 
   const [content, setContent] = useState<ReactNode | null>(<Lists />);
 
