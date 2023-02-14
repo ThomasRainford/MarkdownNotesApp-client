@@ -42,6 +42,10 @@ const ListPaneHeaderTitle = ({
   const [editingValue, setEditingValue] = useState(title);
   const { colorMode } = useColorMode();
 
+  useEffect(() => {
+    setEditingValue(title);
+  }, [title]);
+
   const {
     collection: { collection },
     list: { list },

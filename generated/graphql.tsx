@@ -318,6 +318,22 @@ export type UserResponse = {
   user?: Maybe<User>;
 };
 
+export type CreateCollectionMutationVariables = Exact<{
+  title: Scalars['String'];
+  visibility: Scalars['String'];
+}>;
+
+
+export type CreateCollectionMutation = { __typename?: 'Mutation', createCollection: { __typename?: 'CollectionResponse', collection?: { __typename?: 'Collection', id: string, title: string } | null, error?: { __typename?: 'Error', property: string, message: string } | null } };
+
+export type CreateNotesListMutationVariables = Exact<{
+  collectionId: Scalars['String'];
+  title: Scalars['String'];
+}>;
+
+
+export type CreateNotesListMutation = { __typename?: 'Mutation', createNotesList: { __typename?: 'NotesListResponse', notesList?: { __typename?: 'NotesList', id: string, title: string } | null, error?: { __typename?: 'Error', property: string, message: string } | null } };
+
 export type LoginMutationVariables = Exact<{
   usernameOrEmail: Scalars['String'];
   password: Scalars['String'];
@@ -379,6 +395,42 @@ export type NotesListQueryVariables = Exact<{
 export type NotesListQuery = { __typename?: 'Query', notesList?: { __typename?: 'NotesList', id: string, title: string, createdAt: any, updatedAt: any, collection: { __typename?: 'Collection', id: string }, notes: Array<{ __typename?: 'Note', id: string, title: string, body: string, createdAt: any, updatedAt: any }> } | null };
 
 
+export const CreateCollectionDocument = gql`
+    mutation CreateCollection($title: String!, $visibility: String!) {
+  createCollection(title: $title, visibility: $visibility) {
+    collection {
+      id
+      title
+    }
+    error {
+      property
+      message
+    }
+  }
+}
+    `;
+
+export function useCreateCollectionMutation() {
+  return Urql.useMutation<CreateCollectionMutation, CreateCollectionMutationVariables>(CreateCollectionDocument);
+};
+export const CreateNotesListDocument = gql`
+    mutation CreateNotesList($collectionId: String!, $title: String!) {
+  createNotesList(collectionId: $collectionId, title: $title) {
+    notesList {
+      id
+      title
+    }
+    error {
+      property
+      message
+    }
+  }
+}
+    `;
+
+export function useCreateNotesListMutation() {
+  return Urql.useMutation<CreateNotesListMutation, CreateNotesListMutationVariables>(CreateNotesListDocument);
+};
 export const LoginDocument = gql`
     mutation Login($usernameOrEmail: String!, $password: String!) {
   login(usernameOrEmail: $usernameOrEmail, password: $password) {

@@ -17,15 +17,11 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { useState } from "react";
-import { SelectedCollectionContext } from "../../../../contexts/SelectedCollectionContext";
-import { SelectedListContext } from "../../../../contexts/SelectedListContext";
-import { useNotesListsQuery } from "../../../../generated/graphql";
-import { getLocalStorageValue } from "../../../../utils/getLocalStorageValue";
-import { useLocalStorageValue } from "../../../../utils/hooks/useLocalStorageValue";
 import {
-  LocalStorageContextType,
-  LocalStorageKeys,
-} from "../../../../utils/types/types";
+  useCreateNotesListMutation,
+  useNotesListsQuery,
+} from "../../../../generated/graphql";
+import { useAllLocalStorageValues } from "../../../../utils/hooks/useAllLocalStorageValues";
 import AddOrCancelAddItem from "../../add-or-cancel-add-item/AddOrCancelAddItem";
 import NewItemInput from "../../new-item-input/NewItemInput";
 
@@ -72,20 +68,16 @@ const ListDeleteButton = ({ list }: { list: any }) => {
 const Lists = (): JSX.Element => {
   const [isAddingNewList, setIsAddingNewList] = useState(false);
   const { colorMode } = useColorMode();
-  const [selectedCollection] = useLocalStorageValue(
-    SelectedCollectionContext,
-    LocalStorageKeys.SELECTED_COLLECTION
-  ) as LocalStorageContextType;
-  const [selectedList, setSelectedList] = useLocalStorageValue(
-    SelectedListContext,
-    LocalStorageKeys.SELECTED_LIST
-  ) as LocalStorageContextType;
-  const collection = getLocalStorageValue(selectedCollection);
-  const list = getLocalStorageValue(selectedList);
-
+  const {
+    collection: { collection },
+    list: { list, setSelectedList },
+  } = useAllLocalStorageValues();
   const [notesListsResult] = useNotesListsQuery({
     variables: { collectionId: collection?.id || "" },
   });
+
+  const [, createNotesList] = useCreateNotesListMutation();
+
   const lists = notesListsResult.data?.notesLists;
 
   return (
@@ -149,6 +141,10 @@ const Lists = (): JSX.Element => {
         <NewItemInput
           type="list"
           confirmAdd={(title: string) => {
+            createNotesList({
+              collectionId: collection.id,
+              title,
+            });
             setIsAddingNewList(false);
           }}
         />

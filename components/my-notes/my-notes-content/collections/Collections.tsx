@@ -17,15 +17,11 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { useState } from "react";
-import { SelectedCollectionContext } from "../../../../contexts/SelectedCollectionContext";
-import { SelectedListContext } from "../../../../contexts/SelectedListContext";
-import { useCollectionsQuery } from "../../../../generated/graphql";
-import { getLocalStorageValue } from "../../../../utils/getLocalStorageValue";
-import { useLocalStorageValue } from "../../../../utils/hooks/useLocalStorageValue";
 import {
-  LocalStorageContextType,
-  LocalStorageKeys,
-} from "../../../../utils/types/types";
+  useCollectionsQuery,
+  useCreateCollectionMutation,
+} from "../../../../generated/graphql";
+import { useAllLocalStorageValues } from "../../../../utils/hooks/useAllLocalStorageValues";
 import AddOrCancelAddItem from "../../add-or-cancel-add-item/AddOrCancelAddItem";
 import NewItemInput from "../../new-item-input/NewItemInput";
 
@@ -72,17 +68,13 @@ const CollectionDeleteButton = ({ collection }: { collection: any }) => {
 
 const Collections = (): JSX.Element => {
   const [collectionsResult] = useCollectionsQuery();
+  const [, createCollection] = useCreateCollectionMutation();
   const [isAddingNewCollection, setIsAddingNewCollection] = useState(false);
   const { colorMode } = useColorMode();
-  const [selectedCollection, setSelectedCollection] = useLocalStorageValue(
-    SelectedCollectionContext,
-    LocalStorageKeys.SELECTED_COLLECTION
-  ) as LocalStorageContextType;
-  const [, setSelectedList] = useLocalStorageValue(
-    SelectedListContext,
-    LocalStorageKeys.SELECTED_LIST
-  ) as LocalStorageContextType;
-  const collection = getLocalStorageValue(selectedCollection);
+  const {
+    collection: { collection, setSelectedCollection },
+    list: { setSelectedList },
+  } = useAllLocalStorageValues();
 
   const collections = collectionsResult.data?.collections;
 
@@ -144,6 +136,10 @@ const Collections = (): JSX.Element => {
         <NewItemInput
           type="collection"
           confirmAdd={(title: string) => {
+            createCollection({
+              title,
+              visibility: collection.visibility,
+            });
             setIsAddingNewCollection(false);
           }}
         />

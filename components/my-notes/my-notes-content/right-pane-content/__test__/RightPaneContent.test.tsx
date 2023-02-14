@@ -99,7 +99,7 @@ describe("RightPaneContent component", () => {
       fireEvent.doubleClick(rightPaneContentHeader);
     });
     // Edit collection title
-    const newCollectionTitle = "collection 1 changed";
+    const newCollectionTitle = /collection 1 updated/i;
     const collectionInput = screen.getByDisplayValue(/collection 1/i);
     fireEvent.change(collectionInput, {
       target: { value: newCollectionTitle },
@@ -136,7 +136,7 @@ describe("RightPaneContent component", () => {
       fireEvent.doubleClick(rightPaneContentHeader);
     });
     // Edit list title
-    const newListTitle = "list 1 changed";
+    const newListTitle = /list 1 updated/i;
     const listInput = screen.getByDisplayValue(/list 1/i);
     fireEvent.change(listInput, {
       target: { value: newListTitle },
