@@ -13,6 +13,10 @@ import {
   NotesListsQueryVariables,
   RegisterMutation,
   RegisterMutationVariables,
+  UpdateCollectionMutation,
+  UpdateCollectionMutationVariables,
+  UpdateNotesListMutation,
+  UpdateNotesListMutationVariables,
 } from "../../generated/graphql";
 import { createMockUrqlClient } from "../createMockUrqlClient";
 import { testNotesLists, _testCollections } from "../testData";
@@ -29,7 +33,9 @@ export const mockClient = (options?: MockClientOptions) =>
     | NotesListQueryVariables
     | MeQueryVariables
     | LoginMutationVariables
-    | RegisterMutationVariables,
+    | RegisterMutationVariables
+    | UpdateCollectionMutationVariables
+    | UpdateNotesListMutationVariables,
     sourceT<{
       data:
         | CollectionsQuery
@@ -37,7 +43,9 @@ export const mockClient = (options?: MockClientOptions) =>
         | NotesListQuery
         | MeQuery
         | LoginMutation
-        | RegisterMutation;
+        | RegisterMutation
+        | UpdateCollectionMutation
+        | UpdateNotesListMutation;
     }>
   >({
     executeQuery: ({ query }) => {
@@ -92,7 +100,7 @@ export const mockClient = (options?: MockClientOptions) =>
               data: {
                 login: {
                   user: {
-                    id: "62c112b482c8f5360ce6dfcb",
+                    id: "1",
                     username: variables.usernameOrEmail,
                     email: "mail@test.com",
                   },
@@ -121,7 +129,7 @@ export const mockClient = (options?: MockClientOptions) =>
               data: {
                 register: {
                   user: {
-                    id: "62c112b482c8f5360ce6dfcb",
+                    id: "1",
                     username: variables.registerInput.username,
                     email: variables.registerInput.email,
                   },
@@ -144,6 +152,58 @@ export const mockClient = (options?: MockClientOptions) =>
               },
             });
           }
+        case "updatecollection":
+          return fromValue({
+            data: {
+              updateCollection: {
+                collection: {
+                  id: "1",
+                  title: "Collection 1 updated",
+                  visibility: "public",
+                  upvotes: 0,
+                  createdAt: "",
+                  updatedAt: "",
+                  owner: {
+                    id: "1",
+                    username: "User01",
+                  },
+                  lists: [
+                    {
+                      id: "1",
+                      title: "List 11",
+                    },
+                  ],
+                },
+                error: null,
+              },
+            },
+          });
+        case "updatenoteslist":
+          return fromValue({
+            data: {
+              updateNotesList: {
+                notesList: {
+                  id: "1",
+                  title: "List 1 updated",
+                  createdAt: "",
+                  updatedAt: "",
+                  collection: {
+                    id: "1",
+                  },
+                  notes: [
+                    {
+                      id: "noteid",
+                      title: "Note 1",
+                      body: "Body 1",
+                      createdAt: "",
+                      updatedAt: "",
+                    },
+                  ],
+                },
+                error: null,
+              },
+            },
+          });
         default:
           break;
       }
