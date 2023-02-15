@@ -300,8 +300,4 @@ export const testUser = {
   __typename: "User" as "User",
 };
 
-export const testSelectedNote = {
-  note: testCollections[0].lists[0].notes[0],
-  list: testCollections[0].lists[0],
-  collection: testCollections[0],
-};
+export const testSelectedNote = testCollections[0].lists[0].notes[0];

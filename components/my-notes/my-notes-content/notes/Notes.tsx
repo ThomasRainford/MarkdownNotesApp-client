@@ -112,13 +112,7 @@ const Notes = (): JSX.Element => {
                   bg: colorMode === "light" ? "gray.200" : "gray.600",
                 }}
                 onClick={() => {
-                  setSelecteNote(
-                    JSON.stringify({
-                      note,
-                      list,
-                      collection,
-                    })
-                  );
+                  setSelecteNote(JSON.stringify(note));
                 }}
               >
                 <Box>

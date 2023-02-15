@@ -1,7 +1,7 @@
 import { SelectedCollectionContext } from "../../contexts/SelectedCollectionContext";
 import { SelectedListContext } from "../../contexts/SelectedListContext";
 import { SelectedNoteContext } from "../../contexts/SelectedNoteContext";
-import { Collection, NotesList } from "../../generated/graphql";
+import { Collection, Note, NotesList } from "../../generated/graphql";
 import { getLocalStorageValue } from "../getLocalStorageValue";
 import { LocalStorageContextType, LocalStorageKeys } from "../types/types";
 import { useLocalStorageValue } from "./useLocalStorageValue";
@@ -21,7 +21,7 @@ export const useAllLocalStorageValues = () => {
   ) as LocalStorageContextType;
   const collection = getLocalStorageValue(selectedCollection) as Collection;
   const list = getLocalStorageValue(selectedList) as NotesList;
-  const note = getLocalStorageValue(selectedNote) as any;
+  const note = getLocalStorageValue(selectedNote) as Note;
 
   return {
     collection: { collection, setSelectedCollection },

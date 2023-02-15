@@ -14,7 +14,6 @@ const invalidateCollections = (cache: Cache) => {
 
 const invalidateNotesLists = (cache: Cache) => {
   const allFields = cache.inspectFields("Query");
-  console.log(allFields);
   const fieldInfos = allFields.filter(
     (info) => info.fieldName === "notesLists"
   );

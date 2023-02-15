@@ -1,14 +1,9 @@
 import { AddIcon, CloseIcon, EditIcon } from "@chakra-ui/icons";
 import { Box, Heading, IconButton, Input, Tag, Text } from "@chakra-ui/react";
 import { useState } from "react";
-import { SelectedNoteContext } from "../../../../contexts/SelectedNoteContext";
-import { getLocalStorageValue } from "../../../../utils/getLocalStorageValue";
+import { Note } from "../../../../generated/graphql";
 import { getTimeSince } from "../../../../utils/getTimeSince";
-import { useLocalStorageValue } from "../../../../utils/hooks/useLocalStorageValue";
-import {
-  LocalStorageContextType,
-  LocalStorageKeys,
-} from "../../../../utils/types/types";
+import { useAllLocalStorageValues } from "../../../../utils/hooks/useAllLocalStorageValues";
 import NoteEditor from "./note-editor/NoteEditor";
 
 const NoteContentHeaderTitle = ({ title }: { title: string }) => {
@@ -79,16 +74,10 @@ const NoteContentHeaderTitle = ({ title }: { title: string }) => {
   );
 };
 
-const NoteContentHeader = ({
-  selectedNote,
-  note,
-}: {
-  selectedNote: any;
-  note: any;
-}) => {
+const NoteContentHeader = ({ note }: { note: Note | undefined }) => {
   return (
     <Box>
-      {selectedNote && (
+      {note && (
         <Box>
           <NoteContentHeaderTitle title={note.title} />
           <Box display={"flex"} alignItems="center" mt="1em">
@@ -115,12 +104,9 @@ const NoteContentHeader = ({
 };
 
 const NoteContent = (): JSX.Element => {
-  const [selectedNote] = useLocalStorageValue(
-    SelectedNoteContext,
-    LocalStorageKeys.SELECTED_NOTE
-  ) as LocalStorageContextType;
-  const _selectedNote = getLocalStorageValue(selectedNote) as any;
-  const note = _selectedNote.note;
+  const {
+    note: { note },
+  } = useAllLocalStorageValues();
 
   return (
     <Box className="note-content" h={"100%"}>
@@ -128,7 +114,7 @@ const NoteContent = (): JSX.Element => {
         <Box>No Note Selected...</Box>
       ) : (
         <Box pt={"1em"} px={"1em"} h={"100%"}>
-          <NoteContentHeader selectedNote={_selectedNote} note={note} />
+          <NoteContentHeader note={note} />
           <Box className="node-editor-container" height={"100%"} mt="1.5em">
             <NoteEditor markdownText={note.body} />
           </Box>
