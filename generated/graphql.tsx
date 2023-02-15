@@ -362,6 +362,14 @@ export type UpdateCollectionMutationVariables = Exact<{
 
 export type UpdateCollectionMutation = { __typename?: 'Mutation', updateCollection: { __typename?: 'CollectionResponse', collection?: { __typename?: 'Collection', id: string, title: string, visibility: string, upvotes: number, createdAt: any, updatedAt: any, owner: { __typename?: 'User', id: string, username: string }, lists: Array<{ __typename?: 'NotesList', id: string, title: string }> } | null, error?: { __typename?: 'Error', property: string, message: string } | null } };
 
+export type UpdateNoteMutationVariables = Exact<{
+  noteLocation: NoteLocationInput;
+  noteInput: NoteUpdateInput;
+}>;
+
+
+export type UpdateNoteMutation = { __typename?: 'Mutation', updateNote: { __typename?: 'NoteResponse', note?: { __typename?: 'Note', id: string, title: string, body: string } | null, error?: { __typename?: 'Error', property: string, message: string } | null } };
+
 export type UpdateNotesListMutationVariables = Exact<{
   listLocation: ListLocationInput;
   notesListInput: NotesListUpdateInput;
@@ -509,6 +517,25 @@ export const UpdateCollectionDocument = gql`
 
 export function useUpdateCollectionMutation() {
   return Urql.useMutation<UpdateCollectionMutation, UpdateCollectionMutationVariables>(UpdateCollectionDocument);
+};
+export const UpdateNoteDocument = gql`
+    mutation UpdateNote($noteLocation: NoteLocationInput!, $noteInput: NoteUpdateInput!) {
+  updateNote(noteLocaton: $noteLocation, noteInput: $noteInput) {
+    note {
+      id
+      title
+      body
+    }
+    error {
+      property
+      message
+    }
+  }
+}
+    `;
+
+export function useUpdateNoteMutation() {
+  return Urql.useMutation<UpdateNoteMutation, UpdateNoteMutationVariables>(UpdateNoteDocument);
 };
 export const UpdateNotesListDocument = gql`
     mutation UpdateNotesList($listLocation: ListLocationInput!, $notesListInput: NotesListUpdateInput!) {

@@ -1,14 +1,39 @@
 import { AddIcon, CloseIcon, EditIcon } from "@chakra-ui/icons";
 import { Box, Heading, IconButton, Input, Tag, Text } from "@chakra-ui/react";
 import { useState } from "react";
-import { Note } from "../../../../generated/graphql";
+import { Note, useUpdateNoteMutation } from "../../../../generated/graphql";
 import { getTimeSince } from "../../../../utils/getTimeSince";
 import { useAllLocalStorageValues } from "../../../../utils/hooks/useAllLocalStorageValues";
+import { useUpdateItem } from "../../../../utils/hooks/useUpdateItem";
 import NoteEditor from "./note-editor/NoteEditor";
 
-const NoteContentHeaderTitle = ({ title }: { title: string }) => {
+const NoteContentHeaderTitle = () => {
+  const {
+    collection: { collection },
+    list: { list },
+    note: { note },
+  } = useAllLocalStorageValues();
   const [isEditing, setIsEditing] = useState(false);
-  const [editingValue, setEditingValue] = useState(title);
+  const [editingValue, setEditingValue] = useState(note.title);
+  const [, updateNote] = useUpdateNoteMutation();
+  const [updateItem] = useUpdateItem();
+
+  const update = () => {
+    return updateItem(
+      "note",
+      {
+        noteLocation: {
+          collectionId: collection.id,
+          listId: list.id,
+          noteId: note.id,
+        },
+        noteInput: {
+          title: note.title,
+        },
+      },
+      updateNote
+    );
+  };
 
   return (
     <Box>
@@ -41,8 +66,9 @@ const NoteContentHeaderTitle = ({ title }: { title: string }) => {
             onChange={(e) => {
               setEditingValue(e.target.value);
             }}
-            onKeyDown={(e) => {
+            onKeyDown={async (e) => {
               if (e.key === "Enter") {
+                await update();
                 setIsEditing(false);
               }
             }}
@@ -64,7 +90,8 @@ const NoteContentHeaderTitle = ({ title }: { title: string }) => {
             variant={"outline"}
             aria-label={`update-note-title`}
             icon={<AddIcon boxSize={3} />}
-            onClick={() => {
+            onClick={async () => {
+              await update();
               setIsEditing(false);
             }}
           />
@@ -79,7 +106,7 @@ const NoteContentHeader = ({ note }: { note: Note | undefined }) => {
     <Box>
       {note && (
         <Box>
-          <NoteContentHeaderTitle title={note.title} />
+          <NoteContentHeaderTitle />
           <Box display={"flex"} alignItems="center" mt="1em">
             <Box mr={"0.5em"}>
               <Text>Last Modified</Text>

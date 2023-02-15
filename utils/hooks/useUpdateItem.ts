@@ -2,6 +2,8 @@ import { UseMutationState } from "urql";
 import {
   UpdateCollectionMutation,
   UpdateCollectionMutationVariables,
+  UpdateNoteMutation,
+  UpdateNoteMutationVariables,
   UpdateNotesListMutation,
   UpdateNotesListMutationVariables,
 } from "../../generated/graphql";
@@ -11,11 +13,15 @@ export const useUpdateItem = () => {
   const {
     collection: { setSelectedCollection },
     list: { setSelectedList },
+    note: { setSelectedNote },
   } = useAllLocalStorageValues();
 
   const updateFunc = async (
-    type: "collection" | "list",
-    data: UpdateCollectionMutationVariables | UpdateNotesListMutationVariables,
+    type: "collection" | "list" | "note",
+    data:
+      | UpdateCollectionMutationVariables
+      | UpdateNotesListMutationVariables
+      | UpdateNoteMutationVariables,
     updateMutationFunc: Function
   ) => {
     if (type === "collection") {
@@ -28,12 +34,20 @@ export const useUpdateItem = () => {
         );
         return result;
       }
-    } else {
+    } else if (type === "list") {
       const result = (await updateMutationFunc(
         data
       )) as UseMutationState<UpdateNotesListMutation>;
       if (!result.data?.updateNotesList.error) {
         setSelectedList(JSON.stringify(result.data?.updateNotesList.notesList));
+        return result;
+      }
+    } else if (type === "note") {
+      const result = (await updateMutationFunc(
+        data
+      )) as UseMutationState<UpdateNoteMutation>;
+      if (!result.data?.updateNote.error) {
+        setSelectedNote(JSON.stringify(result.data?.updateNote.note));
         return result;
       }
     }

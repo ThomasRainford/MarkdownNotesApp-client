@@ -57,7 +57,7 @@ const ListPaneHeaderTitle = ({
 
   const update = () => {
     if (type === "collection") {
-      updateItem(
+      return updateItem(
         type,
         {
           id: selectedItem.id,
@@ -68,7 +68,7 @@ const ListPaneHeaderTitle = ({
         updateCollection
       );
     } else {
-      updateItem(
+      return updateItem(
         type,
         {
           listLocation: {
@@ -117,10 +117,10 @@ const ListPaneHeaderTitle = ({
             onDoubleClick={() => {
               setIsEditing(!isEditing);
             }}
-            onKeyDown={(e) => {
+            onKeyDown={async (e) => {
               if (e.key === "Enter") {
+                await update();
                 setIsEditing(false);
-                update();
               }
             }}
           />
@@ -130,9 +130,9 @@ const ListPaneHeaderTitle = ({
             variant={"outline"}
             aria-label={`update-${type}-title`}
             icon={<AddIcon boxSize={3} />}
-            onClick={() => {
+            onClick={async () => {
+              await update();
               setIsEditing(false);
-              update();
             }}
           />
         </Box>
