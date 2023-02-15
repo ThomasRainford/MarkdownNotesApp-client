@@ -368,7 +368,7 @@ export type UpdateNoteMutationVariables = Exact<{
 }>;
 
 
-export type UpdateNoteMutation = { __typename?: 'Mutation', updateNote: { __typename?: 'NoteResponse', note?: { __typename?: 'Note', id: string, title: string, body: string } | null, error?: { __typename?: 'Error', property: string, message: string } | null } };
+export type UpdateNoteMutation = { __typename?: 'Mutation', updateNote: { __typename?: 'NoteResponse', note?: { __typename?: 'Note', id: string, title: string, body: string, createdAt: any, updatedAt: any } | null, error?: { __typename?: 'Error', property: string, message: string } | null } };
 
 export type UpdateNotesListMutationVariables = Exact<{
   listLocation: ListLocationInput;
@@ -381,7 +381,7 @@ export type UpdateNotesListMutation = { __typename?: 'Mutation', updateNotesList
 export type CollectionsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type CollectionsQuery = { __typename?: 'Query', collections: Array<{ __typename?: 'Collection', id: string, title: string, visibility: string, upvotes: number, createdAt: any, updatedAt: any, owner: { __typename?: 'User', id: string, username: string }, lists: Array<{ __typename?: 'NotesList', id: string, title: string }> }> };
+export type CollectionsQuery = { __typename?: 'Query', collections: Array<{ __typename?: 'Collection', id: string, title: string, visibility: string, upvotes: number, createdAt: any, updatedAt: any, owner: { __typename?: 'User', id: string, username: string }, lists: Array<{ __typename?: 'NotesList', id: string, title: string, notes: Array<{ __typename?: 'Note', id: string, title: string, body: string, createdAt: any, updatedAt: any }> }> }> };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -525,6 +525,8 @@ export const UpdateNoteDocument = gql`
       id
       title
       body
+      createdAt
+      updatedAt
     }
     error {
       property
@@ -583,6 +585,13 @@ export const CollectionsDocument = gql`
     lists {
       id
       title
+      notes {
+        id
+        title
+        body
+        createdAt
+        updatedAt
+      }
     }
   }
 }

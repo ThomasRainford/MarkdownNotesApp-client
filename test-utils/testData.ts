@@ -1,72 +1,3 @@
-export const _testCollections = [
-  {
-    id: "1",
-    title: "Collection 1",
-    visibility: "public",
-    upvotes: 0,
-    createdAt: "2023-01-03T08:52:02.025+00:00",
-    updatedAt: "2023-01-03T08:52:02.025+00:00",
-    owner: {
-      id: "1",
-      username: "User01",
-    },
-    lists: [
-      {
-        id: "1",
-        title: "List 1",
-      },
-    ],
-  },
-  {
-    id: "2",
-    title: "Collection 2",
-    visibility: "public",
-    upvotes: 0,
-    createdAt: "2023-01-03T08:52:02.025+00:00",
-    updatedAt: "2023-01-03T08:52:02.025+00:00",
-    owner: {
-      id: "1",
-      username: "User01",
-    },
-    lists: [
-      {
-        id: "2",
-        title: "List 2",
-      },
-      {
-        id: "21",
-        title: "List 2-1",
-      },
-    ],
-  },
-  {
-    id: "3",
-    title: "Collection 3",
-    visibility: "public",
-    upvotes: 0,
-    createdAt: "2023-01-03T08:52:02.025+00:00",
-    updatedAt: "2023-01-03T08:52:02.025+00:00",
-    owner: {
-      id: "1",
-      username: "User01",
-    },
-    lists: [
-      {
-        id: "3",
-        title: "List 3",
-      },
-      {
-        id: "31",
-        title: "List 3-1",
-      },
-      {
-        id: "32",
-        title: "List 3-2",
-      },
-    ],
-  },
-];
-
 export const testNotesLists = {
   collection1: [
     {
@@ -177,11 +108,54 @@ export const testNotesLists = {
           title: "Note 3-2",
           body: "Body 3-2",
           updatedAt: "2023-01-03T08:52:02.025+00:00",
+          createdAt: "2023-01-03T08:52:02.025+00:00",
         },
       ],
     },
   ],
 };
+
+export const _testCollections = [
+  {
+    id: "1",
+    title: "Collection 1",
+    visibility: "public",
+    upvotes: 0,
+    createdAt: "2023-01-03T08:52:02.025+00:00",
+    updatedAt: "2023-01-03T08:52:02.025+00:00",
+    owner: {
+      id: "1",
+      username: "User01",
+    },
+    lists: testNotesLists.collection1,
+  },
+  {
+    id: "2",
+    title: "Collection 2",
+    visibility: "public",
+    upvotes: 0,
+    createdAt: "2023-01-03T08:52:02.025+00:00",
+    updatedAt: "2023-01-03T08:52:02.025+00:00",
+    owner: {
+      id: "1",
+      username: "User01",
+    },
+    lists: testNotesLists.collection2,
+  },
+  {
+    id: "3",
+    title: "Collection 3",
+    visibility: "public",
+    upvotes: 0,
+    createdAt: "2023-01-03T08:52:02.025+00:00",
+    updatedAt: "2023-01-03T08:52:02.025+00:00",
+    owner: {
+      id: "1",
+      username: "User01",
+    },
+    lists: testNotesLists.collection3,
+  },
+];
 
 export const testCollections = [
   {
@@ -198,6 +172,7 @@ export const testCollections = [
             title: "Note 1",
             body: "Body 1",
             updatedAt: "2023-01-03T08:52:02.025+00:00",
+            createdAt: "2023-01-03T08:52:02.025+00:00",
           },
         ],
       },

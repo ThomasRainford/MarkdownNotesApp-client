@@ -1,7 +1,11 @@
 import { AddIcon, CloseIcon, EditIcon } from "@chakra-ui/icons";
 import { Box, Heading, IconButton, Input, Tag, Text } from "@chakra-ui/react";
 import { useState } from "react";
-import { Note, useUpdateNoteMutation } from "../../../../generated/graphql";
+import {
+  Note,
+  NotesList,
+  useUpdateNoteMutation,
+} from "../../../../generated/graphql";
 import { getTimeSince } from "../../../../utils/getTimeSince";
 import { useAllLocalStorageValues } from "../../../../utils/hooks/useAllLocalStorageValues";
 import { useUpdateItem } from "../../../../utils/hooks/useUpdateItem";
@@ -10,8 +14,8 @@ import NoteEditor from "./note-editor/NoteEditor";
 const NoteContentHeaderTitle = () => {
   const {
     collection: { collection },
-    list: { list },
-    note: { note },
+    list: { list, setSelectedList },
+    note: { note, setSelectedNote },
   } = useAllLocalStorageValues();
   const [isEditing, setIsEditing] = useState(false);
   const [editingValue, setEditingValue] = useState(note.title);
@@ -19,12 +23,25 @@ const NoteContentHeaderTitle = () => {
   const [updateItem] = useUpdateItem();
 
   const update = () => {
+    let selectedList: NotesList = list;
+    if ((list as any) === "") {
+      collection.lists.forEach((_list: NotesList) => {
+        _list.notes.forEach((_note: Note) => {
+          if (_note.id === _note.id) {
+            selectedList = _list;
+            setSelectedList(JSON.stringify(_list));
+            setSelectedNote(JSON.stringify(_note));
+            console.log(_note);
+          }
+        });
+      });
+    }
     return updateItem(
       "note",
       {
         noteLocation: {
           collectionId: collection.id,
-          listId: list.id,
+          listId: selectedList.id,
           noteId: note.id,
         },
         noteInput: {
@@ -101,7 +118,11 @@ const NoteContentHeaderTitle = () => {
   );
 };
 
-const NoteContentHeader = ({ note }: { note: Note | undefined }) => {
+const NoteContentHeader = () => {
+  const {
+    note: { note },
+  } = useAllLocalStorageValues();
+
   return (
     <Box>
       {note && (
@@ -141,7 +162,7 @@ const NoteContent = (): JSX.Element => {
         <Box>No Note Selected...</Box>
       ) : (
         <Box pt={"1em"} px={"1em"} h={"100%"}>
-          <NoteContentHeader note={note} />
+          <NoteContentHeader />
           <Box className="node-editor-container" height={"100%"} mt="1.5em">
             <NoteEditor markdownText={note.body} />
           </Box>

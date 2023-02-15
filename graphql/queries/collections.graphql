@@ -13,6 +13,13 @@ query collections {
     lists {
       id
       title
+      notes {
+        id
+        title
+        body
+        createdAt
+        updatedAt
+      }
     }
   }
 }
