@@ -157,7 +157,7 @@ export const _testCollections = [
   },
 ];
 
-export const createCollectionCollection = [
+export const createCollectionCollections = [
   ..._testCollections,
   {
     id: "4",
@@ -171,6 +171,20 @@ export const createCollectionCollection = [
       username: "User01",
     },
     lists: testNotesLists.collection3,
+  },
+];
+
+export const createNotesListNoteLists = [
+  ...testNotesLists.collection1,
+  {
+    id: "2",
+    title: "List 2",
+    createdAt: "2023-01-03T08:52:02.025+00:00",
+    updatedAt: "2023-01-03T08:52:02.025+00:00",
+    collection: {
+      id: "1",
+    },
+    notes: [],
   },
 ];
 
