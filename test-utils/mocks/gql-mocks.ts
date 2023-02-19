@@ -3,6 +3,8 @@ import { sourceT } from "wonka/dist/types/src/Wonka_types.gen";
 import {
   CollectionsQuery,
   CollectionsQueryVariables,
+  CreateCollectionMutation,
+  CreateCollectionMutationVariables,
   LoginMutation,
   LoginMutationVariables,
   MeQuery,
@@ -19,11 +21,18 @@ import {
   UpdateNotesListMutationVariables,
 } from "../../generated/graphql";
 import { createMockUrqlClient } from "../createMockUrqlClient";
-import { testNotesLists, _testCollections } from "../testData";
+import {
+  createCollectionCollection,
+  testNotesLists,
+  _testCollections,
+} from "../testData";
 
 type MockClientOptions = {
   register?: "success" | "error";
   login?: "success" | "error";
+  collection?: {
+    create: "success" | "error";
+  };
 };
 
 export const mockClient = (options?: MockClientOptions) =>
@@ -35,7 +44,8 @@ export const mockClient = (options?: MockClientOptions) =>
     | LoginMutationVariables
     | RegisterMutationVariables
     | UpdateCollectionMutationVariables
-    | UpdateNotesListMutationVariables,
+    | UpdateNotesListMutationVariables
+    | CreateCollectionMutationVariables,
     sourceT<{
       data:
         | CollectionsQuery
@@ -45,7 +55,8 @@ export const mockClient = (options?: MockClientOptions) =>
         | LoginMutation
         | RegisterMutation
         | UpdateCollectionMutation
-        | UpdateNotesListMutation;
+        | UpdateNotesListMutation
+        | CreateCollectionMutation;
     }>
   >({
     executeQuery: ({ query }) => {
@@ -54,9 +65,13 @@ export const mockClient = (options?: MockClientOptions) =>
       ).toLowerCase();
       switch (queryType) {
         case "collections":
+          let collections = _testCollections;
+          if (options?.collection?.create === "success") {
+            collections = createCollectionCollection;
+          }
           return fromValue({
             data: {
-              collections: _testCollections,
+              collections: collections,
             },
           });
         case "noteslists":
@@ -204,6 +219,32 @@ export const mockClient = (options?: MockClientOptions) =>
               },
             },
           });
+        case "createcollection":
+          if (options?.collection?.create === "error") {
+            return fromValue({
+              data: {
+                createCollection: {
+                  error: {
+                    property: "title",
+                    message: "'title' cannot be empty.",
+                  },
+                },
+              },
+            });
+          } else {
+            return fromValue({
+              data: {
+                createCollection: {
+                  collection: {
+                    id: "4",
+                    title: "Collection 4",
+                  },
+                  error: null,
+                },
+              },
+            });
+          }
+
         default:
           break;
       }

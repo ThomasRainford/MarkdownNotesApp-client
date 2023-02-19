@@ -157,6 +157,23 @@ export const _testCollections = [
   },
 ];
 
+export const createCollectionCollection = [
+  ..._testCollections,
+  {
+    id: "4",
+    title: "Collection 4",
+    visibility: "public",
+    upvotes: 0,
+    createdAt: "2023-01-03T08:52:02.025+00:00",
+    updatedAt: "2023-01-03T08:52:02.025+00:00",
+    owner: {
+      id: "1",
+      username: "User01",
+    },
+    lists: testNotesLists.collection3,
+  },
+];
+
 export const testCollections = [
   {
     _id: 1,

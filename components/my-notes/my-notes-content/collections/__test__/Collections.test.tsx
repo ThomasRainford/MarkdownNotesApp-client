@@ -65,4 +65,67 @@ describe("Collections tests", () => {
     expect(collection).not.toBeNull();
     expect(JSON.parse(collection).title).toBe(title);
   });
+
+  test("adds a new collection successfully.", async () => {
+    // Render
+    render(
+      <Provider
+        value={
+          mockClient({ collection: { create: "success" } }) as unknown as Client
+        }
+      >
+        <SelectedDataProvider>
+          <Collections />
+        </SelectedDataProvider>
+      </Provider>
+    );
+
+    const addCollectionButton = screen.getByLabelText(/add-collection/i);
+    await act(async () => {
+      fireEvent.click(addCollectionButton);
+    });
+    const input = screen.getByPlaceholderText(/title/i);
+    await act(async () => {
+      fireEvent.change(input, { target: { value: "Collection 4" } });
+    });
+    const createCollectionButton = screen.getByLabelText(/create-collection/i);
+    await act(async () => {
+      fireEvent.click(createCollectionButton);
+    });
+    const newCollection = screen.getByRole("heading", {
+      name: /Collection 4/i,
+    });
+
+    expect(newCollection).toBeInTheDocument();
+  });
+
+  test("fails to add a new collection", async () => {
+    // Render
+    render(
+      <Provider
+        value={
+          mockClient({ collection: { create: "error" } }) as unknown as Client
+        }
+      >
+        <SelectedDataProvider>
+          <Collections />
+        </SelectedDataProvider>
+      </Provider>
+    );
+
+    const addCollectionButton = screen.getByLabelText(/add-collection/i);
+    await act(async () => {
+      fireEvent.click(addCollectionButton);
+    });
+    const input = screen.getByPlaceholderText(/title/i);
+    await act(async () => {
+      fireEvent.change(input, { target: { value: "" } });
+    });
+    const createCollectionButton = screen.getByLabelText(/create-collection/i);
+    await act(async () => {
+      fireEvent.click(createCollectionButton);
+    });
+
+    expect(createCollectionButton).toBeInTheDocument();
+  });
 });

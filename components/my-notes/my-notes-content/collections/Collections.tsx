@@ -149,7 +149,6 @@ const Collections = (): JSX.Element => {
               result,
               toast
             );
-            console.log(result, hasError);
             if (!hasError) setIsAddingNewCollection(false);
           }}
         />
