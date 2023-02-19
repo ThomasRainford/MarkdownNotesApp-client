@@ -15,12 +15,14 @@ import {
   Text,
   useColorMode,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import {
   useCreateNotesListMutation,
   useNotesListsQuery,
 } from "../../../../generated/graphql";
+import { handleCreateNotesListErrors } from "../../../../utils/error-handlers/noteslist-errors";
 import { useAllLocalStorageValues } from "../../../../utils/hooks/useAllLocalStorageValues";
 import AddOrCancelAddItem from "../../add-or-cancel-add-item/AddOrCancelAddItem";
 import NewItemInput from "../../new-item-input/NewItemInput";
@@ -68,6 +70,7 @@ const ListDeleteButton = ({ list }: { list: any }) => {
 const Lists = (): JSX.Element => {
   const [isAddingNewList, setIsAddingNewList] = useState(false);
   const { colorMode } = useColorMode();
+  const toast = useToast();
   const {
     collection: { collection },
     list: { list, setSelectedList },
@@ -140,12 +143,18 @@ const Lists = (): JSX.Element => {
       {isAddingNewList && (
         <NewItemInput
           type="list"
-          confirmAdd={(title: string) => {
-            createNotesList({
+          confirmAdd={async (title: string) => {
+            const variables = {
               collectionId: collection.id,
               title,
-            });
-            setIsAddingNewList(false);
+            };
+            const result = await createNotesList(variables);
+            const hasError = handleCreateNotesListErrors(
+              variables,
+              result,
+              toast
+            );
+            if (!hasError) setIsAddingNewList(false);
           }}
         />
       )}

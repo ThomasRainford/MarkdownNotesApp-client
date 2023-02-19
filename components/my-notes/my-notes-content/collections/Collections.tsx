@@ -15,12 +15,14 @@ import {
   Text,
   useColorMode,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import {
   useCollectionsQuery,
   useCreateCollectionMutation,
 } from "../../../../generated/graphql";
+import { handleCreateCollectionErrors } from "../../../../utils/error-handlers/collection-errors";
 import { useAllLocalStorageValues } from "../../../../utils/hooks/useAllLocalStorageValues";
 import AddOrCancelAddItem from "../../add-or-cancel-add-item/AddOrCancelAddItem";
 import NewItemInput from "../../new-item-input/NewItemInput";
@@ -71,6 +73,7 @@ const Collections = (): JSX.Element => {
   const [, createCollection] = useCreateCollectionMutation();
   const [isAddingNewCollection, setIsAddingNewCollection] = useState(false);
   const { colorMode } = useColorMode();
+  const toast = useToast();
   const {
     collection: { collection, setSelectedCollection },
     list: { setSelectedList },
@@ -135,12 +138,19 @@ const Collections = (): JSX.Element => {
       {isAddingNewCollection && (
         <NewItemInput
           type="collection"
-          confirmAdd={(title: string) => {
-            createCollection({
+          confirmAdd={async (title: string) => {
+            const variables = {
               title,
               visibility: collection.visibility,
-            });
-            setIsAddingNewCollection(false);
+            };
+            const result = await createCollection(variables);
+            const hasError = handleCreateCollectionErrors(
+              variables,
+              result,
+              toast
+            );
+            console.log(result, hasError);
+            if (!hasError) setIsAddingNewCollection(false);
           }}
         />
       )}
