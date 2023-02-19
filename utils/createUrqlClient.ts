@@ -22,6 +22,14 @@ const invalidateNotesLists = (cache: Cache) => {
   });
 };
 
+const invalidateNotesList = (cache: Cache) => {
+  const allFields = cache.inspectFields("Query");
+  const fieldInfos = allFields.filter((info) => info.fieldName === "notesList");
+  fieldInfos.forEach((fi) => {
+    cache.invalidate("Query", "notesList", fi.arguments || null);
+  });
+};
+
 export const createUrqlClient = (ssrExchange: SSRExchange) => {
   return {
     url: process.env.NEXT_PUBLIC_API_URL,
@@ -36,6 +44,9 @@ export const createUrqlClient = (ssrExchange: SSRExchange) => {
             createNotesList: (_result, _args, cache, _info) => {
               invalidateCollections(cache);
               invalidateNotesLists(cache);
+            },
+            addNote: (_result, _args, cache, _info) => {
+              invalidateNotesList(cache);
             },
             updateCollection: (_result, _args, cache, _info) => {
               invalidateCollections(cache);

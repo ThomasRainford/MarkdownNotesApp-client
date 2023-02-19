@@ -318,6 +318,14 @@ export type UserResponse = {
   user?: Maybe<User>;
 };
 
+export type AddNoteMutationVariables = Exact<{
+  listLocation: ListLocationInput;
+  noteInput: NoteInput;
+}>;
+
+
+export type AddNoteMutation = { __typename?: 'Mutation', addNote: { __typename?: 'NoteResponse', note?: { __typename?: 'Note', id: string, title: string, body: string } | null, error?: { __typename?: 'Error', property: string, message: string } | null } };
+
 export type CreateCollectionMutationVariables = Exact<{
   title: Scalars['String'];
   visibility: Scalars['String'];
@@ -403,6 +411,25 @@ export type NotesListQueryVariables = Exact<{
 export type NotesListQuery = { __typename?: 'Query', notesList?: { __typename?: 'NotesList', id: string, title: string, createdAt: any, updatedAt: any, collection: { __typename?: 'Collection', id: string }, notes: Array<{ __typename?: 'Note', id: string, title: string, body: string, createdAt: any, updatedAt: any }> } | null };
 
 
+export const AddNoteDocument = gql`
+    mutation AddNote($listLocation: ListLocationInput!, $noteInput: NoteInput!) {
+  addNote(listLocation: $listLocation, noteInput: $noteInput) {
+    note {
+      id
+      title
+      body
+    }
+    error {
+      property
+      message
+    }
+  }
+}
+    `;
+
+export function useAddNoteMutation() {
+  return Urql.useMutation<AddNoteMutation, AddNoteMutationVariables>(AddNoteDocument);
+};
 export const CreateCollectionDocument = gql`
     mutation CreateCollection($title: String!, $visibility: String!) {
   createCollection(title: $title, visibility: $visibility) {

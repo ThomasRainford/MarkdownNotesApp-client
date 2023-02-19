@@ -15,12 +15,17 @@ import {
   Text,
   useColorMode,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { SelectedCollectionContext } from "../../../../contexts/SelectedCollectionContext";
 import { SelectedListContext } from "../../../../contexts/SelectedListContext";
 import { SelectedNoteContext } from "../../../../contexts/SelectedNoteContext";
-import { useNotesListQuery } from "../../../../generated/graphql";
+import {
+  useAddNoteMutation,
+  useNotesListQuery,
+} from "../../../../generated/graphql";
+import { handleAddNoteErrors } from "../../../../utils/error-handlers/note-errors";
 import { getLocalStorageValue } from "../../../../utils/getLocalStorageValue";
 import { getTimeSince } from "../../../../utils/getTimeSince";
 import { useLocalStorageValue } from "../../../../utils/hooks/useLocalStorageValue";
@@ -72,6 +77,7 @@ const NoteDeleteButton = ({ note }: { note: any }) => {
 const Notes = (): JSX.Element => {
   const [isAddingNewNote, setIsAddingNewNote] = useState(false);
   const { colorMode } = useColorMode();
+  const toast = useToast();
   const [selectedCollection] = useLocalStorageValue(
     SelectedCollectionContext,
     LocalStorageKeys.SELECTED_COLLECTION
@@ -93,6 +99,8 @@ const Notes = (): JSX.Element => {
     },
   });
   const notes = notesListResult.data?.notesList?.notes;
+
+  const [, addNote] = useAddNoteMutation();
 
   return (
     <Box>
@@ -149,8 +157,20 @@ const Notes = (): JSX.Element => {
       {isAddingNewNote && (
         <NewItemInput
           type="note"
-          confirmAdd={(title: string) => {
-            setIsAddingNewNote(false);
+          confirmAdd={async (title: string) => {
+            const variables = {
+              listLocation: {
+                collectionId: collection.id,
+                listId: list.id,
+              },
+              noteInput: {
+                title,
+                body: "",
+              },
+            };
+            const result = await addNote(variables);
+            const hasError = handleAddNoteErrors(variables, result, toast);
+            if (!hasError) setIsAddingNewNote(false);
           }}
         />
       )}
