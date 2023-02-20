@@ -33,7 +33,7 @@ const NoteContentHeaderTitle = () => {
   const update = () => {
     let notesCollection: Collection = selectedCollection;
     let notesNotesList: NotesList = list;
-    if ((list as any) === "") {
+    if ((list as any) === "" || !list.notes.find((n) => n.id === note.id)) {
       collections?.forEach((_collection) => {
         _collection.lists?.forEach((_list) => {
           _list.notes.forEach((_note: Note) => {
@@ -43,7 +43,6 @@ const NoteContentHeaderTitle = () => {
               setSelectedCollection(JSON.stringify(notesCollection));
               setSelectedList(JSON.stringify(notesNotesList));
               setSelectedNote(JSON.stringify(_note));
-              console.log(_note);
             }
           });
         });
