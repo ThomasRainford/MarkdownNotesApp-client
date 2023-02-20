@@ -188,6 +188,20 @@ export const createNotesListNoteLists = [
   },
 ];
 
+export const createNoteNotesList = {
+  ...testNotesLists.collection1[0],
+  notes: [
+    ...testNotesLists.collection1[0].notes,
+    {
+      id: "2",
+      title: "Note 2",
+      body: "",
+      createdAt: "2023-01-03T08:52:02.025+00:00",
+      updatedAt: "2023-01-03T08:52:02.025+00:00",
+    },
+  ],
+};
+
 export const testCollections = [
   {
     _id: 1,

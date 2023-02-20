@@ -18,21 +18,13 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useState } from "react";
-import { SelectedCollectionContext } from "../../../../contexts/SelectedCollectionContext";
-import { SelectedListContext } from "../../../../contexts/SelectedListContext";
-import { SelectedNoteContext } from "../../../../contexts/SelectedNoteContext";
 import {
   useAddNoteMutation,
   useNotesListQuery,
 } from "../../../../generated/graphql";
 import { handleAddNoteErrors } from "../../../../utils/error-handlers/note-errors";
-import { getLocalStorageValue } from "../../../../utils/getLocalStorageValue";
 import { getTimeSince } from "../../../../utils/getTimeSince";
-import { useLocalStorageValue } from "../../../../utils/hooks/useLocalStorageValue";
-import {
-  LocalStorageContextType,
-  LocalStorageKeys,
-} from "../../../../utils/types/types";
+import { useAllLocalStorageValues } from "../../../../utils/hooks/useAllLocalStorageValues";
 import AddOrCancelAddItem from "../../add-or-cancel-add-item/AddOrCancelAddItem";
 import NewItemInput from "../../new-item-input/NewItemInput";
 
@@ -78,29 +70,19 @@ const Notes = (): JSX.Element => {
   const [isAddingNewNote, setIsAddingNewNote] = useState(false);
   const { colorMode } = useColorMode();
   const toast = useToast();
-  const [selectedCollection] = useLocalStorageValue(
-    SelectedCollectionContext,
-    LocalStorageKeys.SELECTED_COLLECTION
-  ) as LocalStorageContextType;
-  const [selectedList] = useLocalStorageValue(
-    SelectedListContext,
-    LocalStorageKeys.SELECTED_LIST
-  ) as LocalStorageContextType;
-  const [, setSelecteNote] = useLocalStorageValue(
-    SelectedNoteContext,
-    LocalStorageKeys.SELECTED_NOTE
-  ) as LocalStorageContextType;
-  const collection = getLocalStorageValue(selectedCollection);
-  const list = getLocalStorageValue(selectedList);
-
+  const {
+    collection: { collection },
+    list: { list },
+    note: { setSelectedNote },
+  } = useAllLocalStorageValues();
   const [notesListResult] = useNotesListQuery({
     variables: {
       listLocation: { collectionId: collection.id, listId: list.id },
     },
   });
-  const notes = notesListResult.data?.notesList?.notes;
-
   const [, addNote] = useAddNoteMutation();
+
+  const notes = notesListResult.data?.notesList?.notes;
 
   return (
     <Box>
@@ -120,7 +102,7 @@ const Notes = (): JSX.Element => {
                   bg: colorMode === "light" ? "gray.200" : "gray.600",
                 }}
                 onClick={() => {
-                  setSelecteNote(JSON.stringify(note));
+                  setSelectedNote(JSON.stringify(note));
                 }}
               >
                 <Box>
@@ -169,6 +151,7 @@ const Notes = (): JSX.Element => {
               },
             };
             const result = await addNote(variables);
+            console.log(result);
             const hasError = handleAddNoteErrors(variables, result, toast);
             if (!hasError) setIsAddingNewNote(false);
           }}

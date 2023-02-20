@@ -1,6 +1,8 @@
 import { fromValue } from "wonka";
 import { sourceT } from "wonka/dist/types/src/Wonka_types.gen";
 import {
+  AddNoteMutation,
+  AddNoteMutationVariables,
   CollectionsQuery,
   CollectionsQueryVariables,
   CreateCollectionMutation,
@@ -25,6 +27,7 @@ import {
 import { createMockUrqlClient } from "../createMockUrqlClient";
 import {
   createCollectionCollections,
+  createNoteNotesList,
   createNotesListNoteLists,
   testNotesLists,
   _testCollections,
@@ -37,6 +40,9 @@ type MockClientOptions = {
     create: "success" | "error";
   };
   noteslist?: {
+    create: "success" | "error";
+  };
+  note?: {
     create: "success" | "error";
   };
 };
@@ -52,7 +58,8 @@ export const mockClient = (options?: MockClientOptions) =>
     | UpdateCollectionMutationVariables
     | UpdateNotesListMutationVariables
     | CreateCollectionMutationVariables
-    | CreateNotesListMutationVariables,
+    | CreateNotesListMutationVariables
+    | AddNoteMutationVariables,
     sourceT<{
       data:
         | CollectionsQuery
@@ -64,7 +71,8 @@ export const mockClient = (options?: MockClientOptions) =>
         | UpdateCollectionMutation
         | UpdateNotesListMutation
         | CreateCollectionMutation
-        | CreateNotesListMutation;
+        | CreateNotesListMutation
+        | AddNoteMutation;
     }>
   >({
     executeQuery: ({ query }) => {
@@ -93,9 +101,13 @@ export const mockClient = (options?: MockClientOptions) =>
             },
           });
         case "noteslist":
+          let notesList = testNotesLists.collection1[0];
+          if (options?.note?.create === "success") {
+            notesList = createNoteNotesList;
+          }
           return fromValue({
             data: {
-              notesList: testNotesLists.collection1[0],
+              notesList,
             },
           });
         case "me":
@@ -282,7 +294,32 @@ export const mockClient = (options?: MockClientOptions) =>
               },
             });
           }
-
+        case "addnote":
+          if (options?.note?.create === "error") {
+            return fromValue({
+              data: {
+                addNote: {
+                  error: {
+                    property: "title",
+                    message: "'title' cannot be empty.",
+                  },
+                },
+              },
+            });
+          } else {
+            return fromValue({
+              data: {
+                addNote: {
+                  note: {
+                    id: "2",
+                    title: "Note 2",
+                    body: "",
+                  },
+                  error: null,
+                },
+              },
+            });
+          }
         default:
           break;
       }

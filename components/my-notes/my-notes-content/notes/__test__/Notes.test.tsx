@@ -1,4 +1,5 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
+import { act } from "react-dom/test-utils";
 import { Client, Provider } from "urql";
 import { mockClient } from "../../../../../test-utils/mocks/gql-mocks";
 import { testCollections } from "../../../../../test-utils/testData";
@@ -29,5 +30,116 @@ describe("Notes component", () => {
     const note = screen.getByText(/note 1/i);
 
     expect(note).toBeInTheDocument();
+  });
+
+  test("Selects a note that is then stored in local storage.", async () => {
+    // Local storage
+    localStorage.setItem(
+      LocalStorageKeys.SELECTED_COLLECTION,
+      JSON.stringify(testCollections[0])
+    );
+    localStorage.setItem(
+      LocalStorageKeys.SELECTED_LIST,
+      JSON.stringify(testCollections[0].lists[0])
+    );
+    // Render
+    render(
+      <Provider value={mockClient() as unknown as Client}>
+        <SelectedDataProvider>
+          <Notes />
+        </SelectedDataProvider>
+      </Provider>
+    );
+
+    const title = "Note 1";
+
+    const note = screen.getByText(title);
+
+    await act(async () => {
+      fireEvent.click(note);
+    });
+
+    const noteInStorage = localStorage.getItem(LocalStorageKeys.SELECTED_NOTE);
+    const selectedNote = JSON.parse(noteInStorage || "{}");
+
+    expect(selectedNote).not.toBeNull();
+    expect(JSON.parse(selectedNote).title).toBe(title);
+  });
+
+  test("Adds a new note successfully.", async () => {
+    // Local storage
+    localStorage.setItem(
+      LocalStorageKeys.SELECTED_COLLECTION,
+      JSON.stringify(testCollections[0])
+    );
+    localStorage.setItem(
+      LocalStorageKeys.SELECTED_LIST,
+      JSON.stringify(testCollections[0].lists[0])
+    );
+    // Render
+    render(
+      <Provider
+        value={mockClient({ note: { create: "success" } }) as unknown as Client}
+      >
+        <SelectedDataProvider>
+          <Notes />
+        </SelectedDataProvider>
+      </Provider>
+    );
+
+    const addNoteButton = screen.getByLabelText(/add-note/i);
+    await act(async () => {
+      fireEvent.click(addNoteButton);
+    });
+    const input = screen.getByPlaceholderText(/title/i);
+    await act(async () => {
+      fireEvent.change(input, { target: { value: "Note 2" } });
+    });
+    const createNoteButton = screen.getByLabelText(/create-note/i);
+    await act(async () => {
+      fireEvent.click(createNoteButton);
+    });
+    const newNote = screen.getByRole("heading", {
+      name: /Note 2/i,
+    });
+
+    expect(newNote).toBeInTheDocument();
+  });
+
+  test("Fails to add a new note with an empty title.", async () => {
+    // Local storage
+    localStorage.setItem(
+      LocalStorageKeys.SELECTED_COLLECTION,
+      JSON.stringify(testCollections[0])
+    );
+    localStorage.setItem(
+      LocalStorageKeys.SELECTED_LIST,
+      JSON.stringify(testCollections[0].lists[0])
+    );
+    // Render
+    render(
+      <Provider
+        value={mockClient({ note: { create: "error" } }) as unknown as Client}
+      >
+        <SelectedDataProvider>
+          <Notes />
+        </SelectedDataProvider>
+      </Provider>
+    );
+
+    const addNoteButton = screen.getByLabelText(/add-note/i);
+    await act(async () => {
+      fireEvent.click(addNoteButton);
+    });
+    const input = screen.getByPlaceholderText(/title/i);
+    await act(async () => {
+      fireEvent.change(input, { target: { value: "" } });
+    });
+    const createNoteButton = screen.getByLabelText(/create-note/i);
+    await act(async () => {
+      fireEvent.click(createNoteButton);
+    });
+
+    expect(createNoteButton).toBeInTheDocument();
   });
 });
