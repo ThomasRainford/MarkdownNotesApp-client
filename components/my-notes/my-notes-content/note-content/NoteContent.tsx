@@ -1,9 +1,11 @@
 import { AddIcon, CloseIcon, EditIcon } from "@chakra-ui/icons";
 import { Box, Heading, IconButton, Input, Tag, Text } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
+  Collection,
   Note,
   NotesList,
+  useCollectionsQuery,
   useUpdateNoteMutation,
 } from "../../../../generated/graphql";
 import { getTimeSince } from "../../../../utils/getTimeSince";
@@ -12,8 +14,9 @@ import { useUpdateItem } from "../../../../utils/hooks/useUpdateItem";
 import NoteEditor from "./note-editor/NoteEditor";
 
 const NoteContentHeaderTitle = () => {
+  const [collectionsResult] = useCollectionsQuery();
   const {
-    collection: { collection },
+    collection: { collection: selectedCollection, setSelectedCollection },
     list: { list, setSelectedList },
     note: { note, setSelectedNote },
   } = useAllLocalStorageValues();
@@ -21,18 +24,28 @@ const NoteContentHeaderTitle = () => {
   const [editingValue, setEditingValue] = useState(note.title);
   const [, updateNote] = useUpdateNoteMutation();
   const [updateItem] = useUpdateItem();
+  const collections = collectionsResult.data?.collections;
+
+  useEffect(() => {
+    setEditingValue(note.title);
+  }, [note.title]);
 
   const update = () => {
-    let selectedList: NotesList = list;
+    let notesCollection: Collection = selectedCollection;
+    let notesNotesList: NotesList = list;
     if ((list as any) === "") {
-      collection.lists.forEach((_list: NotesList) => {
-        _list.notes.forEach((_note: Note) => {
-          if (_note.id === _note.id) {
-            selectedList = _list;
-            setSelectedList(JSON.stringify(_list));
-            setSelectedNote(JSON.stringify(_note));
-            console.log(_note);
-          }
+      collections?.forEach((_collection) => {
+        _collection.lists?.forEach((_list) => {
+          _list.notes.forEach((_note: Note) => {
+            if (_note.id === note.id) {
+              notesCollection = _collection as Collection;
+              notesNotesList = _list as NotesList;
+              setSelectedCollection(JSON.stringify(notesCollection));
+              setSelectedList(JSON.stringify(notesNotesList));
+              setSelectedNote(JSON.stringify(_note));
+              console.log(_note);
+            }
+          });
         });
       });
     }
@@ -40,12 +53,12 @@ const NoteContentHeaderTitle = () => {
       "note",
       {
         noteLocation: {
-          collectionId: collection.id,
-          listId: selectedList.id,
+          collectionId: notesCollection.id,
+          listId: notesNotesList.id,
           noteId: note.id,
         },
         noteInput: {
-          title: note.title,
+          title: editingValue,
         },
       },
       updateNote
