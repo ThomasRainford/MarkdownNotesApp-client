@@ -147,13 +147,15 @@ const Notes = (): JSX.Element => {
               },
               noteInput: {
                 title,
-                body: "",
+                body: "# New Note",
               },
             };
             const result = await addNote(variables);
-            console.log(result);
             const hasError = handleAddNoteErrors(variables, result, toast);
-            if (!hasError) setIsAddingNewNote(false);
+            if (!hasError) {
+              setSelectedNote(JSON.stringify(result.data?.addNote.note));
+              setIsAddingNewNote(false);
+            }
           }}
         />
       )}

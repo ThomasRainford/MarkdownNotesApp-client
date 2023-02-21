@@ -4,6 +4,8 @@ mutation AddNote($listLocation: ListLocationInput!, $noteInput: NoteInput!) {
       id
       title
       body
+      createdAt
+      updatedAt
     }
     error {
       property

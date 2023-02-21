@@ -324,7 +324,7 @@ export type AddNoteMutationVariables = Exact<{
 }>;
 
 
-export type AddNoteMutation = { __typename?: 'Mutation', addNote: { __typename?: 'NoteResponse', note?: { __typename?: 'Note', id: string, title: string, body: string } | null, error?: { __typename?: 'Error', property: string, message: string } | null } };
+export type AddNoteMutation = { __typename?: 'Mutation', addNote: { __typename?: 'NoteResponse', note?: { __typename?: 'Note', id: string, title: string, body: string, createdAt: any, updatedAt: any } | null, error?: { __typename?: 'Error', property: string, message: string } | null } };
 
 export type CreateCollectionMutationVariables = Exact<{
   title: Scalars['String'];
@@ -418,6 +418,8 @@ export const AddNoteDocument = gql`
       id
       title
       body
+      createdAt
+      updatedAt
     }
     error {
       property
