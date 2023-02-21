@@ -21,6 +21,8 @@ import {
   RegisterMutationVariables,
   UpdateCollectionMutation,
   UpdateCollectionMutationVariables,
+  UpdateNoteMutation,
+  UpdateNoteMutationVariables,
   UpdateNotesListMutation,
   UpdateNotesListMutationVariables,
 } from "../../generated/graphql";
@@ -57,6 +59,7 @@ export const mockClient = (options?: MockClientOptions) =>
     | RegisterMutationVariables
     | UpdateCollectionMutationVariables
     | UpdateNotesListMutationVariables
+    | UpdateNoteMutationVariables
     | CreateCollectionMutationVariables
     | CreateNotesListMutationVariables
     | AddNoteMutationVariables,
@@ -70,6 +73,7 @@ export const mockClient = (options?: MockClientOptions) =>
         | RegisterMutation
         | UpdateCollectionMutation
         | UpdateNotesListMutation
+        | UpdateNoteMutation
         | CreateCollectionMutation
         | CreateNotesListMutation
         | AddNoteMutation;
@@ -239,6 +243,21 @@ export const mockClient = (options?: MockClientOptions) =>
                       updatedAt: "",
                     },
                   ],
+                },
+                error: null,
+              },
+            },
+          });
+        case "updatenote":
+          return fromValue({
+            data: {
+              updateNote: {
+                note: {
+                  id: "1",
+                  title: "Note 1 updated",
+                  body: "",
+                  createdAt: "2022-08-28T08:52:02.025Z",
+                  updatedAt: "2022-08-28T08:52:02.025Z",
                 },
                 error: null,
               },
