@@ -333,6 +333,8 @@ export const mockClient = (options?: MockClientOptions) =>
                     id: "2",
                     title: "Note 2",
                     body: "",
+                    createdAt: "2022-08-28T08:52:02.025Z",
+                    updatedAt: "2022-08-28T08:52:02.025Z",
                   },
                   error: null,
                 },

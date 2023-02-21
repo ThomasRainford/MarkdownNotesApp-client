@@ -28,9 +28,11 @@ describe("NoteContent component", () => {
     );
     // Render
     render(
-      <SelectedDataProvider>
-        <NoteContent />
-      </SelectedDataProvider>
+      <Provider value={mockClient() as unknown as Client}>
+        <SelectedDataProvider>
+          <NoteContent />
+        </SelectedDataProvider>
+      </Provider>
     );
 
     const note = screen.getByText(/note 1/i);

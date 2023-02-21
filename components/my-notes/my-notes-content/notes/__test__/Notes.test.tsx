@@ -1,6 +1,7 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { act } from "react-dom/test-utils";
 import { Client, Provider } from "urql";
+import { Note } from "../../../../../generated/graphql";
 import { mockClient } from "../../../../../test-utils/mocks/gql-mocks";
 import { testCollections } from "../../../../../test-utils/testData";
 import { LocalStorageKeys } from "../../../../../utils/types/types";
@@ -87,23 +88,30 @@ describe("Notes component", () => {
       </Provider>
     );
 
+    const noteTitle = "Note 2";
+
     const addNoteButton = screen.getByLabelText(/add-note/i);
     await act(async () => {
       fireEvent.click(addNoteButton);
     });
     const input = screen.getByPlaceholderText(/title/i);
     await act(async () => {
-      fireEvent.change(input, { target: { value: "Note 2" } });
+      fireEvent.change(input, { target: { value: noteTitle } });
     });
     const createNoteButton = screen.getByLabelText(/create-note/i);
     await act(async () => {
       fireEvent.click(createNoteButton);
     });
     const newNote = screen.getByRole("heading", {
-      name: /Note 2/i,
+      name: noteTitle,
     });
 
+    const selectedNote = JSON.parse(
+      JSON.parse(localStorage.getItem(LocalStorageKeys.SELECTED_NOTE) || "{}")
+    ) as Note;
+
     expect(newNote).toBeInTheDocument();
+    expect(selectedNote.title).toBe(noteTitle);
   });
 
   test("Fails to add a new note with an empty title.", async () => {
