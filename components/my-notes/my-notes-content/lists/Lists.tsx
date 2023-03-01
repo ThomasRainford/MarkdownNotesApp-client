@@ -1,16 +1,8 @@
 import { ArrowForwardIcon, DeleteIcon } from "@chakra-ui/icons";
 import {
   Box,
-  Button,
   Heading,
   IconButton,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
   Tag,
   Text,
   useColorMode,
@@ -27,6 +19,7 @@ import {
 } from "../../../../generated/graphql";
 import { handleCreateNotesListErrors } from "../../../../utils/error-handlers/noteslist-errors";
 import { useAllLocalStorageValues } from "../../../../utils/hooks/useAllLocalStorageValues";
+import ConfirmModal from "../../../helper/CorfirmModal";
 import AddOrCancelAddItem from "../../add-or-cancel-add-item/AddOrCancelAddItem";
 import NewItemInput from "../../new-item-input/NewItemInput";
 
@@ -59,50 +52,38 @@ const ListDeleteButton = ({
         icon={<DeleteIcon boxSize={3} />}
         onClick={onOpen}
       />
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Delete List?</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <Text>
-              Are you sure you want to delete <Text as="b">{list.title}</Text>
-            </Text>
-          </ModalBody>
-
-          <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={onClose}>
-              Cancel
-            </Button>
-            <Button
-              variant="solid"
-              colorScheme={"red"}
-              onClick={async () => {
-                const result = await deleteNotesList({
-                  listLocation: {
-                    collectionId: collection.id,
-                    listId: list.id,
-                  },
-                });
-                if (result.data?.deleteNotesList) {
-                  if (
-                    notesListsResult.data?.notesLists &&
-                    notesListsResult.data?.notesLists?.length > 1
-                  ) {
-                    setSelectedList(
-                      JSON.stringify(notesListsResult.data?.notesLists[0])
-                    );
-                  } else {
-                    setSelectedList("");
-                  }
-                }
-              }}
-            >
-              Delete
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+      <ConfirmModal
+        isOpen={isOpen}
+        onClose={onClose}
+        headerText={"Delete List?"}
+        bodyContent={
+          <Text>
+            Are you sure you want to delete <Text as="b">{list.title}</Text>
+          </Text>
+        }
+        closeText={"Cancel"}
+        confirmText={"Delete"}
+        onConfirm={async () => {
+          const result = await deleteNotesList({
+            listLocation: {
+              collectionId: collection.id,
+              listId: list.id,
+            },
+          });
+          if (result.data?.deleteNotesList) {
+            if (
+              notesListsResult.data?.notesLists &&
+              notesListsResult.data?.notesLists?.length > 1
+            ) {
+              setSelectedList(
+                JSON.stringify(notesListsResult.data?.notesLists[0])
+              );
+            } else {
+              setSelectedList("");
+            }
+          }
+        }}
+      />
     </>
   );
 };

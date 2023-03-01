@@ -1,16 +1,8 @@
 import { ArrowForwardIcon, DeleteIcon } from "@chakra-ui/icons";
 import {
   Box,
-  Button,
   Heading,
   IconButton,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
   Tag,
   Text,
   useColorMode,
@@ -19,16 +11,21 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import {
+  Collection,
   useCollectionsQuery,
   useCreateCollectionMutation,
   useDeleteCollectionMutation,
 } from "../../../../generated/graphql";
 import { handleCreateCollectionErrors } from "../../../../utils/error-handlers/collection-errors";
 import { useAllLocalStorageValues } from "../../../../utils/hooks/useAllLocalStorageValues";
+import ConfirmModal from "../../../helper/CorfirmModal";
 import AddOrCancelAddItem from "../../add-or-cancel-add-item/AddOrCancelAddItem";
 import NewItemInput from "../../new-item-input/NewItemInput";
 
-const CollectionDeleteButton = ({ collection }: { collection: any }) => {
+const CollectionDeleteButton = ({ collection }: { collection: Collection }) => {
+  const {
+    collection: { setSelectedCollection },
+  } = useAllLocalStorageValues();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const [, deleteCollection] = useDeleteCollectionMutation();
@@ -45,34 +42,23 @@ const CollectionDeleteButton = ({ collection }: { collection: any }) => {
         icon={<DeleteIcon boxSize={3} />}
         onClick={onOpen}
       />
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Delete Collection?</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <Text>
-              Are you sure you want to delete{" "}
-              <Text as="b">{collection.title}</Text>
-            </Text>
-          </ModalBody>
-
-          <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={onClose}>
-              Cancel
-            </Button>
-            <Button
-              variant="solid"
-              colorScheme={"red"}
-              onClick={() => {
-                deleteCollection({ id: collection.id });
-              }}
-            >
-              Delete
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+      <ConfirmModal
+        isOpen={isOpen}
+        onClose={onClose}
+        headerText={"Delete Collection?"}
+        bodyContent={
+          <Text>
+            Are you sure you want to delete{" "}
+            <Text as="b">{collection.title}</Text>
+          </Text>
+        }
+        closeText={"Cancel"}
+        confirmText={"Delete"}
+        onConfirm={() => {
+          deleteCollection({ id: collection.id });
+          setSelectedCollection("");
+        }}
+      />
     </>
   );
 };
@@ -150,7 +136,7 @@ const Collections = (): JSX.Element => {
           confirmAdd={async (title: string) => {
             const variables = {
               title,
-              visibility: collection.visibility,
+              visibility: "private",
             };
             const result = await createCollection(variables);
             const hasError = handleCreateCollectionErrors(
