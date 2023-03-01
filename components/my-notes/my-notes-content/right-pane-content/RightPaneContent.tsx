@@ -1,4 +1,9 @@
-import { AddIcon, CheckCircleIcon, TriangleUpIcon } from "@chakra-ui/icons";
+import {
+  AddIcon,
+  CheckCircleIcon,
+  DeleteIcon,
+  TriangleUpIcon,
+} from "@chakra-ui/icons";
 import {
   Box,
   Heading,
@@ -97,6 +102,7 @@ const ListPaneHeaderTitle = ({
             id="right-pane-heading"
             as="h3"
             size={"md"}
+            pt={"3px"}
             textColor={colorMode === "light" ? "gray.600" : "gray.300"}
             onDoubleClick={() => {
               setIsEditing(!isEditing);
@@ -152,9 +158,28 @@ const ListPaneHeader = ({
     selectedList === ""
       ? ""
       : (getLocalStorageValue(selectedList) as NotesList);
+  const [showDelete, setShowDelete] = useState(false);
+
+  const hover = (event: any) => {
+    const target = event.target;
+    if (target.matches(".list-pane-header, .list-pane-header *")) {
+      if (event.type === "mouseover") {
+        setShowDelete(true);
+      } else if (event.type === "mouseout") {
+        setShowDelete(false);
+      }
+    }
+  };
 
   return (
-    <>
+    <Box
+      className="list-pane-header"
+      display={"flex"}
+      w="100%"
+      h="2em"
+      onMouseOver={hover}
+      onMouseOut={hover}
+    >
       {selectedList === "" ? (
         <Box display={"flex"} justifyContent={"space-between"} w="100%">
           <ListPaneHeaderTitle
@@ -163,31 +188,59 @@ const ListPaneHeader = ({
             type="collection"
           />
           <Box display={"flex"}>
-            <CheckCircleIcon
-              color={"blue.400"}
-              boxSize={4}
-              mt={"4px"}
-              mr="0.25em"
-            />
-            <Heading as={"h6"} size="sm" mt={"2px"}>
-              {collection.upvotes}
-            </Heading>
+            {showDelete && (
+              <Box display={"flex"}>
+                <IconButton
+                  mr="1em"
+                  colorScheme="red"
+                  variant={"outline"}
+                  size={"sm"}
+                  aria-label={"delete-collection"}
+                  icon={<DeleteIcon />}
+                  onClick={() => {}}
+                />
+              </Box>
+            )}
+            <Box display={"flex"} alignItems="center">
+              <CheckCircleIcon
+                color={"blue.400"}
+                boxSize={4}
+                mt={"2px"}
+                mr="0.25em"
+              />
+              <Heading as={"h6"} size="sm" mt={"2px"}>
+                {collection.upvotes}
+              </Heading>
+            </Box>
           </Box>
         </Box>
       ) : (
         <>
           <Box display={"flex"} justifyContent="space-between" w="100%">
-            <Box display={"flex"} alignItems="center">
-              <ListPaneHeaderTitle
-                selectedItem={list as NotesList}
-                title={(list as NotesList).title}
-                type="list"
-              />
+            <ListPaneHeaderTitle
+              selectedItem={list as NotesList}
+              title={(list as NotesList).title}
+              type="list"
+            />
+            <Box display={"flex"}>
+              {showDelete && (
+                <Box display={"flex"}>
+                  <IconButton
+                    mr="1em"
+                    colorScheme="red"
+                    variant={"outline"}
+                    size={"sm"}
+                    aria-label={"delete-list"}
+                    icon={<DeleteIcon />}
+                    onClick={() => {}}
+                  />
+                </Box>
+              )}
             </Box>
           </Box>
         </>
       )}
-    </>
+    </Box>
   );
 };
 
@@ -225,12 +278,10 @@ const RightPaneContent = (): JSX.Element => {
           <p>Select a collection</p>
         ) : (
           <Box w={"100%"}>
-            <Box display={"flex"} w="100%">
-              <ListPaneHeader
-                collection={collection}
-                selectedList={selectedList}
-              />
-            </Box>
+            <ListPaneHeader
+              collection={collection}
+              selectedList={selectedList}
+            />
             <Box mt={"1.75em"}>
               <InputGroup>
                 {/* eslint-disable-next-line */}

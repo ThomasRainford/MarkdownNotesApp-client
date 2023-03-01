@@ -22,9 +22,9 @@ const RightPane = () => {
             <NoteContent />
           </Box>
         }
-        minSize={210}
-        maxSize={400}
-        defaultSize={270}
+        minSize={300}
+        maxSize={440}
+        defaultSize={340}
         style={{
           display: "flex",
           flex: "1 1 0%",
@@ -52,9 +52,9 @@ const MyNotesContent = (): JSX.Element => {
       <ResizeablePanel
         panel={<LeftPane />}
         content={<RightPane />}
-        minSize={260}
-        maxSize={400}
-        defaultSize={300}
+        minSize={300}
+        maxSize={450}
+        defaultSize={350}
         style={{
           display: "flex",
           flex: "1 1 0%",
