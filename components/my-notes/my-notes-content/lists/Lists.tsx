@@ -19,7 +19,10 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import {
+  Collection,
+  NotesList,
   useCreateNotesListMutation,
+  useDeleteNotesListMutation,
   useNotesListsQuery,
 } from "../../../../generated/graphql";
 import { handleCreateNotesListErrors } from "../../../../utils/error-handlers/noteslist-errors";
@@ -27,8 +30,22 @@ import { useAllLocalStorageValues } from "../../../../utils/hooks/useAllLocalSto
 import AddOrCancelAddItem from "../../add-or-cancel-add-item/AddOrCancelAddItem";
 import NewItemInput from "../../new-item-input/NewItemInput";
 
-const ListDeleteButton = ({ list }: { list: any }) => {
+const ListDeleteButton = ({
+  collection,
+  list,
+}: {
+  collection: Collection;
+  list: NotesList;
+}) => {
+  const {
+    list: { setSelectedList },
+  } = useAllLocalStorageValues();
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const [notesListsResult] = useNotesListsQuery({
+    variables: { collectionId: collection?.id || "" },
+  });
+  const [, deleteNotesList] = useDeleteNotesListMutation();
 
   return (
     <>
@@ -57,7 +74,30 @@ const ListDeleteButton = ({ list }: { list: any }) => {
             <Button colorScheme="blue" mr={3} onClick={onClose}>
               Cancel
             </Button>
-            <Button variant="solid" colorScheme={"red"} onClick={() => {}}>
+            <Button
+              variant="solid"
+              colorScheme={"red"}
+              onClick={async () => {
+                const result = await deleteNotesList({
+                  listLocation: {
+                    collectionId: collection.id,
+                    listId: list.id,
+                  },
+                });
+                if (result.data?.deleteNotesList) {
+                  if (
+                    notesListsResult.data?.notesLists &&
+                    notesListsResult.data?.notesLists?.length > 1
+                  ) {
+                    setSelectedList(
+                      JSON.stringify(notesListsResult.data?.notesLists[0])
+                    );
+                  } else {
+                    setSelectedList("");
+                  }
+                }
+              }}
+            >
               Delete
             </Button>
           </ModalFooter>
@@ -119,8 +159,11 @@ const Lists = (): JSX.Element => {
                     </Heading>
                     <Box display={"flex"}>
                       <Box mr="0.5em">
-                        {_list.id === list?._id && (
-                          <ListDeleteButton list={list} />
+                        {_list.id === list?.id && (
+                          <ListDeleteButton
+                            collection={collection}
+                            list={list}
+                          />
                         )}
                         <Tag mt="1px">{notes.length}</Tag>
                       </Box>

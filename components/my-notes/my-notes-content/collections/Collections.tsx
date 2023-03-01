@@ -21,6 +21,7 @@ import { useState } from "react";
 import {
   useCollectionsQuery,
   useCreateCollectionMutation,
+  useDeleteCollectionMutation,
 } from "../../../../generated/graphql";
 import { handleCreateCollectionErrors } from "../../../../utils/error-handlers/collection-errors";
 import { useAllLocalStorageValues } from "../../../../utils/hooks/useAllLocalStorageValues";
@@ -29,6 +30,8 @@ import NewItemInput from "../../new-item-input/NewItemInput";
 
 const CollectionDeleteButton = ({ collection }: { collection: any }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const [, deleteCollection] = useDeleteCollectionMutation();
 
   return (
     <>
@@ -58,7 +61,13 @@ const CollectionDeleteButton = ({ collection }: { collection: any }) => {
             <Button colorScheme="blue" mr={3} onClick={onClose}>
               Cancel
             </Button>
-            <Button variant="solid" colorScheme={"red"} onClick={() => {}}>
+            <Button
+              variant="solid"
+              colorScheme={"red"}
+              onClick={() => {
+                deleteCollection({ id: collection.id });
+              }}
+            >
               Delete
             </Button>
           </ModalFooter>
@@ -117,7 +126,7 @@ const Collections = (): JSX.Element => {
                 </Heading>
                 <Box display={"flex"}>
                   <Box mr="0.5em">
-                    {_collection.id === collection?._id && (
+                    {_collection.id === collection?.id && (
                       <CollectionDeleteButton collection={collection} />
                     )}
                     <Tag mt="1px">{lists.length}</Tag>
