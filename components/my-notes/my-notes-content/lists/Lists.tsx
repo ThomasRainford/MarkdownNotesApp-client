@@ -1,24 +1,42 @@
-import { ArrowForwardIcon, DeleteIcon } from "@chakra-ui/icons";
+import { ArrowForwardIcon, DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import {
   Box,
+  Button,
+  FormControl,
+  FormLabel,
   Heading,
   IconButton,
+  Input,
+  Popover,
+  PopoverArrow,
+  PopoverBody,
+  PopoverCloseButton,
+  PopoverContent,
+  PopoverHeader,
+  PopoverTrigger,
+  Stack,
   Tag,
   Text,
   useColorMode,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useFormik } from "formik";
+import { FormEvent, useState } from "react";
+import { AnyVariables, UseMutationState } from "urql";
+import * as Yup from "yup";
 import {
   Collection,
   NotesList,
+  UpdateNotesListMutation,
   useCreateNotesListMutation,
   useDeleteNotesListMutation,
   useNotesListsQuery,
+  useUpdateNotesListMutation,
 } from "../../../../generated/graphql";
 import { handleCreateNotesListErrors } from "../../../../utils/error-handlers/noteslist-errors";
 import { useAllLocalStorageValues } from "../../../../utils/hooks/useAllLocalStorageValues";
+import { useUpdateItem } from "../../../../utils/hooks/useUpdateItem";
 import ConfirmModal from "../../../helper/CorfirmModal";
 import AddOrCancelAddItem from "../../add-or-cancel-add-item/AddOrCancelAddItem";
 import NewItemInput from "../../new-item-input/NewItemInput";
@@ -43,13 +61,11 @@ const ListDeleteButton = ({
   return (
     <>
       <IconButton
-        mr={"0.75em"}
-        mb="1px"
         colorScheme="red"
         variant={"outline"}
-        size={"xs"}
+        size={"md"}
         aria-label={`delete-list`}
-        icon={<DeleteIcon boxSize={3} />}
+        icon={<DeleteIcon boxSize={4} />}
         onClick={onOpen}
       />
       <ConfirmModal
@@ -88,6 +104,127 @@ const ListDeleteButton = ({
   );
 };
 
+interface FormValues {
+  title: string;
+}
+
+const NotesListsUpdate = ({ notesList }: { notesList: NotesList }) => {
+  const [, updateNotesList] = useUpdateNotesListMutation();
+  const toast = useToast();
+  const [updateItem] = useUpdateItem();
+  const {
+    collection: { collection },
+  } = useAllLocalStorageValues();
+
+  const formik = useFormik<FormValues>({
+    initialValues: {
+      title: notesList.title,
+    },
+    validationSchema: Yup.object().shape({
+      title: Yup.string().required("Required"),
+    }),
+    onSubmit: async (values) => {
+      const response = (await updateItem(
+        "list",
+        {
+          listLocation: {
+            collectionId: collection.id,
+            listId: notesList.id,
+          },
+          notesListInput: {
+            title: values.title,
+          },
+        },
+        updateNotesList
+      )) as UseMutationState<UpdateNotesListMutation, AnyVariables>;
+      if (
+        response.data?.updateNotesList.notesList &&
+        !toast.isActive("updateNotesList")
+      ) {
+        toast({
+          id: "updateCollection",
+          title: "Successfully Updated List",
+          status: "success",
+          position: "top",
+          duration: 2000,
+        });
+      }
+      if (
+        response.data?.updateNotesList.error &&
+        !toast.isActive("updateNotesList")
+      ) {
+        toast({
+          id: "updateNotesList",
+          title: "Failed to Update List",
+          status: "error",
+          position: "top",
+          duration: 2000,
+        });
+      }
+    },
+  });
+
+  return (
+    <Popover>
+      <PopoverTrigger>
+        <IconButton
+          aria-label={"collections-edit"}
+          mr={"0.75em"}
+          mb="1px"
+          variant={"outline"}
+          size={"xs"}
+          icon={<EditIcon boxSize={3} />}
+          onClick={() => {}}
+        />
+      </PopoverTrigger>
+      <PopoverContent>
+        <PopoverArrow />
+        <PopoverCloseButton />
+        <PopoverHeader>Edit Collection</PopoverHeader>
+        <PopoverBody>
+          <Stack
+            as="form"
+            onSubmit={(e) =>
+              formik.handleSubmit(e as unknown as FormEvent<HTMLFormElement>)
+            }
+          >
+            <FormControl id="title">
+              <FormLabel>Title</FormLabel>
+              <Input
+                type="text"
+                value={formik.values.title}
+                onChange={formik.handleChange}
+              />
+              {formik.errors.title && formik.touched.title ? (
+                <Text fontSize="sm" fontStyle={"italic"} color={"red.300"}>
+                  {formik.errors.title}
+                </Text>
+              ) : null}
+            </FormControl>
+            <Box display={"flex"} justifyContent="space-between" mt="1em">
+              <Box display={"flex"}>
+                <Button
+                  type="submit"
+                  bg={"blue.400"}
+                  color={"white"}
+                  _hover={{
+                    bg: "blue.500",
+                  }}
+                >
+                  Submit
+                </Button>
+              </Box>
+              <Box display={"flex"}>
+                <ListDeleteButton collection={collection} list={notesList} />
+              </Box>
+            </Box>
+          </Stack>
+        </PopoverBody>
+      </PopoverContent>
+    </Popover>
+  );
+};
+
 const Lists = (): JSX.Element => {
   const [isAddingNewList, setIsAddingNewList] = useState(false);
   const { colorMode } = useColorMode();
@@ -109,7 +246,7 @@ const Lists = (): JSX.Element => {
       <Box>
         {!lists ? null : (
           <>
-            {lists.map((_list: any) => {
+            {lists.map((_list) => {
               const notes = _list.notes;
               return (
                 <Box
@@ -123,9 +260,7 @@ const Lists = (): JSX.Element => {
                     bg: colorMode === "light" ? "gray.200" : "gray.600",
                   }}
                   border={_list.id === list?.id ? "1px" : ""}
-                  borderColor={
-                    _list._id === list?._id ? "gray.200" : "gray.800"
-                  }
+                  borderColor={_list.id === list?.id ? "gray.200" : "gray.800"}
                   onClick={() => setSelectedList(JSON.stringify(_list))}
                 >
                   <Box display={"flex"} justifyContent="space-between" w="100%">
@@ -141,10 +276,7 @@ const Lists = (): JSX.Element => {
                     <Box display={"flex"}>
                       <Box mr="0.5em">
                         {_list.id === list?.id && (
-                          <ListDeleteButton
-                            collection={collection}
-                            list={list}
-                          />
+                          <NotesListsUpdate notesList={list} />
                         )}
                         <Tag mt="1px">{notes.length}</Tag>
                       </Box>

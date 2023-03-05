@@ -1,9 +1,4 @@
-import {
-  AddIcon,
-  CheckCircleIcon,
-  DeleteIcon,
-  TriangleUpIcon,
-} from "@chakra-ui/icons";
+import { AddIcon, CheckCircleIcon, TriangleUpIcon } from "@chakra-ui/icons";
 import {
   Box,
   Heading,
@@ -158,28 +153,9 @@ const ListPaneHeader = ({
     selectedList === ""
       ? ""
       : (getLocalStorageValue(selectedList) as NotesList);
-  const [showDelete, setShowDelete] = useState(false);
-
-  const hover = (event: any) => {
-    const target = event.target;
-    if (target.matches(".list-pane-header, .list-pane-header *")) {
-      if (event.type === "mouseover") {
-        setShowDelete(true);
-      } else if (event.type === "mouseout") {
-        setShowDelete(false);
-      }
-    }
-  };
 
   return (
-    <Box
-      className="list-pane-header"
-      display={"flex"}
-      w="100%"
-      h="2em"
-      onMouseOver={hover}
-      onMouseOut={hover}
-    >
+    <Box className="list-pane-header" display={"flex"} w="100%" h="2em">
       {selectedList === "" ? (
         <Box display={"flex"} justifyContent={"space-between"} w="100%">
           <ListPaneHeaderTitle
@@ -188,19 +164,6 @@ const ListPaneHeader = ({
             type="collection"
           />
           <Box display={"flex"}>
-            {showDelete && (
-              <Box display={"flex"}>
-                <IconButton
-                  mr="1em"
-                  colorScheme="red"
-                  variant={"outline"}
-                  size={"sm"}
-                  aria-label={"delete-collection"}
-                  icon={<DeleteIcon />}
-                  onClick={() => {}}
-                />
-              </Box>
-            )}
             <Box display={"flex"} alignItems="center">
               <CheckCircleIcon
                 color={"blue.400"}
@@ -222,21 +185,6 @@ const ListPaneHeader = ({
               title={(list as NotesList).title}
               type="list"
             />
-            <Box display={"flex"}>
-              {showDelete && (
-                <Box display={"flex"}>
-                  <IconButton
-                    mr="1em"
-                    colorScheme="red"
-                    variant={"outline"}
-                    size={"sm"}
-                    aria-label={"delete-list"}
-                    icon={<DeleteIcon />}
-                    onClick={() => {}}
-                  />
-                </Box>
-              )}
-            </Box>
           </Box>
         </>
       )}
