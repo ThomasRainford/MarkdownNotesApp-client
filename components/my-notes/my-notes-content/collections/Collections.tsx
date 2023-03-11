@@ -70,9 +70,18 @@ const CollectionDeleteButton = ({ collection }: { collection: Collection }) => {
         }
         closeText={"Cancel"}
         confirmText={"Delete"}
-        onConfirm={() => {
-          deleteCollection({ id: collection.id });
-          setSelectedCollection("");
+        toastText={{
+          success: `Successfully deleted ${collection.title}.`,
+          error: `Failed to delete ${collection.title}.`,
+        }}
+        onConfirm={async () => {
+          const result = await deleteCollection({ id: collection.id });
+          if (result.data?.deleteCollection) {
+            setSelectedCollection("");
+            return true;
+          } else {
+            return false;
+          }
         }}
       />
     </>

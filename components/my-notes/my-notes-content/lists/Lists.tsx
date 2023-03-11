@@ -79,6 +79,10 @@ const ListDeleteButton = ({
         }
         closeText={"Cancel"}
         confirmText={"Delete"}
+        toastText={{
+          success: `Successfully deleted ${list.title}.`,
+          error: `Failed to delete ${list.title}.`,
+        }}
         onConfirm={async () => {
           const result = await deleteNotesList({
             listLocation: {
@@ -97,6 +101,9 @@ const ListDeleteButton = ({
             } else {
               setSelectedList("");
             }
+            return true;
+          } else {
+            return false;
           }
         }}
       />

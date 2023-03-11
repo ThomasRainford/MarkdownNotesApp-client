@@ -349,6 +349,13 @@ export type DeleteCollectionMutationVariables = Exact<{
 
 export type DeleteCollectionMutation = { __typename?: 'Mutation', deleteCollection: boolean };
 
+export type DeleteNoteMutationVariables = Exact<{
+  noteLocation: NoteLocationInput;
+}>;
+
+
+export type DeleteNoteMutation = { __typename?: 'Mutation', deleteNote: boolean };
+
 export type DeleteNotesListMutationVariables = Exact<{
   listLocation: ListLocationInput;
 }>;
@@ -490,6 +497,15 @@ export const DeleteCollectionDocument = gql`
 
 export function useDeleteCollectionMutation() {
   return Urql.useMutation<DeleteCollectionMutation, DeleteCollectionMutationVariables>(DeleteCollectionDocument);
+};
+export const DeleteNoteDocument = gql`
+    mutation DeleteNote($noteLocation: NoteLocationInput!) {
+  deleteNote(noteLocation: $noteLocation)
+}
+    `;
+
+export function useDeleteNoteMutation() {
+  return Urql.useMutation<DeleteNoteMutation, DeleteNoteMutationVariables>(DeleteNoteDocument);
 };
 export const DeleteNotesListDocument = gql`
     mutation DeleteNotesList($listLocation: ListLocationInput!) {

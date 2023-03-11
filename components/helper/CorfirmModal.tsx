@@ -8,8 +8,8 @@ import {
   ModalHeader,
   ModalOverlay,
   Text,
+  useToast,
 } from "@chakra-ui/react";
-import { MouseEventHandler } from "react";
 
 const ConfirmModal = ({
   isOpen,
@@ -18,6 +18,7 @@ const ConfirmModal = ({
   bodyContent,
   closeText,
   confirmText,
+  toastText,
   onConfirm,
 }: {
   isOpen: boolean;
@@ -26,8 +27,14 @@ const ConfirmModal = ({
   bodyContent: JSX.Element;
   closeText: string;
   confirmText: string;
-  onConfirm: MouseEventHandler<HTMLButtonElement>;
+  toastText: {
+    success: string;
+    error: string;
+  };
+  onConfirm: (event: any) => Promise<boolean>;
 }) => {
+  const toast = useToast();
+
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
@@ -42,7 +49,30 @@ const ConfirmModal = ({
           <Button colorScheme="blue" mr={3} onClick={onClose}>
             {closeText}
           </Button>
-          <Button variant="solid" colorScheme={"red"} onClick={onConfirm}>
+          <Button
+            variant="solid"
+            colorScheme={"red"}
+            onClick={async (event) => {
+              const result = await onConfirm(event);
+              if (result) {
+                toast({
+                  id: "delete-note-success",
+                  title: toastText.success,
+                  status: "success",
+                  position: "top",
+                  duration: 2000,
+                });
+              } else {
+                toast({
+                  id: "delete-note-error",
+                  title: toastText.error,
+                  status: "error",
+                  position: "top",
+                  duration: 2000,
+                });
+              }
+            }}
+          >
             {confirmText}
           </Button>
         </ModalFooter>

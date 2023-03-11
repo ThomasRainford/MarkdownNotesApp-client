@@ -1,16 +1,8 @@
 import { DeleteIcon } from "@chakra-ui/icons";
 import {
   Box,
-  Button,
   Heading,
   IconButton,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
   Tag,
   Text,
   useColorMode,
@@ -19,17 +11,35 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import {
+  Collection,
+  Note,
+  NotesList,
   useAddNoteMutation,
+  useDeleteNoteMutation,
   useNotesListQuery,
 } from "../../../../generated/graphql";
 import { handleAddNoteErrors } from "../../../../utils/error-handlers/note-errors";
 import { getTimeSince } from "../../../../utils/getTimeSince";
 import { useAllLocalStorageValues } from "../../../../utils/hooks/useAllLocalStorageValues";
+import ConfirmModal from "../../../helper/CorfirmModal";
 import AddOrCancelAddItem from "../../add-or-cancel-add-item/AddOrCancelAddItem";
 import NewItemInput from "../../new-item-input/NewItemInput";
 
-const NoteDeleteButton = ({ note }: { note: any }) => {
+const NoteDeleteButton = ({
+  note,
+  collection,
+  notesList,
+}: {
+  note: Note;
+  collection: Collection;
+  notesList: NotesList;
+}) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    note: { note: selectedNote, setSelectedNote },
+  } = useAllLocalStorageValues();
+
+  const [, deleteNote] = useDeleteNoteMutation();
 
   return (
     <>
@@ -41,27 +51,39 @@ const NoteDeleteButton = ({ note }: { note: any }) => {
         icon={<DeleteIcon boxSize={3} />}
         onClick={onOpen}
       />
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Delete Note?</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <Text>
-              Are you sure you want to delete <Text as="b">{note.title}</Text>
-            </Text>
-          </ModalBody>
-
-          <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={onClose}>
-              Cancel
-            </Button>
-            <Button variant="solid" colorScheme={"red"} onClick={() => {}}>
-              Delete
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+      <ConfirmModal
+        isOpen={isOpen}
+        onClose={onClose}
+        headerText={"Delete Note?"}
+        bodyContent={
+          <Text>
+            Are you sure you want to delete <Text as="b">{note.title}</Text>
+          </Text>
+        }
+        closeText={"Cancel"}
+        confirmText={"Delete"}
+        toastText={{
+          success: `Successfully deleted ${note.title}.`,
+          error: `Failed to delete ${note.title}.`,
+        }}
+        onConfirm={async () => {
+          const result = await deleteNote({
+            noteLocation: {
+              collectionId: collection.id,
+              listId: notesList.id,
+              noteId: note.id,
+            },
+          });
+          if (result.data?.deleteNote) {
+            if (selectedNote.id === note.id) {
+              setSelectedNote("");
+            }
+            return true;
+          } else {
+            return false;
+          }
+        }}
+      />
     </>
   );
 };
@@ -129,7 +151,11 @@ const Notes = (): JSX.Element => {
                   </Box>
                 </Box>
                 <Box>
-                  <NoteDeleteButton note={note} />
+                  <NoteDeleteButton
+                    note={note}
+                    collection={collection}
+                    notesList={list}
+                  />
                 </Box>
               </Box>
             ))}
