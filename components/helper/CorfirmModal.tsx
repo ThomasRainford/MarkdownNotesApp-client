@@ -31,7 +31,7 @@ const ConfirmModal = ({
     success: string;
     error: string;
   };
-  onConfirm: (event: any) => Promise<boolean>;
+  onConfirm: (_: any) => Promise<boolean>;
 }) => {
   const toast = useToast();
 
