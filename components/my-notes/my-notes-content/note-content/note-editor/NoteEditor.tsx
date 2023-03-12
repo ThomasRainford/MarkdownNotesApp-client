@@ -16,7 +16,7 @@ import { useUpdateItem } from "../../../../../utils/hooks/useUpdateItem";
 
 interface NoteEditorProps {
   markdownText: string;
-  handleChange: ((state: EditorState) => void) | undefined;
+  handleChange: ((_: EditorState) => void) | undefined;
 }
 
 const NoteEditor = ({
