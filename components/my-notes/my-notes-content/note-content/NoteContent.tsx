@@ -3,51 +3,33 @@ import { Box, Heading, IconButton, Input, Tag, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import {
   Collection,
-  Note,
-  NotesList,
   useCollectionsQuery,
   useUpdateNoteMutation,
 } from "../../../../generated/graphql";
 import { getTimeSince } from "../../../../utils/getTimeSince";
 import { useAllLocalStorageValues } from "../../../../utils/hooks/useAllLocalStorageValues";
+import { useHandleCrossEditing } from "../../../../utils/hooks/useHandleCrossEditing";
 import { useUpdateItem } from "../../../../utils/hooks/useUpdateItem";
 import NoteEditorContainer from "./note-editor/NoteEditor";
 
 const NoteContentHeaderTitle = () => {
   const [collectionsResult] = useCollectionsQuery();
   const {
-    collection: { collection: selectedCollection, setSelectedCollection },
-    list: { list, setSelectedList },
-    note: { note, setSelectedNote },
+    note: { note },
   } = useAllLocalStorageValues();
   const [isEditing, setIsEditing] = useState(false);
   const [editingValue, setEditingValue] = useState(note.title);
   const [, updateNote] = useUpdateNoteMutation();
   const [updateItem] = useUpdateItem();
-  const collections = collectionsResult.data?.collections;
+  const collections = collectionsResult.data?.collections as Collection[];
+  const handelCrossEditing = useHandleCrossEditing({ collections });
 
   useEffect(() => {
     setEditingValue(note.title);
   }, [note.title]);
 
   const update = () => {
-    let notesCollection: Collection = selectedCollection;
-    let notesNotesList: NotesList = list;
-    if ((list as any) === "" || !list.notes.find((n) => n.id === note.id)) {
-      collections?.forEach((_collection) => {
-        _collection.lists?.forEach((_list) => {
-          _list.notes.forEach((_note: Note) => {
-            if (_note.id === note.id) {
-              notesCollection = _collection as Collection;
-              notesNotesList = _list as NotesList;
-              setSelectedCollection(JSON.stringify(notesCollection));
-              setSelectedList(JSON.stringify(notesNotesList));
-              setSelectedNote(JSON.stringify(_note));
-            }
-          });
-        });
-      });
-    }
+    const { notesCollection, notesNotesList } = handelCrossEditing();
     return updateItem(
       "note",
       {

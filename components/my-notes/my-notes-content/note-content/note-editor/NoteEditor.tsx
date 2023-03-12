@@ -2,9 +2,16 @@ import { Box } from "@chakra-ui/react";
 import { EditorState } from "@codemirror/state";
 import { useCallback, useEffect, useState } from "react";
 import { useAutosave } from "react-autosave";
-import { useUpdateNoteMutation } from "../../../../../generated/graphql";
+import { AnyVariables, UseMutationState } from "urql";
+import {
+  Collection,
+  UpdateNoteMutation,
+  useCollectionsQuery,
+  useUpdateNoteMutation,
+} from "../../../../../generated/graphql";
 import { useAllLocalStorageValues } from "../../../../../utils/hooks/useAllLocalStorageValues";
 import useCodeMirror from "../../../../../utils/hooks/useCodeMirror";
+import { useHandleCrossEditing } from "../../../../../utils/hooks/useHandleCrossEditing";
 import { useUpdateItem } from "../../../../../utils/hooks/useUpdateItem";
 
 interface NoteEditorProps {
@@ -61,14 +68,17 @@ const NoteEditorContainer = ({
   markdownText,
 }: NoteEditorContainerProps): JSX.Element => {
   const {
-    collection: { collection },
-    list: { list },
     note: { note },
   } = useAllLocalStorageValues();
+  const [collectionsResult] = useCollectionsQuery();
   const [, updateNote] = useUpdateNoteMutation();
   const [updateItem] = useUpdateItem();
-
+  const [savingState, setSavingState] = useState<
+    "processing" | "saving" | "saved" | "error"
+  >("saved");
   const [text, setText] = useState(markdownText);
+  const collections = collectionsResult.data?.collections as Collection[];
+  const handelCrossEditing = useHandleCrossEditing({ collections });
 
   const handleTextChange = useCallback((newText: string) => {
     setText(newText);
@@ -82,12 +92,14 @@ const NoteEditorContainer = ({
   );
 
   const onSave = async (body: string) => {
-    const result = await updateItem(
+    setSavingState("saving");
+    const { notesCollection, notesNotesList } = handelCrossEditing();
+    const result = (await updateItem(
       "note",
       {
         noteLocation: {
-          collectionId: collection.id,
-          listId: list.id,
+          collectionId: notesCollection.id,
+          listId: notesNotesList.id,
           noteId: note.id,
         },
         noteInput: {
@@ -95,13 +107,24 @@ const NoteEditorContainer = ({
         },
       },
       updateNote
-    );
-    console.log(result);
+    )) as UseMutationState<UpdateNoteMutation, AnyVariables>;
+    if (result?.data?.updateNote) {
+      console.log("saved");
+      setSavingState("saved");
+    } else {
+      console.log("error");
+      setSavingState("error");
+    }
   };
 
   useAutosave({ data: text, onSave });
 
-  return <NoteEditor markdownText={markdownText} handleChange={handleChange} />;
+  return (
+    <Box>
+      {savingState}
+      <NoteEditor markdownText={markdownText} handleChange={handleChange} />
+    </Box>
+  );
 };
 
 export default NoteEditorContainer;
