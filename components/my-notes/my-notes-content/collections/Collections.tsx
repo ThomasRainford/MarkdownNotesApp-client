@@ -63,10 +63,10 @@ const CollectionDeleteButton = ({ collection }: { collection: Collection }) => {
         onClose={onClose}
         headerText={"Delete Collection?"}
         bodyContent={
-          <Text>
+          <Box>
             Are you sure you want to delete{" "}
             <Text as="b">{collection.title}</Text>
-          </Text>
+          </Box>
         }
         closeText={"Cancel"}
         confirmText={"Delete"}

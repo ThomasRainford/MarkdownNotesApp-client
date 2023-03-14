@@ -7,7 +7,6 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Text,
   useToast,
 } from "@chakra-ui/react";
 
@@ -41,10 +40,7 @@ const ConfirmModal = ({
       <ModalContent>
         <ModalHeader>{headerText}</ModalHeader>
         <ModalCloseButton />
-        <ModalBody>
-          <Text>{bodyContent}</Text>
-        </ModalBody>
-
+        <ModalBody>{bodyContent}</ModalBody>
         <ModalFooter>
           <Button colorScheme="blue" mr={3} onClick={onClose}>
             {closeText}

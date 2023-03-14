@@ -39,10 +39,10 @@ type MockClientOptions = {
   register?: "success" | "error";
   login?: "success" | "error";
   collection?: {
-    create: "success" | "error";
+    create?: "success" | "error";
   };
   noteslist?: {
-    create: "success" | "error";
+    create?: "success" | "error";
   };
   note?: {
     create?: "success" | "error";

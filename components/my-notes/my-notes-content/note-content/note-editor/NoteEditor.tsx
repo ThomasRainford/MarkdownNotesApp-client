@@ -90,25 +90,26 @@ const NoteEditor = ({ markdownText }: Props): JSX.Element => {
   const onSave = async (body: string) => {
     setSavingState("saving");
     const { notesCollection, notesNotesList } = handelCrossEditing();
-    const result = (await updateItem(
-      "note",
-      {
-        noteLocation: {
-          collectionId: notesCollection.id,
-          listId: notesNotesList.id,
-          noteId: note.id,
+    if (body !== note.body) {
+      const result = (await updateItem(
+        "note",
+        {
+          noteLocation: {
+            collectionId: notesCollection.id,
+            listId: notesNotesList.id,
+            noteId: note.id,
+          },
+          noteInput: {
+            body,
+          },
         },
-        noteInput: {
-          body,
-        },
-      },
-      updateNote
-    )) as UseMutationState<UpdateNoteMutation, AnyVariables>;
-    if (result?.data?.updateNote) {
-      setSavingState("saved");
-    } else {
-      console.log("error");
-      setSavingState("error");
+        updateNote
+      )) as UseMutationState<UpdateNoteMutation, AnyVariables>;
+      if (result?.data?.updateNote) {
+        setSavingState("saved");
+      } else {
+        setSavingState("error");
+      }
     }
   };
 
