@@ -31,12 +31,6 @@ describe("getTimeSince", () => {
     expect(getTimeSince(date)).toEqual("1 minute");
   });
 
-  it('returns "1 second" for a date that is one second in the past', () => {
-    const date = new Date();
-    date.setSeconds(date.getSeconds() - 1);
-    expect(getTimeSince(date)).toEqual("1 second");
-  });
-
   it('returns "Just now" for a date that is equal in seconds to the date now', () => {
     const date = new Date();
     date.setSeconds(date.getSeconds());

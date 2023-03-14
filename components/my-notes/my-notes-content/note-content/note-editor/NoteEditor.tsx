@@ -105,7 +105,6 @@ const NoteEditor = ({ markdownText }: Props): JSX.Element => {
       updateNote
     )) as UseMutationState<UpdateNoteMutation, AnyVariables>;
     if (result?.data?.updateNote) {
-      console.log("saved");
       setSavingState("saved");
     } else {
       console.log("error");

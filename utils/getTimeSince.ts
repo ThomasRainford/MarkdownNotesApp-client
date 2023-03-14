@@ -1,30 +1,30 @@
-export const getTimeSince = (date: Date): string => {
-  const seconds = Math.floor((new Date().getTime() - date.getTime()) / 1000);
-  let interval = Math.floor(seconds / 31536000);
+import moment from "moment";
 
-  if (interval >= 1) {
-    return interval + (interval > 1 ? " years" : " year");
-  }
-  interval = Math.floor(seconds / 2592000);
-  if (interval >= 1) {
-    return interval + (interval > 1 ? " months" : " month");
-  }
-  interval = Math.floor(seconds / 86400);
-  if (interval >= 1) {
-    return interval + (interval > 1 ? " days" : " day");
-  }
-  interval = Math.floor(seconds / 3600);
-  if (interval >= 1) {
-    return interval + (interval > 1 ? " hours" : " hour");
-  }
-  interval = Math.floor(seconds / 60);
-  if (interval >= 1) {
-    return interval + (interval > 1 ? " minutes" : " minute");
-  }
-  const floorSeconds = Math.floor(seconds);
-  return floorSeconds === 0
-    ? "Just now"
-    : floorSeconds > 1
-    ? `${floorSeconds} seconds`
-    : `${floorSeconds} second`;
+moment.updateLocale("en", {
+  relativeTime: {
+    future: "in %s",
+    past: "%s ago",
+    s: "Just now",
+    ss: "%d seconds",
+    m: "1 minute",
+    mm: "%d minutes",
+    h: "1 hour",
+    hh: "%d hours",
+    d: "1 day",
+    dd: "%d days",
+    w: "1 week",
+    ww: "%d weeks",
+    M: "1 month",
+    MM: "%d months",
+    y: "1 year",
+    yy: "%d years",
+  },
+});
+
+export const getTimeSince = (date: Date): string => {
+  const value = moment(date).fromNow();
+  return value
+    .split(" ")
+    .splice(0, value.split(" ").length - 1)
+    .join(" ");
 };
