@@ -14,7 +14,7 @@ import useCodeMirror from "../../../../../utils/hooks/useCodeMirror";
 import { useHandleCrossEditing } from "../../../../../utils/hooks/useHandleCrossEditing";
 import { useUpdateItem } from "../../../../../utils/hooks/useUpdateItem";
 
-const NoteEditor = ({
+const Editor = ({
   markdownText,
   handleChange,
 }: {
@@ -62,7 +62,7 @@ export interface Props {
   markdownText: string;
 }
 
-const NoteEditorContainer = ({ markdownText }: Props): JSX.Element => {
+const NoteEditor = ({ markdownText }: Props): JSX.Element => {
   const {
     note: { note },
   } = useAllLocalStorageValues();
@@ -118,9 +118,9 @@ const NoteEditorContainer = ({ markdownText }: Props): JSX.Element => {
   return (
     <Box>
       {savingState}
-      <NoteEditor markdownText={markdownText} handleChange={handleChange} />
+      <Editor markdownText={markdownText} handleChange={handleChange} />
     </Box>
   );
 };
 
-export default NoteEditorContainer;
+export default NoteEditor;

@@ -10,7 +10,7 @@ import { getTimeSince } from "../../../../utils/getTimeSince";
 import { useAllLocalStorageValues } from "../../../../utils/hooks/useAllLocalStorageValues";
 import { useHandleCrossEditing } from "../../../../utils/hooks/useHandleCrossEditing";
 import { useUpdateItem } from "../../../../utils/hooks/useUpdateItem";
-import NoteEditorContainer from "./note-editor/NoteEditor";
+import NoteEditor from "./note-editor/NoteEditor";
 
 const NoteContentHeaderTitle = () => {
   const [collectionsResult] = useCollectionsQuery();
@@ -158,7 +158,7 @@ const NoteContent = (): JSX.Element => {
         <Box pt={"1em"} px={"1em"} h={"100%"}>
           <NoteContentHeader />
           <Box className="node-editor-container" height={"100%"} mt="1.5em">
-            <NoteEditorContainer markdownText={note.body} />
+            <NoteEditor markdownText={note.body} />
           </Box>
         </Box>
       )}

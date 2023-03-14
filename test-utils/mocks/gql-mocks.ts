@@ -45,7 +45,11 @@ type MockClientOptions = {
     create: "success" | "error";
   };
   note?: {
-    create: "success" | "error";
+    create?: "success" | "error";
+    update?: {
+      title?: string;
+      body?: string;
+    };
   };
 };
 
@@ -249,20 +253,37 @@ export const mockClient = (options?: MockClientOptions) =>
             },
           });
         case "updatenote":
-          return fromValue({
-            data: {
-              updateNote: {
-                note: {
-                  id: "1",
-                  title: "Note 1 updated",
-                  body: "",
-                  createdAt: "2022-08-28T08:52:02.025Z",
-                  updatedAt: "2022-08-28T08:52:02.025Z",
+          if (options?.note?.update?.title) {
+            return fromValue({
+              data: {
+                updateNote: {
+                  note: {
+                    id: "1",
+                    title: options?.note?.update?.title || "",
+                    body: "",
+                    createdAt: "2022-08-28T08:52:02.025Z",
+                    updatedAt: "2022-08-28T08:52:02.025Z",
+                  },
+                  error: null,
                 },
-                error: null,
               },
-            },
-          });
+            });
+          } else {
+            return fromValue({
+              data: {
+                updateNote: {
+                  note: {
+                    id: "1",
+                    title: "Title",
+                    body: options?.note?.update?.body || "",
+                    createdAt: "2022-08-28T08:52:02.025Z",
+                    updatedAt: "2022-08-28T08:52:02.025Z",
+                  },
+                  error: null,
+                },
+              },
+            });
+          }
         case "createcollection":
           if (options?.collection?.create === "error") {
             return fromValue({

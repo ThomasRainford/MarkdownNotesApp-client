@@ -55,15 +55,16 @@ describe("NoteContent component", () => {
       JSON.stringify(testSelectedNote)
     );
     // Render
+    const options = { note: { update: { title: "Note 1 updated" } } };
     render(
-      <Provider value={mockClient() as unknown as Client}>
+      <Provider value={mockClient(options) as unknown as Client}>
         <SelectedDataProvider>
           <NoteContent />
         </SelectedDataProvider>
       </Provider>
     );
 
-    const newNoteTitle = "Note 1 updated";
+    const newNoteTitle = options.note.update.title;
 
     const updateNoteButton = screen.getByLabelText(/update-note-title/i);
     await act(async () => {
@@ -94,15 +95,16 @@ describe("NoteContent component", () => {
       JSON.stringify(testSelectedNote)
     );
     // Render
+    const options = { note: { update: { title: "Note 1 updated" } } };
     render(
-      <Provider value={mockClient() as unknown as Client}>
+      <Provider value={mockClient(options) as unknown as Client}>
         <SelectedDataProvider>
           <NoteContent />
         </SelectedDataProvider>
       </Provider>
     );
 
-    const newNoteTitle = "Note 1 updated";
+    const newNoteTitle = options.note.update.title;
 
     const updateNoteButton = screen.getByLabelText(/update-note-title/i);
     await act(async () => {
