@@ -1,4 +1,5 @@
-import { Box } from "@chakra-ui/react";
+import { CheckIcon } from "@chakra-ui/icons";
+import { Box, Spinner, Tag } from "@chakra-ui/react";
 import { EditorState } from "@codemirror/state";
 import { useCallback, useEffect, useState } from "react";
 import { useAutosave } from "react-autosave";
@@ -58,6 +59,33 @@ const Editor = ({
   );
 };
 
+const SavingTag = ({
+  state,
+}: {
+  state: "processing" | "saving" | "saved" | "error";
+}) => {
+  switch (state) {
+    case "processing":
+      return <Tag variant={"solid"}>...</Tag>;
+    case "saving":
+      return (
+        <Tag colorScheme={"blue"} variant="solid">
+          <Spinner size={"sm"} />
+        </Tag>
+      );
+    case "saved":
+      return <Tag>{<CheckIcon />}</Tag>;
+    case "error":
+      return (
+        <Tag colorScheme={"red"} variant="solid">
+          Error
+        </Tag>
+      );
+    default:
+      throw new Error("Invalid state given: " + state);
+  }
+};
+
 export interface Props {
   markdownText: string;
 }
@@ -81,16 +109,16 @@ const NoteEditor = ({ markdownText }: Props): JSX.Element => {
   }, []);
 
   const handleChange = useCallback(
-    async (state: EditorState) => {
+    (state: EditorState) => {
       handleTextChange(state.doc.toString());
     },
     [handleTextChange]
   );
 
   const onSave = async (body: string) => {
-    setSavingState("saving");
     const { notesCollection, notesNotesList } = handelCrossEditing();
     if (body !== note.body) {
+      setSavingState("saving");
       const result = (await updateItem(
         "note",
         {
@@ -115,9 +143,13 @@ const NoteEditor = ({ markdownText }: Props): JSX.Element => {
 
   useAutosave({ data: text, onSave });
 
+  useEffect(() => {
+    if (text !== note.body) setSavingState("processing");
+  }, [text, note.body]);
+
   return (
     <Box>
-      {savingState}
+      <SavingTag state={savingState} />
       <Editor markdownText={markdownText} handleChange={handleChange} />
     </Box>
   );
