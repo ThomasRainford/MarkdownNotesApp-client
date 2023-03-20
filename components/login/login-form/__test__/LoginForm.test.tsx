@@ -2,58 +2,16 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { RouterContext } from "next/dist/shared/lib/router-context";
 import { act } from "react-dom/test-utils";
 import { Client, Provider } from "urql";
-import { fromValue } from "wonka";
-import { sourceT } from "wonka/dist/types/src/Wonka_types.gen";
-import {
-  LoginMutation,
-  LoginMutationVariables,
-  MeQuery,
-} from "../../../../generated/graphql";
 import { createMockRouter } from "../../../../test-utils/createMockRouter";
-import { createMockUrqlClient } from "../../../../test-utils/createMockUrqlClient";
+import { mockClient } from "../../../../test-utils/mocks/gql-mocks";
 import LoginForm from "../LoginForm";
 
 describe("LoginForm component", () => {
   test("Should login successfully", async () => {
-    const mockClient = createMockUrqlClient<
-      LoginMutationVariables,
-      sourceT<{ data: LoginMutation | MeQuery }>
-    >({
-      executeMutation: (query: { variables: LoginMutationVariables }) => {
-        const variables = query.variables;
-        return fromValue({
-          data: {
-            login: {
-              user: {
-                id: "62c112b482c8f5360ce6dfcb",
-                username: variables.usernameOrEmail,
-                email: "mail@test.com",
-              },
-              errors: null,
-            },
-          },
-        });
-      },
-      executeQuery: () => {
-        return fromValue({
-          data: {
-            me: {
-              _id: "id",
-              id: "id",
-              username: "User01",
-              email: "User01@mail.com",
-              followers: [] as string[],
-              following: [] as string[],
-              upvoted: [] as string[],
-            },
-          },
-        });
-      },
-    });
     const mockRouter = createMockRouter({});
     render(
       <RouterContext.Provider value={mockRouter}>
-        <Provider value={mockClient as unknown as Client}>
+        <Provider value={mockClient({ login: "success" }) as unknown as Client}>
           <LoginForm />
         </Provider>
       </RouterContext.Provider>
@@ -88,30 +46,10 @@ describe("LoginForm component", () => {
   });
 
   test("Should fail to login", async () => {
-    const mockClient = createMockUrqlClient<
-      LoginMutationVariables,
-      sourceT<{ data: LoginMutation }>
-    >({
-      executeMutation: () => {
-        return fromValue({
-          data: {
-            login: {
-              user: null,
-              errors: [
-                {
-                  field: "usernameOrEmail",
-                  message: "Invalid username or email",
-                },
-              ],
-            },
-          },
-        });
-      },
-    });
     const mockRouter = createMockRouter({});
     render(
       <RouterContext.Provider value={mockRouter}>
-        <Provider value={mockClient as unknown as Client}>
+        <Provider value={mockClient({ login: "error" }) as unknown as Client}>
           <LoginForm />
         </Provider>
       </RouterContext.Provider>
@@ -146,30 +84,10 @@ describe("LoginForm component", () => {
   });
 
   test("Should fail to login with validation errors of 'Required'", async () => {
-    const mockClient = createMockUrqlClient<
-      LoginMutationVariables,
-      sourceT<{ data: LoginMutation }>
-    >({
-      executeMutation: () => {
-        return fromValue({
-          data: {
-            login: {
-              user: null,
-              errors: [
-                {
-                  field: "usernameOrEmail",
-                  message: "Invalid username or email",
-                },
-              ],
-            },
-          },
-        });
-      },
-    });
     const mockRouter = createMockRouter({});
     render(
       <RouterContext.Provider value={mockRouter}>
-        <Provider value={mockClient as unknown as Client}>
+        <Provider value={mockClient({ login: "error" }) as unknown as Client}>
           <LoginForm />
         </Provider>
       </RouterContext.Provider>

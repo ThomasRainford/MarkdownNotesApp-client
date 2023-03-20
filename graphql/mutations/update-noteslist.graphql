@@ -1,0 +1,30 @@
+mutation UpdateNotesList(
+  $listLocation: ListLocationInput!
+  $notesListInput: NotesListUpdateInput!
+) {
+  updateNotesList(
+    listLocation: $listLocation
+    notesListInput: $notesListInput
+  ) {
+    notesList {
+      id
+      title
+      createdAt
+      updatedAt
+      collection {
+        id
+      }
+      notes {
+        id
+        title
+        body
+        createdAt
+        updatedAt
+      }
+    }
+    error {
+      property
+      message
+    }
+  }
+}

@@ -1,0 +1,25 @@
+query collections {
+  collections {
+    id
+    title
+    visibility
+    upvotes
+    createdAt
+    updatedAt
+    owner {
+      id
+      username
+    }
+    lists {
+      id
+      title
+      notes {
+        id
+        title
+        body
+        createdAt
+        updatedAt
+      }
+    }
+  }
+}

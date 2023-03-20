@@ -1,5 +1,6 @@
 import { DocumentNode } from "graphql";
 import {
+  AnyVariables,
   GraphQLRequest,
   Operation,
   OperationContext,
@@ -7,7 +8,7 @@ import {
   TypedDocumentNode,
 } from "urql";
 
-export type MockClient<Variables, Response> = {
+export type MockClient<Variables extends AnyVariables, Response> = {
   operations$: jest.Mock;
   reexecuteOperation: jest.Mock;
   subscribeToDebugTarget?: jest.Mock;
@@ -21,12 +22,12 @@ export type MockClient<Variables, Response> = {
   createOperationContext(
     opts?: Partial<OperationContext> | undefined
   ): jest.Mock;
-  createRequestOperation<Data = any, Variables = object>(
+  createRequestOperation<Data = any, Variables extends AnyVariables = object>(
     kind: OperationType,
     request: GraphQLRequest<Data, Variables>,
     opts?: Partial<OperationContext> | undefined
   ): jest.Mock;
-  executeRequestOperation<Data = any, Variables = object>(
+  executeRequestOperation<Data = any, Variables extends AnyVariables = object>(
     operation: Operation<Data, Variables>
   ): jest.Mock;
   query<Data = any, Variables extends object = {}>(
@@ -51,12 +52,15 @@ export type MockClient<Variables, Response> = {
     context?: Partial<OperationContext>
   ): jest.Mock;
 
-  executeMutation: (query: { variables: Variables }) => Response;
-  executeQuery: () => Response;
+  executeMutation: (query: {
+    query: any;
+    variables: any;
+  }) => Response | undefined;
+  executeQuery: (query: { query: any; variables: any }) => Response | undefined;
   executeSubscription: () => null;
 };
 
-export const createMockUrqlClient = <Variables, Response>(
+export const createMockUrqlClient = <Variables extends AnyVariables, Response>(
   functions: Partial<MockClient<Variables, Response>>
 ): MockClient<Variables, Response> => {
   return {

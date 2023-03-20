@@ -1,0 +1,27 @@
+mutation UpdateCollection(
+  $id: String!
+  $collectionInput: CollectionUpdateInput!
+) {
+  updateCollection(id: $id, collectionInput: $collectionInput) {
+    collection {
+      id
+      title
+      visibility
+      upvotes
+      createdAt
+      updatedAt
+      owner {
+        id
+        username
+      }
+      lists {
+        id
+        title
+      }
+    }
+    error {
+      property
+      message
+    }
+  }
+}
