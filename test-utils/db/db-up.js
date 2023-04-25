@@ -6,7 +6,7 @@
  */
 db.user.insertMany([
   {
-    _id: 1,
+    _id: new ObjectId("111111111111111111111111"),
     email: "user01@mail.com",
     username: "User01",
     password: "$argon2i$v=19$m=16,t=2,p=1$cXdlcnR5dWk$96NSCvpc+wrSDbiZgCJrxg",
@@ -17,7 +17,7 @@ db.user.insertMany([
     updatedAt: new Date(),
   },
   {
-    _id: 2,
+    _id: new ObjectId("222222222222222222222222"),
     email: "user02@mail.com",
     username: "User02",
     password: "$argon2i$v=19$m=16,t=2,p=1$cXdlcnR5dWk$96NSCvpc+wrSDbiZgCJrxg",
@@ -34,8 +34,8 @@ db.user.insertMany([
  */
 db.collection.insertMany([
   {
-    _id: 11,
-    owner: 1,
+    _id: new ObjectId("c11111111111111111111111"),
+    owner: new ObjectId("111111111111111111111111"),
     title: "Collection 1",
     upvotes: 0,
     visibility: "public",
@@ -43,8 +43,8 @@ db.collection.insertMany([
     updatedAt: new Date(),
   },
   {
-    _id: 12,
-    owner: 1,
+    _id: new ObjectId("c22222222222222222222222"),
+    owner: new ObjectId("111111111111111111111111"),
     title: "Collection 2",
     upvotes: 0,
     visibility: "private",
@@ -52,8 +52,8 @@ db.collection.insertMany([
     updatedAt: new Date(),
   },
   {
-    _id: 21,
-    owner: 2,
+    _id: new ObjectId("c33333333333333333333333"),
+    owner: new ObjectId("222222222222222222222222"),
     title: "Collection 1",
     upvotes: 0,
     visibility: "private",
@@ -61,8 +61,8 @@ db.collection.insertMany([
     updatedAt: new Date(),
   },
   {
-    _id: 22,
-    owner: 2,
+    _id: new ObjectId("c44444444444444444444444"),
+    owner: new ObjectId("222222222222222222222222"),
     title: "Collection 2",
     upvotes: 0,
     visibility: "public",
@@ -86,7 +86,7 @@ db["notes-list"].insertMany([
         updatedAt: new Date(),
       },
     ],
-    collection: 11,
+    collection: new ObjectId("c11111111111111111111111"),
     createdAt: new Date(),
     updatedAt: new Date(),
   },
@@ -101,7 +101,7 @@ db["notes-list"].insertMany([
         updatedAt: new Date(),
       },
     ],
-    collection: 12,
+    collection: new ObjectId("c22222222222222222222222"),
     createdAt: new Date(),
     updatedAt: new Date(),
   },
@@ -116,7 +116,7 @@ db["notes-list"].insertMany([
         updatedAt: new Date(),
       },
     ],
-    collection: 21,
+    collection: new ObjectId("c33333333333333333333333"),
     createdAt: new Date(),
     updatedAt: new Date(),
   },
@@ -131,7 +131,7 @@ db["notes-list"].insertMany([
         updatedAt: new Date(),
       },
     ],
-    collection: 22,
+    collection: new ObjectId("c44444444444444444444444"),
     createdAt: new Date(),
     updatedAt: new Date(),
   },

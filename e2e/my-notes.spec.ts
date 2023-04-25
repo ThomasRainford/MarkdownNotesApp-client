@@ -26,20 +26,35 @@ test.describe("test my-notes page", () => {
 
   test("should display my-notes page", async ({ page }) => {
     await page.goto("/my-notes");
-
-    expect(page.locator('h3:has-text("Collections")')).toBeTruthy();
-    expect(page.locator("text=Select a collection")).toBeTruthy();
-    // Select collection, list note.
-    await page.locator("#collection-heading-1").click();
-    await page.locator("#list-heading-1").click();
-    await page.locator("#note-heading-1").click();
-    // Expect correct note details.
-    expect(page.locator(".cm-activeLine")).toHaveText("Body 1");
-    expect(page.locator("#note-header-note-title")).toBeTruthy();
-    expect(page.locator("#note-header-last-modified")).toBeTruthy();
-    expect(page.locator("#collection-heading-1")).toBeTruthy();
-    // Select back.
+    await page.getByRole("heading", { name: "Collection 1" }).click();
+    await page.getByRole("heading", { name: "List 1" }).click();
+    await page.getByRole("heading", { name: "Note 1" }).click();
+    await page
+      .getByRole("textbox")
+      .filter({ hasText: "Body 1" })
+      .locator("div")
+      .click();
     await page.getByRole("button", { name: "left-pane-back-button" }).click();
-    expect(page.getByRole("heading", { name: "Collections" })).toBeTruthy();
+    expect(page.getByRole("heading", { name: "Collections" })).toBeDefined();
+  });
+
+  test("should select, display and modify notes", async ({ page }) => {
+    await page.goto("/my-notes");
+    await page.getByRole("heading", { name: "Collection 1" }).click();
+    await page.getByRole("heading", { name: "List 1" }).click();
+    await page.getByRole("heading", { name: "Note 1" }).click();
+    await page
+      .getByRole("textbox")
+      .filter({ hasText: "Body 1" })
+      .locator("div")
+      .click();
+    await page
+      .getByRole("textbox")
+      .filter({ hasText: "Body 1" })
+      .fill("Body 123");
+    await page.locator("#note-header-note-title").click();
+    await page.getByRole("paragraph").filter({ hasText: "Body 123" }).click();
+    await page.getByRole("button", { name: "left-pane-back-button" }).click();
+    expect(page.getByRole("heading", { name: "Collections" })).toBeDefined();
   });
 });
