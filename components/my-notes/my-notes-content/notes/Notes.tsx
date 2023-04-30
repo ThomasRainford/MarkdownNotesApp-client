@@ -75,7 +75,7 @@ const NoteDeleteButton = ({
             },
           });
           if (result.data?.deleteNote) {
-            if (selectedNote.id === note.id) {
+            if (selectedNote?.id === note.id) {
               setSelectedNote("");
             }
             return true;
@@ -99,7 +99,10 @@ const Notes = (): JSX.Element => {
   } = useAllLocalStorageValues();
   const [notesListResult] = useNotesListQuery({
     variables: {
-      listLocation: { collectionId: collection.id, listId: list.id },
+      listLocation: {
+        collectionId: collection?.id || "",
+        listId: list?.id || "",
+      },
     },
   });
   const [, addNote] = useAddNoteMutation();
@@ -153,8 +156,8 @@ const Notes = (): JSX.Element => {
                 <Box>
                   <NoteDeleteButton
                     note={note}
-                    collection={collection}
-                    notesList={list}
+                    collection={collection as Collection}
+                    notesList={list as NotesList}
                   />
                 </Box>
               </Box>
@@ -168,8 +171,8 @@ const Notes = (): JSX.Element => {
           confirmAdd={async (title: string) => {
             const variables = {
               listLocation: {
-                collectionId: collection.id,
-                listId: list.id,
+                collectionId: collection?.id || "",
+                listId: list?.id || "",
               },
               noteInput: {
                 title,

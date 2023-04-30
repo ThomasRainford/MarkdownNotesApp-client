@@ -13,13 +13,13 @@ export const useHandleCrossEditing = ({
   } = useAllLocalStorageValues();
 
   const handler = () => {
-    let notesCollection: Collection = selectedCollection;
-    let notesNotesList: NotesList = list;
-    if ((list as any) === "" || !list.notes.find((n) => n.id === note.id)) {
+    let notesCollection: Collection | null = selectedCollection;
+    let notesNotesList: NotesList | null = list;
+    if (!list || !list.notes.find((n) => n.id === note?.id)) {
       collections?.forEach((_collection) => {
         _collection.lists?.forEach((_list) => {
           _list.notes.forEach((_note: Note) => {
-            if (_note.id === note.id) {
+            if (_note.id === note?.id) {
               notesCollection = _collection as Collection;
               notesNotesList = _list as NotesList;
               setSelectedCollection(JSON.stringify(notesCollection));

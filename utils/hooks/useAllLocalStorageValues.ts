@@ -19,9 +19,11 @@ export const useAllLocalStorageValues = () => {
     SelectedNoteContext,
     LocalStorageKeys.SELECTED_NOTE
   ) as LocalStorageContextType;
-  const collection = getLocalStorageValue(selectedCollection) as Collection;
-  const list = getLocalStorageValue(selectedList) as NotesList;
-  const note = getLocalStorageValue(selectedNote) as Note;
+  const collection = getLocalStorageValue(
+    selectedCollection
+  ) as Collection | null;
+  const list = getLocalStorageValue(selectedList) as NotesList | null;
+  const note = getLocalStorageValue(selectedNote) as Note | null;
 
   return {
     collection: { collection, setSelectedCollection },

@@ -72,8 +72,8 @@ const ListPaneHeaderTitle = ({
         type,
         {
           listLocation: {
-            collectionId: collection.id,
-            listId: list.id,
+            collectionId: collection?.id || "",
+            listId: list?.id || "",
           },
           notesListInput: {
             title: editingValue,

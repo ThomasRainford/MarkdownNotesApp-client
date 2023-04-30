@@ -135,7 +135,7 @@ const NotesListsUpdate = ({ notesList }: { notesList: NotesList }) => {
         "list",
         {
           listLocation: {
-            collectionId: collection.id,
+            collectionId: collection?.id || "",
             listId: notesList.id,
           },
           notesListInput: {
@@ -222,7 +222,10 @@ const NotesListsUpdate = ({ notesList }: { notesList: NotesList }) => {
                 </Button>
               </Box>
               <Box display={"flex"}>
-                <ListDeleteButton collection={collection} list={notesList} />
+                <ListDeleteButton
+                  collection={collection as Collection}
+                  list={notesList}
+                />
               </Box>
             </Box>
           </Stack>
@@ -308,7 +311,7 @@ const Lists = (): JSX.Element => {
           type="list"
           confirmAdd={async (title: string) => {
             const variables = {
-              collectionId: collection.id,
+              collectionId: collection?.id || "",
               title,
             };
             const result = await createNotesList(variables);

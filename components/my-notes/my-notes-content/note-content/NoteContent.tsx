@@ -18,15 +18,15 @@ const NoteContentHeaderTitle = () => {
     note: { note },
   } = useAllLocalStorageValues();
   const [isEditing, setIsEditing] = useState(false);
-  const [editingValue, setEditingValue] = useState(note.title);
+  const [editingValue, setEditingValue] = useState(note?.title);
   const [, updateNote] = useUpdateNoteMutation();
   const [updateItem] = useUpdateItem();
   const collections = collectionsResult.data?.collections as Collection[];
   const handelCrossEditing = useHandleCrossEditing({ collections });
 
   useEffect(() => {
-    setEditingValue(note.title);
-  }, [note.title]);
+    setEditingValue(note?.title);
+  }, [note?.title]);
 
   const update = () => {
     const { notesCollection, notesNotesList } = handelCrossEditing();
@@ -34,9 +34,9 @@ const NoteContentHeaderTitle = () => {
       "note",
       {
         noteLocation: {
-          collectionId: notesCollection.id,
-          listId: notesNotesList.id,
-          noteId: note.id,
+          collectionId: notesCollection?.id || "",
+          listId: notesNotesList?.id || "",
+          noteId: note?.id || "",
         },
         noteInput: {
           title: editingValue,

@@ -25,13 +25,13 @@ const LeftPaneContent = (): JSX.Element => {
   const collection = getLocalStorageValue(selectedCollection);
 
   const [content, setContent] = useState<ReactNode | null>(
-    selectedList === "" ? <Collections /> : <Lists />
+    !selectedList ? <Collections /> : <Lists />
   );
 
   const { colorMode } = useColorMode();
 
   useEffect(() => {
-    if (selectedList === "") {
+    if (!selectedList) {
       setContent(<Collections />);
     } else {
       setContent(<Lists />);
@@ -45,8 +45,8 @@ const LeftPaneContent = (): JSX.Element => {
     >
       <Box h={"50px"} />
       <Box display={"flex"} px={"1em"} py={"1em"}>
-        {selectedList !== "" ? (
-          <Box visibility={selectedList !== "" ? "visible" : "hidden"}>
+        {selectedList ? (
+          <Box visibility={selectedList ? "visible" : "hidden"}>
             <IconButton
               aria-label={"left-pane-back-button"}
               variant="outline"
@@ -77,7 +77,7 @@ const LeftPaneContent = (): JSX.Element => {
               textColor={colorMode === "light" ? "gray.700" : "gray.400"}
               pl={"1em"}
             >
-              {collection.title}
+              {collection?.title}
             </Heading>
           )}
         </Box>

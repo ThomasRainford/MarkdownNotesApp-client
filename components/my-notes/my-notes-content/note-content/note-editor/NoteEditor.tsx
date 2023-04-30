@@ -117,15 +117,15 @@ const NoteEditor = ({ markdownText }: Props): JSX.Element => {
 
   const onSave = async (body: string) => {
     const { notesCollection, notesNotesList } = handelCrossEditing();
-    if (body !== note.body) {
+    if (body !== note?.body) {
       setSavingState("saving");
       const result = (await updateItem(
         "note",
         {
           noteLocation: {
-            collectionId: notesCollection.id,
-            listId: notesNotesList.id,
-            noteId: note.id,
+            collectionId: notesCollection?.id || "",
+            listId: notesNotesList?.id || "",
+            noteId: note?.id || "",
           },
           noteInput: {
             body,
@@ -144,8 +144,8 @@ const NoteEditor = ({ markdownText }: Props): JSX.Element => {
   useAutosave({ data: text, onSave });
 
   useEffect(() => {
-    if (text !== note.body) setSavingState("processing");
-  }, [text, note.body]);
+    if (text !== note?.body) setSavingState("processing");
+  }, [text, note?.body]);
 
   return (
     <Box>
