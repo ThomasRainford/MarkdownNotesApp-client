@@ -34,7 +34,7 @@ const LeftPaneContent = (): JSX.Element => {
     } else {
       setContent(<Lists notesLists={collection?.lists || []} />);
     }
-  }, [selectedList?.id]);
+  }, [selectedList?.id, collection?.lists]);
 
   return (
     <Box
