@@ -10,22 +10,17 @@ import {
   useColorMode,
 } from "@chakra-ui/react";
 import { ReactNode, useEffect, useState } from "react";
-import { SelectedCollectionContext } from "../../../../contexts/SelectedCollectionContext";
-import { SelectedListContext } from "../../../../contexts/SelectedListContext";
 import {
   Collection,
   NotesList,
+  useCollectionsQuery,
+  useNotesListsQuery,
   useUpdateCollectionMutation,
   useUpdateNotesListMutation,
 } from "../../../../generated/graphql";
-import { getLocalStorageValue } from "../../../../utils/getLocalStorageValue";
+import { getSelectedCollection } from "../../../../utils/getSelectedValue";
 import { useAllLocalStorageValues } from "../../../../utils/hooks/useAllLocalStorageValues";
-import { useLocalStorageValue } from "../../../../utils/hooks/useLocalStorageValue";
 import { useUpdateItem } from "../../../../utils/hooks/useUpdateItem";
-import {
-  LocalStorageContextType,
-  LocalStorageKeys,
-} from "../../../../utils/types/types";
 import Lists from "../lists/Lists";
 import Notes from "../notes/Notes";
 
@@ -47,8 +42,8 @@ const ListPaneHeaderTitle = ({
   }, [title]);
 
   const {
-    collection: { collection },
-    list: { list },
+    selectedCollection: { selectedCollection },
+    selectedNotesList: { selectedList },
   } = useAllLocalStorageValues();
 
   const [, updateCollection] = useUpdateCollectionMutation();
@@ -72,8 +67,8 @@ const ListPaneHeaderTitle = ({
         type,
         {
           listLocation: {
-            collectionId: collection?.id || "",
-            listId: list?.id || "",
+            collectionId: selectedCollection?.id || "",
+            listId: selectedList?.id || "",
           },
           notesListInput: {
             title: editingValue,
@@ -144,23 +139,18 @@ const ListPaneHeaderTitle = ({
 
 const ListPaneHeader = ({
   collection,
-  selectedList,
+  notesList,
 }: {
   collection: Collection;
-  selectedList: string;
+  notesList: NotesList;
 }) => {
-  const list: NotesList | string =
-    selectedList === ""
-      ? ""
-      : (getLocalStorageValue(selectedList) as NotesList);
-
   return (
     <Box className="list-pane-header" display={"flex"} w="100%" h="2em">
-      {selectedList === "" ? (
+      {!notesList ? (
         <Box display={"flex"} justifyContent={"space-between"} w="100%">
           <ListPaneHeaderTitle
             selectedItem={collection}
-            title={collection.title}
+            title={collection?.title}
             type="collection"
           />
           <Box display={"flex"}>
@@ -172,7 +162,7 @@ const ListPaneHeader = ({
                 mr="0.25em"
               />
               <Heading as={"h6"} size="sm" mt={"2px"}>
-                {collection.upvotes}
+                {collection?.upvotes}
               </Heading>
             </Box>
           </Box>
@@ -181,8 +171,8 @@ const ListPaneHeader = ({
         <>
           <Box display={"flex"} justifyContent="space-between" w="100%">
             <ListPaneHeaderTitle
-              selectedItem={list as NotesList}
-              title={(list as NotesList).title}
+              selectedItem={notesList}
+              title={notesList.title}
               type="list"
             />
           </Box>
@@ -193,25 +183,35 @@ const ListPaneHeader = ({
 };
 
 const RightPaneContent = (): JSX.Element => {
-  const [selectedCollection] = useLocalStorageValue(
-    SelectedCollectionContext,
-    LocalStorageKeys.SELECTED_COLLECTION
-  ) as LocalStorageContextType;
-  const [selectedList] = useLocalStorageValue(
-    SelectedListContext,
-    LocalStorageKeys.SELECTED_LIST
-  ) as LocalStorageContextType;
-  const collection = getLocalStorageValue(selectedCollection) as Collection;
-
-  const [content, setContent] = useState<ReactNode | null>(<Lists />);
+  const [collectionsResult] = useCollectionsQuery();
+  const {
+    selectedCollection: { selectedCollection },
+    selectedNotesList: { selectedList },
+  } = useAllLocalStorageValues();
+  const collection = getSelectedCollection(
+    selectedCollection,
+    collectionsResult.data?.collections as Collection[]
+  );
+  const [notesListsResult] = useNotesListsQuery({
+    variables: {
+      collectionId: selectedCollection?.id || "",
+    },
+  });
+  const notesLists = notesListsResult.data?.notesLists as NotesList[];
+  const notesList = notesLists?.find((nl) => nl.id === selectedList?.id);
+  const notes = notesList?.notes;
+  const [content, setContent] = useState<ReactNode | null>(
+    <Lists notesLists={notesLists || []} />
+  );
 
   useEffect(() => {
-    if (selectedList === "") {
-      setContent(<Lists />);
-    } else {
-      setContent(<Notes />);
+    if (selectedCollection?.id) {
+      setContent(<Lists notesLists={notesLists || []} />);
     }
-  }, [selectedList]);
+    if (selectedList?.id) {
+      setContent(<Notes notes={notes || []} />);
+    }
+  }, [selectedCollection?.id, selectedList?.id, notesLists, notes]);
 
   return (
     <Box h={"100%"}>
@@ -222,13 +222,13 @@ const RightPaneContent = (): JSX.Element => {
         px={"1em"}
         py={"1em"}
       >
-        {!collection ? (
+        {!selectedCollection ? (
           <p>Select a collection</p>
         ) : (
           <Box w={"100%"}>
             <ListPaneHeader
-              collection={collection}
-              selectedList={selectedList}
+              collection={collection as Collection}
+              notesList={notesList as NotesList}
             />
             <Box mt={"1.75em"}>
               <InputGroup>
@@ -237,7 +237,7 @@ const RightPaneContent = (): JSX.Element => {
                 <Input
                   type="text"
                   placeholder={
-                    selectedList === "" ? "Filter Lists..." : "Filter Notes..."
+                    !selectedList ? "Filter Lists..." : "Filter Notes..."
                   }
                 />
               </InputGroup>

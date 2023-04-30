@@ -13,6 +13,9 @@ query collections {
     lists {
       id
       title
+      collection {
+        id
+      }
       notes {
         id
         title

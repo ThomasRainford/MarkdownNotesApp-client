@@ -35,15 +35,17 @@ import {
   useUpdateCollectionMutation,
 } from "../../../../generated/graphql";
 import { handleCreateCollectionErrors } from "../../../../utils/error-handlers/collection-errors";
+import { getSelectedCollection } from "../../../../utils/getSelectedValue";
 import { useAllLocalStorageValues } from "../../../../utils/hooks/useAllLocalStorageValues";
 import { useUpdateItem } from "../../../../utils/hooks/useUpdateItem";
+import { setCollectionValue } from "../../../../utils/setLocalStorageValue";
 import ConfirmModal from "../../../helper/CorfirmModal";
 import AddOrCancelAddItem from "../../add-or-cancel-add-item/AddOrCancelAddItem";
 import NewItemInput from "../../new-item-input/NewItemInput";
 
 const CollectionDeleteButton = ({ collection }: { collection: Collection }) => {
   const {
-    collection: { setSelectedCollection },
+    selectedCollection: { setSelectedCollection },
   } = useAllLocalStorageValues();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [, deleteCollection] = useDeleteCollectionMutation();
@@ -226,9 +228,13 @@ const Collections = (): JSX.Element => {
   const { colorMode } = useColorMode();
   const toast = useToast();
   const {
-    collection: { collection, setSelectedCollection },
-    list: { setSelectedList },
+    selectedCollection: { selectedCollection, setSelectedCollection },
+    selectedNotesList: { setSelectedList },
   } = useAllLocalStorageValues();
+  const collection = getSelectedCollection(
+    selectedCollection,
+    collectionsResult.data?.collections as Collection[]
+  );
 
   const collections = collectionsResult.data?.collections;
 
@@ -253,7 +259,10 @@ const Collections = (): JSX.Element => {
                 _collection.id === collection?.id ? "gray.200" : "gray.800"
               }
               onClick={() => {
-                setSelectedCollection(JSON.stringify(_collection));
+                const selectedValue = setCollectionValue(
+                  _collection as Collection
+                );
+                setSelectedCollection(JSON.stringify(selectedValue));
                 setSelectedList("");
               }}
             >

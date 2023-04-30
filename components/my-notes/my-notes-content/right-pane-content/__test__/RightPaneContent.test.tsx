@@ -59,7 +59,7 @@ describe("RightPaneContent component", () => {
     const list = JSON.parse(listnStorage || "{}");
 
     expect(list).not.toBeNull();
-    expect(JSON.parse(list).title).toBe(title);
+    expect(JSON.parse(list).id).toBe("1");
   });
 
   test("Selecting a list displays the lists notes", async () => {

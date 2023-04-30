@@ -1,20 +1,28 @@
 import { UseMutationState } from "urql";
 import {
+  Note,
+  NotesList,
   UpdateCollectionMutation,
   UpdateCollectionMutationVariables,
   UpdateNoteMutation,
   UpdateNoteMutationVariables,
   UpdateNotesListMutation,
   UpdateNotesListMutationVariables,
+  useCollectionsQuery,
 } from "../../generated/graphql";
+import { setNoteValue } from "../setLocalStorageValue";
 import { useAllLocalStorageValues } from "./useAllLocalStorageValues";
 
 export const useUpdateItem = () => {
+  const [collectionsResult] = useCollectionsQuery();
   const {
-    collection: { setSelectedCollection },
-    list: { setSelectedList },
-    note: { setSelectedNote },
+    selectedCollection: { setSelectedCollection },
+    selectedNotesList: { setSelectedList },
+    selectedNote: { selectedNote, setSelectedNote },
   } = useAllLocalStorageValues();
+  const notesList = collectionsResult.data?.collections
+    .find((collection) => collection.id === selectedNote?.collectionId)
+    ?.lists.find((list) => list.id === selectedNote?.notesListId);
 
   const updateFunc = async (
     type: "collection" | "list" | "note",
@@ -47,7 +55,11 @@ export const useUpdateItem = () => {
         data
       )) as UseMutationState<UpdateNoteMutation>;
       if (!result.data?.updateNote.error) {
-        setSelectedNote(JSON.stringify(result.data?.updateNote.note));
+        const selectValue = setNoteValue(
+          result.data?.updateNote.note as Note,
+          notesList as NotesList
+        );
+        setSelectedNote(JSON.stringify(selectValue));
         return result;
       }
     }

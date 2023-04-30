@@ -6,11 +6,11 @@ import { useAutosave } from "react-autosave";
 import { AnyVariables, UseMutationState } from "urql";
 import {
   Collection,
+  Note,
   UpdateNoteMutation,
   useCollectionsQuery,
   useUpdateNoteMutation,
 } from "../../../../../generated/graphql";
-import { useAllLocalStorageValues } from "../../../../../utils/hooks/useAllLocalStorageValues";
 import useCodeMirror from "../../../../../utils/hooks/useCodeMirror";
 import { useHandleCrossEditing } from "../../../../../utils/hooks/useHandleCrossEditing";
 import { useUpdateItem } from "../../../../../utils/hooks/useUpdateItem";
@@ -87,20 +87,17 @@ const SavingTag = ({
 };
 
 export interface Props {
-  markdownText: string;
+  note: Note;
 }
 
-const NoteEditor = ({ markdownText }: Props): JSX.Element => {
-  const {
-    note: { note },
-  } = useAllLocalStorageValues();
+const NoteEditor = ({ note }: Props): JSX.Element => {
   const [collectionsResult] = useCollectionsQuery();
   const [, updateNote] = useUpdateNoteMutation();
   const [updateItem] = useUpdateItem();
   const [savingState, setSavingState] = useState<
     "processing" | "saving" | "saved" | "error"
   >("saved");
-  const [text, setText] = useState(markdownText);
+  const [text, setText] = useState(note.body);
   const collections = collectionsResult.data?.collections as Collection[];
   const handelCrossEditing = useHandleCrossEditing({ collections });
 
@@ -150,7 +147,7 @@ const NoteEditor = ({ markdownText }: Props): JSX.Element => {
   return (
     <Box>
       <SavingTag state={savingState} />
-      <Editor markdownText={markdownText} handleChange={handleChange} />
+      <Editor markdownText={note.body} handleChange={handleChange} />
     </Box>
   );
 };

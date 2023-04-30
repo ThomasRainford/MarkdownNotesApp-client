@@ -1,42 +1,40 @@
 import { ArrowBackIcon } from "@chakra-ui/icons";
 import { Box, Heading, IconButton, useColorMode } from "@chakra-ui/react";
 import { ReactNode, useEffect, useState } from "react";
-import { SelectedCollectionContext } from "../../../../contexts/SelectedCollectionContext";
-import { SelectedListContext } from "../../../../contexts/SelectedListContext";
-import { getLocalStorageValue } from "../../../../utils/getLocalStorageValue";
-import { useLocalStorageValue } from "../../../../utils/hooks/useLocalStorageValue";
-import {
-  LocalStorageContextType,
-  LocalStorageKeys,
-} from "../../../../utils/types/types";
+import { Collection, useCollectionsQuery } from "../../../../generated/graphql";
+import { getSelectedCollection } from "../../../../utils/getSelectedValue";
+import { useAllLocalStorageValues } from "../../../../utils/hooks/useAllLocalStorageValues";
 import Collections from "../collections/Collections";
 import Lists from "../lists/Lists";
 
 const LeftPaneContent = (): JSX.Element => {
-  const [selectedCollection] = useLocalStorageValue(
-    SelectedCollectionContext,
-    LocalStorageKeys.SELECTED_COLLECTION
-  ) as LocalStorageContextType;
-  const [selectedList, setSelectedList] = useLocalStorageValue(
-    SelectedListContext,
-    LocalStorageKeys.SELECTED_LIST
-  ) as LocalStorageContextType;
-
-  const collection = getLocalStorageValue(selectedCollection);
+  const [collectionsResult] = useCollectionsQuery();
+  const {
+    selectedCollection: { selectedCollection },
+    selectedNotesList: { selectedList, setSelectedList },
+  } = useAllLocalStorageValues();
+  const collection = getSelectedCollection(
+    selectedCollection,
+    collectionsResult.data?.collections as Collection[]
+  );
 
   const [content, setContent] = useState<ReactNode | null>(
-    !selectedList ? <Collections /> : <Lists />
+    !selectedList ? (
+      <Collections />
+    ) : (
+      <Lists notesLists={collection?.lists || []} />
+    )
   );
 
   const { colorMode } = useColorMode();
 
   useEffect(() => {
-    if (!selectedList) {
+    if (!selectedList?.id) {
       setContent(<Collections />);
     } else {
-      setContent(<Lists />);
+      setContent(<Lists notesLists={collection?.lists || []} />);
     }
-  }, [selectedList]);
+  }, [selectedList?.id]);
 
   return (
     <Box
@@ -57,7 +55,7 @@ const LeftPaneContent = (): JSX.Element => {
           </Box>
         ) : null}
         <Box>
-          {selectedList === "" ? (
+          {!selectedList ? (
             <Heading
               id="collection-heading"
               as="h3"

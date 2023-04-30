@@ -3,20 +3,19 @@ import { Box, Heading, IconButton, Input, Tag, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import {
   Collection,
+  Note,
   useCollectionsQuery,
   useUpdateNoteMutation,
 } from "../../../../generated/graphql";
+import { getSelectedCollection } from "../../../../utils/getSelectedValue";
 import { getTimeSince } from "../../../../utils/getTimeSince";
 import { useAllLocalStorageValues } from "../../../../utils/hooks/useAllLocalStorageValues";
 import { useHandleCrossEditing } from "../../../../utils/hooks/useHandleCrossEditing";
 import { useUpdateItem } from "../../../../utils/hooks/useUpdateItem";
 import NoteEditor from "./note-editor/NoteEditor";
 
-const NoteContentHeaderTitle = () => {
+const NoteContentHeaderTitle = ({ note }: { note: Note }) => {
   const [collectionsResult] = useCollectionsQuery();
-  const {
-    note: { note },
-  } = useAllLocalStorageValues();
   const [isEditing, setIsEditing] = useState(false);
   const [editingValue, setEditingValue] = useState(note?.title);
   const [, updateNote] = useUpdateNoteMutation();
@@ -112,16 +111,12 @@ const NoteContentHeaderTitle = () => {
   );
 };
 
-const NoteContentHeader = () => {
-  const {
-    note: { note },
-  } = useAllLocalStorageValues();
-
+const NoteContentHeader = ({ note }: { note: Note }) => {
   return (
     <Box>
       {note && (
         <Box>
-          <NoteContentHeaderTitle />
+          <NoteContentHeaderTitle note={note} />
           <Box display={"flex"} alignItems="center" mt="1em">
             <Box mr={"0.5em"}>
               <Text>Last Modified</Text>
@@ -146,9 +141,20 @@ const NoteContentHeader = () => {
 };
 
 const NoteContent = (): JSX.Element => {
+  const [collectionsResult] = useCollectionsQuery();
   const {
-    note: { note },
+    selectedCollection: { selectedCollection },
+    selectedNote: { selectedNote },
   } = useAllLocalStorageValues();
+
+  const collection = getSelectedCollection(
+    selectedCollection,
+    collectionsResult.data?.collections as Collection[]
+  );
+
+  const note = collection?.lists
+    .find((list) => list.id === selectedNote?.notesListId)
+    ?.notes.find((note) => note.id === selectedNote?.id);
 
   return (
     <Box className="note-content" h={"100%"}>
@@ -156,9 +162,9 @@ const NoteContent = (): JSX.Element => {
         <Box>No Note Selected...</Box>
       ) : (
         <Box pt={"1em"} px={"1em"} h={"100%"}>
-          <NoteContentHeader />
+          <NoteContentHeader note={note} />
           <Box className="node-editor-container" height={"100%"} mt="1.5em">
-            <NoteEditor markdownText={note.body} />
+            <NoteEditor note={note} />
           </Box>
         </Box>
       )}

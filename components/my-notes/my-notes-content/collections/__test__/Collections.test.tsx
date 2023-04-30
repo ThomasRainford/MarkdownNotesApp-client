@@ -2,10 +2,6 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { act } from "react-dom/test-utils";
 import { Client, Provider } from "urql";
 import { mockClient } from "../../../../../test-utils/mocks/gql-mocks";
-import {
-  testCollections,
-  _testCollections,
-} from "../../../../../test-utils/testData";
 import { LocalStorageKeys } from "../../../../../utils/types/types";
 import SelectedDataProvider from "../../../../helper/SelectedDataProvider";
 import Collections from "../Collections";
@@ -15,7 +11,7 @@ describe("Collections tests", () => {
     // Local storage.
     localStorage.setItem(
       LocalStorageKeys.SELECTED_COLLECTION,
-      JSON.stringify(_testCollections[0])
+      JSON.stringify({ id: "1" })
     );
     // Render
     render(
@@ -38,7 +34,7 @@ describe("Collections tests", () => {
     // Local storage.
     localStorage.setItem(
       LocalStorageKeys.SELECTED_COLLECTION,
-      JSON.stringify(testCollections[0])
+      JSON.stringify({ id: "1" })
     );
     // Render
     render(
@@ -63,7 +59,7 @@ describe("Collections tests", () => {
     const collection = JSON.parse(collectionInStorage || "{}");
 
     expect(collection).not.toBeNull();
-    expect(JSON.parse(collection).title).toBe(title);
+    expect(JSON.parse(collection).id).toBe("1");
   });
 
   test("adds a new collection successfully.", async () => {
