@@ -1,11 +1,27 @@
 import { ArrowBackIcon } from "@chakra-ui/icons";
-import { Box, Heading, IconButton, useColorMode } from "@chakra-ui/react";
+import {
+  Box,
+  Heading,
+  IconButton,
+  Spinner,
+  useColorMode,
+} from "@chakra-ui/react";
 import { ReactNode, useEffect, useState } from "react";
 import { Collection, useCollectionsQuery } from "../../../../generated/graphql";
 import { getSelectedCollection } from "../../../../utils/getSelectedValue";
 import { useAllLocalStorageValues } from "../../../../utils/hooks/useAllLocalStorageValues";
 import Collections from "../collections/Collections";
 import Lists from "../lists/Lists";
+
+const LeftPaneContentCollectionsError = () => {
+  return (
+    <Box>
+      <Box display={"flex"} pl={"1.5em"} pr={"1em"} pt={"1em"} pb={"1em"}>
+        Something went wrong fetching your collections!
+      </Box>
+    </Box>
+  );
+};
 
 const LeftPaneContent = (): JSX.Element => {
   const [collectionsResult] = useCollectionsQuery();
@@ -17,18 +33,17 @@ const LeftPaneContent = (): JSX.Element => {
     selectedCollection,
     collectionsResult.data?.collections as Collection[]
   );
-
-  const [content, setContent] = useState<ReactNode | null>(
-    !selectedList ? (
-      <Collections />
-    ) : (
-      <Lists notesLists={collection?.lists || []} />
-    )
-  );
-
+  const [content, setContent] = useState<ReactNode | null>(null);
   const { colorMode } = useColorMode();
 
   useEffect(() => {
+    if (collectionsResult.error) {
+      setContent(<LeftPaneContentCollectionsError />);
+      return;
+    } else if (collectionsResult.fetching) {
+      setContent(<Spinner />);
+      return;
+    }
     if (!selectedList?.id) {
       setContent(<Collections />);
     } else {

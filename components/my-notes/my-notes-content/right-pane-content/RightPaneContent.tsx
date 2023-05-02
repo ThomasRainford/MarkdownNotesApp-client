@@ -6,6 +6,7 @@ import {
   Input,
   InputGroup,
   InputLeftAddon,
+  Spinner,
   Tooltip,
   useColorMode,
 } from "@chakra-ui/react";
@@ -23,6 +24,16 @@ import { useAllLocalStorageValues } from "../../../../utils/hooks/useAllLocalSto
 import { useUpdateItem } from "../../../../utils/hooks/useUpdateItem";
 import Lists from "../lists/Lists";
 import Notes from "../notes/Notes";
+
+const RightPaneContentCollectionsError = () => {
+  return (
+    <Box>
+      <Box display={"flex"} pl={"1.5em"} pr={"1em"} pt={"1em"} pb={"1em"}>
+        Something went wrong fetching your lists!
+      </Box>
+    </Box>
+  );
+};
 
 const ListPaneHeaderTitle = ({
   selectedItem,
@@ -200,11 +211,16 @@ const RightPaneContent = (): JSX.Element => {
   const notesLists = notesListsResult.data?.notesLists as NotesList[];
   const notesList = notesLists?.find((nl) => nl.id === selectedList?.id);
   const notes = notesList?.notes;
-  const [content, setContent] = useState<ReactNode | null>(
-    <Lists notesLists={notesLists || []} />
-  );
+  const [content, setContent] = useState<ReactNode | null>(null);
 
   useEffect(() => {
+    if (notesListsResult.error) {
+      setContent(<RightPaneContentCollectionsError />);
+      return;
+    } else if (notesListsResult.fetching) {
+      setContent(<Spinner />);
+      return;
+    }
     if (selectedCollection?.id) {
       setContent(<Lists notesLists={notesLists || []} />);
     }
