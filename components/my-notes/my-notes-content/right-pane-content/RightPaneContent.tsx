@@ -10,9 +10,17 @@ import {
   Tooltip,
   useColorMode,
 } from "@chakra-ui/react";
-import { ReactNode, useEffect, useState } from "react";
+import { filter, includes } from "lodash";
+import {
+  Dispatch,
+  ReactNode,
+  SetStateAction,
+  useEffect,
+  useState,
+} from "react";
 import {
   Collection,
+  Note,
   NotesList,
   useCollectionsQuery,
   useNotesListsQuery,
@@ -22,6 +30,7 @@ import {
 import { getSelectedCollection } from "../../../../utils/getSelectedValue";
 import { useAllLocalStorageValues } from "../../../../utils/hooks/useAllLocalStorageValues";
 import { useUpdateItem } from "../../../../utils/hooks/useUpdateItem";
+import { SelectedNotesList } from "../../../../utils/types/types";
 import Lists from "../lists/Lists";
 import Notes from "../notes/Notes";
 
@@ -32,6 +41,50 @@ const RightPaneContentCollectionsError = () => {
         Something went wrong fetching your lists!
       </Box>
     </Box>
+  );
+};
+
+export const FilterInput = (props: {
+  selectedList: SelectedNotesList | null;
+  notesLists: NotesList[];
+  notes: Note[];
+  displayed: string;
+  setCurrentFilter: Dispatch<
+    SetStateAction<
+      | {
+          displayed: string;
+          items: string[];
+        }
+      | undefined
+    >
+  >;
+}) => {
+  const { selectedList, notesLists, notes, displayed, setCurrentFilter } =
+    props;
+  const [filterText, setFilterText] = useState<string>("");
+
+  useEffect(() => {
+    if (displayed) setFilterText("");
+  }, [displayed]);
+
+  return (
+    <Input
+      type="text"
+      value={filterText}
+      placeholder={!selectedList ? "Filter Lists..." : "Filter Notes..."}
+      onChange={(event) => {
+        const value = event.target.value;
+        setFilterText(value);
+        const displayed = !selectedList ? "list" : "note";
+        const items = (
+          displayed === "list"
+            ? notesLists.map((nl) => nl.title)
+            : notes?.map((n) => n.title)
+        )?.map((i) => i.toLowerCase());
+        const filteredItems = filter(items, (item) => includes(item, value));
+        setCurrentFilter({ displayed, items: filteredItems });
+      }}
+    />
   );
 };
 
@@ -208,9 +261,15 @@ const RightPaneContent = (): JSX.Element => {
       collectionId: selectedCollection?.id || "",
     },
   });
+  const [displayed, setDisplayed] = useState<string>("");
+  const [filterText, setFilterText] = useState<string>("");
+  const [currentFilter, setCurrentFilter] = useState<{
+    displayed: string;
+    items: string[];
+  }>();
   const notesLists = notesListsResult.data?.notesLists as NotesList[];
   const notesList = notesLists?.find((nl) => nl.id === selectedList?.id);
-  const notes = notesList?.notes;
+  const notes = notesList?.notes as Note[];
   const [content, setContent] = useState<ReactNode | null>(null);
 
   useEffect(() => {
@@ -222,12 +281,47 @@ const RightPaneContent = (): JSX.Element => {
       return;
     }
     if (selectedCollection?.id) {
-      setContent(<Lists notesLists={notesLists || []} />);
+      setDisplayed("notesList");
+      setContent(
+        <Lists
+          notesLists={
+            currentFilter?.displayed === "list"
+              ? notesLists.filter(
+                  (nl) =>
+                    currentFilter?.displayed === "list" &&
+                    currentFilter.items.includes(nl.title.toLowerCase())
+                )
+              : notesLists || []
+          }
+        />
+      );
     }
     if (selectedList?.id) {
-      setContent(<Notes notes={notes || []} />);
+      setDisplayed("note");
+      setContent(
+        <Notes
+          notes={
+            currentFilter?.displayed === "note"
+              ? notes.filter((n) =>
+                  currentFilter.items.includes(n.title.toLowerCase())
+                )
+              : notes || []
+          }
+        />
+      );
     }
-  }, [selectedCollection?.id, selectedList?.id, notesLists, notes]);
+  }, [
+    selectedCollection?.id,
+    selectedList?.id,
+    notesLists,
+    notes,
+    currentFilter?.displayed,
+    currentFilter?.items,
+  ]);
+
+  useEffect(() => {
+    if (displayed) setFilterText("");
+  }, [displayed]);
 
   return (
     <Box h={"100%"}>
@@ -250,11 +344,12 @@ const RightPaneContent = (): JSX.Element => {
               <InputGroup>
                 {/* eslint-disable-next-line */}
                 <InputLeftAddon children={<TriangleUpIcon />} />
-                <Input
-                  type="text"
-                  placeholder={
-                    !selectedList ? "Filter Lists..." : "Filter Notes..."
-                  }
+                <FilterInput
+                  selectedList={selectedList}
+                  notesLists={notesLists}
+                  notes={notes}
+                  displayed={displayed}
+                  setCurrentFilter={setCurrentFilter}
                 />
               </InputGroup>
             </Box>
