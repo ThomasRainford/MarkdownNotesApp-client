@@ -262,7 +262,6 @@ const RightPaneContent = (): JSX.Element => {
     },
   });
   const [displayed, setDisplayed] = useState<string>("");
-  const [filterText, setFilterText] = useState<string>("");
   const [currentFilter, setCurrentFilter] = useState<{
     displayed: string;
     items: string[];
@@ -317,11 +316,9 @@ const RightPaneContent = (): JSX.Element => {
     notes,
     currentFilter?.displayed,
     currentFilter?.items,
+    notesListsResult.error,
+    notesListsResult.fetching,
   ]);
-
-  useEffect(() => {
-    if (displayed) setFilterText("");
-  }, [displayed]);
 
   return (
     <Box h={"100%"}>
