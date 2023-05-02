@@ -12,17 +12,22 @@ import {
 import { useRouter } from "next/router";
 import { AnyVariables, UseQueryState } from "urql";
 import { MeQuery, useLogoutMutation } from "../../../generated/graphql";
+import { useAllLocalStorageValues } from "../../../utils/hooks/useAllLocalStorageValues";
 
 export interface Props {
   user: UseQueryState<MeQuery, AnyVariables>;
 }
 
 const UserMenu = ({ user: me }: Props): JSX.Element => {
-  const username = me.data?.me?.username;
-
   const [, logout] = useLogoutMutation();
+  const {
+    selectedCollection: { setSelectedCollection },
+    selectedNotesList: { setSelectedList },
+    selectedNote: { setSelectedNote },
+  } = useAllLocalStorageValues();
   const router = useRouter();
   const toast = useToast();
+  const username = me.data?.me?.username;
 
   return (
     <Menu id="navbar-usermenu">
@@ -60,6 +65,9 @@ const UserMenu = ({ user: me }: Props): JSX.Element => {
           onClick={async () => {
             const result = await logout({});
             if (result.data?.logout && !result.error) {
+              setSelectedCollection("");
+              setSelectedList("");
+              setSelectedNote("");
               toast({
                 id: "logout",
                 title: "Logout Successfull",
