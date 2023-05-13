@@ -147,7 +147,7 @@ const NoteContent = (): JSX.Element => {
 
   const note: Note | undefined = collectionsResult.data?.collections
     .find((c) => c.id === selectedNote?.collectionId)
-    ?.lists.find((l) => selectedNote?.notesListId)
+    ?.lists.find((l) => l.id === selectedNote?.notesListId)
     ?.notes.find((n) => n.id === selectedNote?.id);
 
   return (
