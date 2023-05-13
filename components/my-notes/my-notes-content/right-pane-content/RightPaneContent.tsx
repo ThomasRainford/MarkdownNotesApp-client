@@ -278,8 +278,7 @@ const RightPaneContent = (): JSX.Element => {
     } else if (notesListsResult.fetching) {
       setContent(<Spinner />);
       return;
-    }
-    if (selectedCollection?.id) {
+    } else if (selectedCollection?.id && !selectedList?.id) {
       setDisplayed("notesList");
       setContent(
         <Lists
@@ -294,8 +293,7 @@ const RightPaneContent = (): JSX.Element => {
           }
         />
       );
-    }
-    if (selectedList?.id) {
+    } else if (selectedList?.id) {
       setDisplayed("note");
       setContent(
         <Notes
@@ -308,6 +306,9 @@ const RightPaneContent = (): JSX.Element => {
           }
         />
       );
+      return;
+    } else {
+      setContent(null);
     }
   }, [
     selectedCollection?.id,

@@ -11,6 +11,7 @@ import {
   useCollectionsQuery,
   useUpdateNoteMutation,
 } from "../../../../../generated/graphql";
+import { useAllLocalStorageValues } from "../../../../../utils/hooks/useAllLocalStorageValues";
 import useCodeMirror from "../../../../../utils/hooks/useCodeMirror";
 import { useHandleCrossEditing } from "../../../../../utils/hooks/useHandleCrossEditing";
 import { useUpdateItem } from "../../../../../utils/hooks/useUpdateItem";
@@ -100,6 +101,9 @@ const NoteEditor = ({ note }: Props): JSX.Element => {
   const [text, setText] = useState(note.body);
   const collections = collectionsResult.data?.collections as Collection[];
   const handelCrossEditing = useHandleCrossEditing({ collections });
+  const {
+    selectedNote: { selectedNote },
+  } = useAllLocalStorageValues();
 
   const handleTextChange = useCallback((newText: string) => {
     setText(newText);
@@ -113,16 +117,15 @@ const NoteEditor = ({ note }: Props): JSX.Element => {
   );
 
   const onSave = async (body: string) => {
-    const { notesCollection, notesNotesList } = handelCrossEditing();
     if (body !== note?.body) {
       setSavingState("saving");
       const result = (await updateItem(
         "note",
         {
           noteLocation: {
-            collectionId: notesCollection?.id || "",
-            listId: notesNotesList?.id || "",
-            noteId: note?.id || "",
+            collectionId: selectedNote?.collectionId || "",
+            listId: selectedNote?.notesListId || "",
+            noteId: selectedNote?.id || "",
           },
           noteInput: {
             body,

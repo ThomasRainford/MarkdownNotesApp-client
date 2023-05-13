@@ -7,7 +7,6 @@ import {
   useCollectionsQuery,
   useUpdateNoteMutation,
 } from "../../../../generated/graphql";
-import { getSelectedCollection } from "../../../../utils/getSelectedValue";
 import { getTimeSince } from "../../../../utils/getTimeSince";
 import { useAllLocalStorageValues } from "../../../../utils/hooks/useAllLocalStorageValues";
 import { useHandleCrossEditing } from "../../../../utils/hooks/useHandleCrossEditing";
@@ -143,18 +142,13 @@ const NoteContentHeader = ({ note }: { note: Note }) => {
 const NoteContent = (): JSX.Element => {
   const [collectionsResult] = useCollectionsQuery();
   const {
-    selectedCollection: { selectedCollection },
     selectedNote: { selectedNote },
   } = useAllLocalStorageValues();
 
-  const collection = getSelectedCollection(
-    selectedCollection,
-    collectionsResult.data?.collections as Collection[]
-  );
-
-  const note = collection?.lists
-    .find((list) => list.id === selectedNote?.notesListId)
-    ?.notes.find((note) => note.id === selectedNote?.id);
+  const note: Note | undefined = collectionsResult.data?.collections
+    .find((c) => c.id === selectedNote?.collectionId)
+    ?.lists.find((l) => selectedNote?.notesListId)
+    ?.notes.find((n) => n.id === selectedNote?.id);
 
   return (
     <Box className="note-content" h={"100%"}>
