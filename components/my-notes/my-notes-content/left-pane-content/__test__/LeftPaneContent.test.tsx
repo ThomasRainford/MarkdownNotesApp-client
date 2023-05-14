@@ -15,7 +15,7 @@ describe("LeftPaneContent component", () => {
     // Local storage
     localStorage.setItem(
       LocalStorageKeys.SELECTED_COLLECTION,
-      JSON.stringify(_testCollections[0])
+      JSON.stringify({ id: "1" })
     );
     localStorage.setItem(LocalStorageKeys.SELECTED_LIST, "");
     // Render
@@ -36,7 +36,7 @@ describe("LeftPaneContent component", () => {
     // Local storage
     localStorage.setItem(
       LocalStorageKeys.SELECTED_COLLECTION,
-      JSON.stringify(_testCollections[0])
+      JSON.stringify({ id: "1" })
     );
     localStorage.setItem(LocalStorageKeys.SELECTED_LIST, "");
     // Render
@@ -87,7 +87,7 @@ describe("LeftPaneContent component", () => {
     const collection = JSON.parse(collectionInStorage || "{}");
 
     expect(collection).not.toBeNull();
-    expect(JSON.parse(collection).title).toBe(title);
+    expect(JSON.parse(collection).id).toBe("1");
   });
 
   test("Selecting a list displays the lists in the right pane", async () => {

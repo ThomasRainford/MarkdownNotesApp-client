@@ -5,14 +5,12 @@ import { useCallback, useEffect, useState } from "react";
 import { useAutosave } from "react-autosave";
 import { AnyVariables, UseMutationState } from "urql";
 import {
-  Collection,
+  Note,
   UpdateNoteMutation,
-  useCollectionsQuery,
   useUpdateNoteMutation,
 } from "../../../../../generated/graphql";
 import { useAllLocalStorageValues } from "../../../../../utils/hooks/useAllLocalStorageValues";
 import useCodeMirror from "../../../../../utils/hooks/useCodeMirror";
-import { useHandleCrossEditing } from "../../../../../utils/hooks/useHandleCrossEditing";
 import { useUpdateItem } from "../../../../../utils/hooks/useUpdateItem";
 
 const Editor = ({
@@ -87,22 +85,19 @@ const SavingTag = ({
 };
 
 export interface Props {
-  markdownText: string;
+  note: Note;
 }
 
-const NoteEditor = ({ markdownText }: Props): JSX.Element => {
-  const {
-    note: { note },
-  } = useAllLocalStorageValues();
-  const [collectionsResult] = useCollectionsQuery();
+const NoteEditor = ({ note }: Props): JSX.Element => {
   const [, updateNote] = useUpdateNoteMutation();
   const [updateItem] = useUpdateItem();
   const [savingState, setSavingState] = useState<
     "processing" | "saving" | "saved" | "error"
   >("saved");
-  const [text, setText] = useState(markdownText);
-  const collections = collectionsResult.data?.collections as Collection[];
-  const handelCrossEditing = useHandleCrossEditing({ collections });
+  const [text, setText] = useState(note.body);
+  const {
+    selectedNote: { selectedNote },
+  } = useAllLocalStorageValues();
 
   const handleTextChange = useCallback((newText: string) => {
     setText(newText);
@@ -116,16 +111,15 @@ const NoteEditor = ({ markdownText }: Props): JSX.Element => {
   );
 
   const onSave = async (body: string) => {
-    const { notesCollection, notesNotesList } = handelCrossEditing();
-    if (body !== note.body) {
+    if (body !== note?.body) {
       setSavingState("saving");
       const result = (await updateItem(
         "note",
         {
           noteLocation: {
-            collectionId: notesCollection.id,
-            listId: notesNotesList.id,
-            noteId: note.id,
+            collectionId: selectedNote?.collectionId || "",
+            listId: selectedNote?.notesListId || "",
+            noteId: selectedNote?.id || "",
           },
           noteInput: {
             body,
@@ -144,13 +138,13 @@ const NoteEditor = ({ markdownText }: Props): JSX.Element => {
   useAutosave({ data: text, onSave });
 
   useEffect(() => {
-    if (text !== note.body) setSavingState("processing");
-  }, [text, note.body]);
+    if (text !== note?.body) setSavingState("processing");
+  }, [text, note?.body]);
 
   return (
     <Box>
       <SavingTag state={savingState} />
-      <Editor markdownText={markdownText} handleChange={handleChange} />
+      <Editor markdownText={note.body} handleChange={handleChange} />
     </Box>
   );
 };

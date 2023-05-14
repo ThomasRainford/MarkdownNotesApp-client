@@ -11,7 +11,6 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import {
-  Collection,
   Note,
   NotesList,
   useAddNoteMutation,
@@ -21,22 +20,23 @@ import {
 import { handleAddNoteErrors } from "../../../../utils/error-handlers/note-errors";
 import { getTimeSince } from "../../../../utils/getTimeSince";
 import { useAllLocalStorageValues } from "../../../../utils/hooks/useAllLocalStorageValues";
+import { setNoteValue } from "../../../../utils/setLocalStorageValue";
 import ConfirmModal from "../../../helper/CorfirmModal";
 import AddOrCancelAddItem from "../../add-or-cancel-add-item/AddOrCancelAddItem";
 import NewItemInput from "../../new-item-input/NewItemInput";
 
 const NoteDeleteButton = ({
   note,
-  collection,
-  notesList,
+  collectionId,
+  notesListId,
 }: {
   note: Note;
-  collection: Collection;
-  notesList: NotesList;
+  collectionId: string;
+  notesListId: string;
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
-    note: { note: selectedNote, setSelectedNote },
+    selectedNote: { selectedNote, setSelectedNote },
   } = useAllLocalStorageValues();
 
   const [, deleteNote] = useDeleteNoteMutation();
@@ -69,13 +69,13 @@ const NoteDeleteButton = ({
         onConfirm={async () => {
           const result = await deleteNote({
             noteLocation: {
-              collectionId: collection.id,
-              listId: notesList.id,
+              collectionId: collectionId,
+              listId: notesListId,
               noteId: note.id,
             },
           });
           if (result.data?.deleteNote) {
-            if (selectedNote.id === note.id) {
+            if (selectedNote?.id === note.id) {
               setSelectedNote("");
             }
             return true;
@@ -88,23 +88,29 @@ const NoteDeleteButton = ({
   );
 };
 
-const Notes = (): JSX.Element => {
+export interface Props {
+  notes: Note[];
+}
+
+const Notes = ({ notes }: Props): JSX.Element => {
   const [isAddingNewNote, setIsAddingNewNote] = useState(false);
   const { colorMode } = useColorMode();
   const toast = useToast();
   const {
-    collection: { collection },
-    list: { list },
-    note: { setSelectedNote },
+    selectedCollection: { selectedCollection },
+    selectedNotesList: { selectedList },
+    selectedNote: { setSelectedNote },
   } = useAllLocalStorageValues();
   const [notesListResult] = useNotesListQuery({
     variables: {
-      listLocation: { collectionId: collection.id, listId: list.id },
+      listLocation: {
+        collectionId: selectedCollection?.id || "",
+        listId: selectedList?.id || "",
+      },
     },
   });
+  const notesList = notesListResult.data?.notesList;
   const [, addNote] = useAddNoteMutation();
-
-  const notes = notesListResult.data?.notesList?.notes;
 
   return (
     <Box>
@@ -124,7 +130,11 @@ const Notes = (): JSX.Element => {
                   bg: colorMode === "light" ? "gray.200" : "gray.600",
                 }}
                 onClick={() => {
-                  setSelectedNote(JSON.stringify(note));
+                  const selectValue = setNoteValue(
+                    note,
+                    notesList as NotesList
+                  );
+                  setSelectedNote(JSON.stringify(selectValue));
                 }}
               >
                 <Box>
@@ -153,8 +163,8 @@ const Notes = (): JSX.Element => {
                 <Box>
                   <NoteDeleteButton
                     note={note}
-                    collection={collection}
-                    notesList={list}
+                    collectionId={selectedCollection?.id || ""}
+                    notesListId={selectedList?.id || ""}
                   />
                 </Box>
               </Box>
@@ -168,8 +178,8 @@ const Notes = (): JSX.Element => {
           confirmAdd={async (title: string) => {
             const variables = {
               listLocation: {
-                collectionId: collection.id,
-                listId: list.id,
+                collectionId: selectedCollection?.id || "",
+                listId: selectedList?.id || "",
               },
               noteInput: {
                 title,
@@ -179,7 +189,11 @@ const Notes = (): JSX.Element => {
             const result = await addNote(variables);
             const hasError = handleAddNoteErrors(variables, result, toast);
             if (!hasError) {
-              setSelectedNote(JSON.stringify(result.data?.addNote.note));
+              const selectValue = setNoteValue(
+                result.data?.addNote.note as Note,
+                notesList as NotesList
+              );
+              setSelectedNote(JSON.stringify(selectValue));
               setIsAddingNewNote(false);
             }
           }}

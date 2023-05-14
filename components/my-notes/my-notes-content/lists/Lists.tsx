@@ -26,7 +26,6 @@ import { FormEvent, useState } from "react";
 import { AnyVariables, UseMutationState } from "urql";
 import * as Yup from "yup";
 import {
-  Collection,
   NotesList,
   UpdateNotesListMutation,
   useCreateNotesListMutation,
@@ -35,26 +34,28 @@ import {
   useUpdateNotesListMutation,
 } from "../../../../generated/graphql";
 import { handleCreateNotesListErrors } from "../../../../utils/error-handlers/noteslist-errors";
+import { getSelectedNotesList } from "../../../../utils/getSelectedValue";
 import { useAllLocalStorageValues } from "../../../../utils/hooks/useAllLocalStorageValues";
 import { useUpdateItem } from "../../../../utils/hooks/useUpdateItem";
+import { setNotesListValue } from "../../../../utils/setLocalStorageValue";
 import ConfirmModal from "../../../helper/CorfirmModal";
 import AddOrCancelAddItem from "../../add-or-cancel-add-item/AddOrCancelAddItem";
 import NewItemInput from "../../new-item-input/NewItemInput";
 
 const ListDeleteButton = ({
-  collection,
+  collectionId,
   list,
 }: {
-  collection: Collection;
+  collectionId: string;
   list: NotesList;
 }) => {
   const {
-    list: { setSelectedList },
+    selectedNotesList: { setSelectedList },
   } = useAllLocalStorageValues();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const [notesListsResult] = useNotesListsQuery({
-    variables: { collectionId: collection?.id || "" },
+    variables: { collectionId },
   });
   const [, deleteNotesList] = useDeleteNotesListMutation();
 
@@ -86,7 +87,7 @@ const ListDeleteButton = ({
         onConfirm={async () => {
           const result = await deleteNotesList({
             listLocation: {
-              collectionId: collection.id,
+              collectionId,
               listId: list.id,
             },
           });
@@ -120,7 +121,7 @@ const NotesListsUpdate = ({ notesList }: { notesList: NotesList }) => {
   const toast = useToast();
   const [updateItem] = useUpdateItem();
   const {
-    collection: { collection },
+    selectedCollection: { selectedCollection },
   } = useAllLocalStorageValues();
 
   const formik = useFormik<FormValues>({
@@ -135,7 +136,7 @@ const NotesListsUpdate = ({ notesList }: { notesList: NotesList }) => {
         "list",
         {
           listLocation: {
-            collectionId: collection.id,
+            collectionId: selectedCollection?.id || "",
             listId: notesList.id,
           },
           notesListInput: {
@@ -222,7 +223,10 @@ const NotesListsUpdate = ({ notesList }: { notesList: NotesList }) => {
                 </Button>
               </Box>
               <Box display={"flex"}>
-                <ListDeleteButton collection={collection} list={notesList} />
+                <ListDeleteButton
+                  collectionId={selectedCollection?.id || ""}
+                  list={notesList}
+                />
               </Box>
             </Box>
           </Stack>
@@ -232,32 +236,33 @@ const NotesListsUpdate = ({ notesList }: { notesList: NotesList }) => {
   );
 };
 
-const Lists = (): JSX.Element => {
+export interface Props {
+  notesLists: NotesList[];
+}
+
+const Lists = ({ notesLists }: Props): JSX.Element => {
   const [isAddingNewList, setIsAddingNewList] = useState(false);
   const { colorMode } = useColorMode();
   const toast = useToast();
   const {
-    collection: { collection },
-    list: { list, setSelectedList },
+    selectedCollection: { selectedCollection },
+    selectedNotesList: { selectedList, setSelectedList },
   } = useAllLocalStorageValues();
-  const [notesListsResult] = useNotesListsQuery({
-    variables: { collectionId: collection?.id || "" },
-  });
+
+  const notesList = getSelectedNotesList(selectedList, notesLists);
 
   const [, createNotesList] = useCreateNotesListMutation();
-
-  const lists = notesListsResult.data?.notesLists;
 
   return (
     <Box>
       <Box>
-        {!lists ? null : (
+        {!notesLists ? null : (
           <>
-            {lists.map((_list) => {
-              const notes = _list.notes;
+            {notesLists.map((_notesList) => {
+              const notes = _notesList.notes;
               return (
                 <Box
-                  key={_list.id}
+                  key={_notesList.id}
                   display={"flex"}
                   pl={"1.5em"}
                   pr={"1em"}
@@ -266,24 +271,31 @@ const Lists = (): JSX.Element => {
                   _hover={{
                     bg: colorMode === "light" ? "gray.200" : "gray.600",
                   }}
-                  border={_list.id === list?.id ? "1px" : ""}
-                  borderColor={_list.id === list?.id ? "gray.200" : "gray.800"}
-                  onClick={() => setSelectedList(JSON.stringify(_list))}
+                  border={_notesList.id === notesList?.id ? "1px" : ""}
+                  borderColor={
+                    _notesList.id === notesList?.id ? "gray.200" : "gray.800"
+                  }
+                  onClick={() => {
+                    const selectedValue = setNotesListValue(
+                      _notesList as NotesList
+                    );
+                    setSelectedList(JSON.stringify(selectedValue));
+                  }}
                 >
                   <Box display={"flex"} justifyContent="space-between" w="100%">
                     <Heading
-                      id={`list-heading-${_list.id}`}
+                      id={`list-heading-${_notesList.id}`}
                       as="h4"
                       size={"md"}
                       pr={"1em"}
                       color={colorMode === "light" ? "gray.600" : "gray.300"}
                     >
-                      {_list.title}
+                      {_notesList.title}
                     </Heading>
                     <Box display={"flex"}>
                       <Box mr="0.5em">
-                        {_list.id === list?.id && (
-                          <NotesListsUpdate notesList={list} />
+                        {_notesList.id === notesList?.id && (
+                          <NotesListsUpdate notesList={_notesList} />
                         )}
                         <Tag mt="1px">{notes.length}</Tag>
                       </Box>
@@ -308,7 +320,7 @@ const Lists = (): JSX.Element => {
           type="list"
           confirmAdd={async (title: string) => {
             const variables = {
-              collectionId: collection.id,
+              collectionId: selectedCollection?.id || "",
               title,
             };
             const result = await createNotesList(variables);

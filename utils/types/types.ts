@@ -6,8 +6,17 @@ export enum LocalStorageKeys {
   SELECTED_NOTE = "selectedNote",
 }
 
+export type SelectedCollection = {
+  id: string;
+};
+
+export type SelectedNotesList = {
+  id: string;
+  collectionId: string;
+};
+
 export type SelectedNote = {
-  note: any; // This will be the generated graphql type.
-  list: any; // This will be the generated graphql type.
-  collection: any; // This will be the generated graphql type.
+  id: string;
+  collectionId: string;
+  notesListId: string;
 };

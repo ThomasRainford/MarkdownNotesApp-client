@@ -1,42 +1,60 @@
 import { ArrowBackIcon } from "@chakra-ui/icons";
-import { Box, Heading, IconButton, useColorMode } from "@chakra-ui/react";
-import { ReactNode, useEffect, useState } from "react";
-import { SelectedCollectionContext } from "../../../../contexts/SelectedCollectionContext";
-import { SelectedListContext } from "../../../../contexts/SelectedListContext";
-import { getLocalStorageValue } from "../../../../utils/getLocalStorageValue";
-import { useLocalStorageValue } from "../../../../utils/hooks/useLocalStorageValue";
 import {
-  LocalStorageContextType,
-  LocalStorageKeys,
-} from "../../../../utils/types/types";
+  Box,
+  Heading,
+  IconButton,
+  Spinner,
+  useColorMode,
+} from "@chakra-ui/react";
+import { ReactNode, useEffect, useState } from "react";
+import { Collection, useCollectionsQuery } from "../../../../generated/graphql";
+import { getSelectedCollection } from "../../../../utils/getSelectedValue";
+import { useAllLocalStorageValues } from "../../../../utils/hooks/useAllLocalStorageValues";
 import Collections from "../collections/Collections";
 import Lists from "../lists/Lists";
 
-const LeftPaneContent = (): JSX.Element => {
-  const [selectedCollection] = useLocalStorageValue(
-    SelectedCollectionContext,
-    LocalStorageKeys.SELECTED_COLLECTION
-  ) as LocalStorageContextType;
-  const [selectedList, setSelectedList] = useLocalStorageValue(
-    SelectedListContext,
-    LocalStorageKeys.SELECTED_LIST
-  ) as LocalStorageContextType;
-
-  const collection = getLocalStorageValue(selectedCollection);
-
-  const [content, setContent] = useState<ReactNode | null>(
-    selectedList === "" ? <Collections /> : <Lists />
+const LeftPaneContentCollectionsError = () => {
+  return (
+    <Box>
+      <Box display={"flex"} pl={"1.5em"} pr={"1em"} pt={"1em"} pb={"1em"}>
+        Something went wrong fetching your collections!
+      </Box>
+    </Box>
   );
+};
 
+const LeftPaneContent = (): JSX.Element => {
+  const [collectionsResult] = useCollectionsQuery();
+  const {
+    selectedCollection: { selectedCollection },
+    selectedNotesList: { selectedList, setSelectedList },
+  } = useAllLocalStorageValues();
+  const collection = getSelectedCollection(
+    selectedCollection,
+    collectionsResult.data?.collections as Collection[]
+  );
+  const [content, setContent] = useState<ReactNode | null>(null);
   const { colorMode } = useColorMode();
 
   useEffect(() => {
-    if (selectedList === "") {
+    if (collectionsResult.error) {
+      setContent(<LeftPaneContentCollectionsError />);
+      return;
+    } else if (collectionsResult.fetching) {
+      setContent(<Spinner />);
+      return;
+    }
+    if (!selectedList?.id) {
       setContent(<Collections />);
     } else {
-      setContent(<Lists />);
+      setContent(<Lists notesLists={collection?.lists || []} />);
     }
-  }, [selectedList]);
+  }, [
+    selectedList?.id,
+    collection?.lists,
+    collectionsResult.error,
+    collectionsResult.fetching,
+  ]);
 
   return (
     <Box
@@ -45,8 +63,8 @@ const LeftPaneContent = (): JSX.Element => {
     >
       <Box h={"50px"} />
       <Box display={"flex"} px={"1em"} py={"1em"}>
-        {selectedList !== "" ? (
-          <Box visibility={selectedList !== "" ? "visible" : "hidden"}>
+        {selectedList ? (
+          <Box visibility={selectedList ? "visible" : "hidden"}>
             <IconButton
               aria-label={"left-pane-back-button"}
               variant="outline"
@@ -57,7 +75,7 @@ const LeftPaneContent = (): JSX.Element => {
           </Box>
         ) : null}
         <Box>
-          {selectedList === "" ? (
+          {!selectedList ? (
             <Heading
               id="collection-heading"
               as="h3"
@@ -77,7 +95,7 @@ const LeftPaneContent = (): JSX.Element => {
               textColor={colorMode === "light" ? "gray.700" : "gray.400"}
               pl={"1em"}
             >
-              {collection.title}
+              {collection?.title}
             </Heading>
           )}
         </Box>

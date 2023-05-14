@@ -2,11 +2,6 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { act } from "react-dom/test-utils";
 import { Client, Provider } from "urql";
 import { mockClient } from "../../../../../test-utils/mocks/gql-mocks";
-import {
-  testCollections,
-  testSelectedNote,
-  _testCollections,
-} from "../../../../../test-utils/testData";
 import { LocalStorageKeys } from "../../../../../utils/types/types";
 import SelectedDataProvider from "../../../../helper/SelectedDataProvider";
 import NoteContent from "../NoteContent";
@@ -16,15 +11,15 @@ describe("NoteContent component", () => {
     // Local storage
     localStorage.setItem(
       LocalStorageKeys.SELECTED_COLLECTION,
-      JSON.stringify(testCollections[0])
+      JSON.stringify({ id: "1" })
     );
     localStorage.setItem(
       LocalStorageKeys.SELECTED_LIST,
-      JSON.stringify(testCollections[0].lists[0])
+      JSON.stringify({ id: "1", collectionId: "1" })
     );
     localStorage.setItem(
       LocalStorageKeys.SELECTED_NOTE,
-      JSON.stringify(testSelectedNote)
+      JSON.stringify({ id: "1", collectionId: "1", notesListId: "1" })
     );
     // Render
     render(
@@ -44,15 +39,15 @@ describe("NoteContent component", () => {
     // Local storage
     localStorage.setItem(
       LocalStorageKeys.SELECTED_COLLECTION,
-      JSON.stringify(testCollections[0])
+      JSON.stringify({ id: "1" })
     );
     localStorage.setItem(
       LocalStorageKeys.SELECTED_LIST,
-      JSON.stringify(testCollections[0].lists[0])
+      JSON.stringify({ id: "1", collectionId: "1" })
     );
     localStorage.setItem(
       LocalStorageKeys.SELECTED_NOTE,
-      JSON.stringify(testSelectedNote)
+      JSON.stringify({ id: "1", collectionId: "1", notesListId: "1" })
     );
     // Render
     const options = { note: { update: { title: "Note 1 updated" } } };
@@ -88,11 +83,15 @@ describe("NoteContent component", () => {
     // Local storage
     localStorage.setItem(
       LocalStorageKeys.SELECTED_COLLECTION,
-      JSON.stringify(_testCollections[1])
+      JSON.stringify({ id: "1" })
+    );
+    localStorage.setItem(
+      LocalStorageKeys.SELECTED_LIST,
+      JSON.stringify({ id: "1", collectionId: "1" })
     );
     localStorage.setItem(
       LocalStorageKeys.SELECTED_NOTE,
-      JSON.stringify(testSelectedNote)
+      JSON.stringify({ id: "1", collectionId: "1", notesListId: "1" })
     );
     // Render
     const options = { note: { update: { title: "Note 1 updated" } } };

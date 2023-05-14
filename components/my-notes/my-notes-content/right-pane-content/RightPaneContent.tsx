@@ -6,28 +6,87 @@ import {
   Input,
   InputGroup,
   InputLeftAddon,
+  Spinner,
   Tooltip,
   useColorMode,
 } from "@chakra-ui/react";
-import { ReactNode, useEffect, useState } from "react";
-import { SelectedCollectionContext } from "../../../../contexts/SelectedCollectionContext";
-import { SelectedListContext } from "../../../../contexts/SelectedListContext";
+import { filter, includes } from "lodash";
+import {
+  Dispatch,
+  ReactNode,
+  SetStateAction,
+  useEffect,
+  useState,
+} from "react";
 import {
   Collection,
+  Note,
   NotesList,
+  useCollectionsQuery,
+  useNotesListsQuery,
   useUpdateCollectionMutation,
   useUpdateNotesListMutation,
 } from "../../../../generated/graphql";
-import { getLocalStorageValue } from "../../../../utils/getLocalStorageValue";
+import { getSelectedCollection } from "../../../../utils/getSelectedValue";
 import { useAllLocalStorageValues } from "../../../../utils/hooks/useAllLocalStorageValues";
-import { useLocalStorageValue } from "../../../../utils/hooks/useLocalStorageValue";
 import { useUpdateItem } from "../../../../utils/hooks/useUpdateItem";
-import {
-  LocalStorageContextType,
-  LocalStorageKeys,
-} from "../../../../utils/types/types";
+import { SelectedNotesList } from "../../../../utils/types/types";
 import Lists from "../lists/Lists";
 import Notes from "../notes/Notes";
+
+const RightPaneContentCollectionsError = () => {
+  return (
+    <Box>
+      <Box display={"flex"} pl={"1.5em"} pr={"1em"} pt={"1em"} pb={"1em"}>
+        Something went wrong fetching your lists!
+      </Box>
+    </Box>
+  );
+};
+
+export const FilterInput = (props: {
+  selectedList: SelectedNotesList | null;
+  notesLists: NotesList[];
+  notes: Note[];
+  displayed: string;
+  setCurrentFilter: Dispatch<
+    SetStateAction<
+      | {
+          displayed: string;
+          items: string[];
+        }
+      | undefined
+    >
+  >;
+}) => {
+  const { selectedList, notesLists, notes, displayed, setCurrentFilter } =
+    props;
+  const [filterText, setFilterText] = useState<string>("");
+
+  useEffect(() => {
+    if (displayed) setFilterText("");
+  }, [displayed]);
+
+  return (
+    <Input
+      type="text"
+      value={filterText}
+      placeholder={!selectedList ? "Filter Lists..." : "Filter Notes..."}
+      onChange={(event) => {
+        const value = event.target.value;
+        setFilterText(value);
+        const displayed = !selectedList ? "list" : "note";
+        const items = (
+          displayed === "list"
+            ? notesLists.map((nl) => nl.title)
+            : notes?.map((n) => n.title)
+        )?.map((i) => i.toLowerCase());
+        const filteredItems = filter(items, (item) => includes(item, value));
+        setCurrentFilter({ displayed, items: filteredItems });
+      }}
+    />
+  );
+};
 
 const ListPaneHeaderTitle = ({
   selectedItem,
@@ -47,8 +106,8 @@ const ListPaneHeaderTitle = ({
   }, [title]);
 
   const {
-    collection: { collection },
-    list: { list },
+    selectedCollection: { selectedCollection },
+    selectedNotesList: { selectedList },
   } = useAllLocalStorageValues();
 
   const [, updateCollection] = useUpdateCollectionMutation();
@@ -72,8 +131,8 @@ const ListPaneHeaderTitle = ({
         type,
         {
           listLocation: {
-            collectionId: collection.id,
-            listId: list.id,
+            collectionId: selectedCollection?.id || "",
+            listId: selectedList?.id || "",
           },
           notesListInput: {
             title: editingValue,
@@ -144,23 +203,18 @@ const ListPaneHeaderTitle = ({
 
 const ListPaneHeader = ({
   collection,
-  selectedList,
+  notesList,
 }: {
   collection: Collection;
-  selectedList: string;
+  notesList: NotesList;
 }) => {
-  const list: NotesList | string =
-    selectedList === ""
-      ? ""
-      : (getLocalStorageValue(selectedList) as NotesList);
-
   return (
     <Box className="list-pane-header" display={"flex"} w="100%" h="2em">
-      {selectedList === "" ? (
+      {!notesList ? (
         <Box display={"flex"} justifyContent={"space-between"} w="100%">
           <ListPaneHeaderTitle
             selectedItem={collection}
-            title={collection.title}
+            title={collection?.title}
             type="collection"
           />
           <Box display={"flex"}>
@@ -172,7 +226,7 @@ const ListPaneHeader = ({
                 mr="0.25em"
               />
               <Heading as={"h6"} size="sm" mt={"2px"}>
-                {collection.upvotes}
+                {collection?.upvotes}
               </Heading>
             </Box>
           </Box>
@@ -181,8 +235,8 @@ const ListPaneHeader = ({
         <>
           <Box display={"flex"} justifyContent="space-between" w="100%">
             <ListPaneHeaderTitle
-              selectedItem={list as NotesList}
-              title={(list as NotesList).title}
+              selectedItem={notesList}
+              title={notesList.title}
               type="list"
             />
           </Box>
@@ -193,25 +247,79 @@ const ListPaneHeader = ({
 };
 
 const RightPaneContent = (): JSX.Element => {
-  const [selectedCollection] = useLocalStorageValue(
-    SelectedCollectionContext,
-    LocalStorageKeys.SELECTED_COLLECTION
-  ) as LocalStorageContextType;
-  const [selectedList] = useLocalStorageValue(
-    SelectedListContext,
-    LocalStorageKeys.SELECTED_LIST
-  ) as LocalStorageContextType;
-  const collection = getLocalStorageValue(selectedCollection) as Collection;
-
-  const [content, setContent] = useState<ReactNode | null>(<Lists />);
+  const [collectionsResult] = useCollectionsQuery();
+  const {
+    selectedCollection: { selectedCollection },
+    selectedNotesList: { selectedList },
+  } = useAllLocalStorageValues();
+  const collection = getSelectedCollection(
+    selectedCollection,
+    collectionsResult.data?.collections as Collection[]
+  );
+  const [notesListsResult] = useNotesListsQuery({
+    variables: {
+      collectionId: selectedCollection?.id || "",
+    },
+  });
+  const [displayed, setDisplayed] = useState<string>("");
+  const [currentFilter, setCurrentFilter] = useState<{
+    displayed: string;
+    items: string[];
+  }>();
+  const notesLists = notesListsResult.data?.notesLists as NotesList[];
+  const notesList = notesLists?.find((nl) => nl.id === selectedList?.id);
+  const notes = notesList?.notes as Note[];
+  const [content, setContent] = useState<ReactNode | null>(null);
 
   useEffect(() => {
-    if (selectedList === "") {
-      setContent(<Lists />);
+    if (notesListsResult.error) {
+      setContent(<RightPaneContentCollectionsError />);
+      return;
+    } else if (notesListsResult.fetching) {
+      setContent(<Spinner />);
+      return;
+    } else if (selectedCollection?.id && !selectedList?.id) {
+      setDisplayed("notesList");
+      setContent(
+        <Lists
+          notesLists={
+            currentFilter?.displayed === "list"
+              ? notesLists.filter(
+                  (nl) =>
+                    currentFilter?.displayed === "list" &&
+                    currentFilter.items.includes(nl.title.toLowerCase())
+                )
+              : notesLists || []
+          }
+        />
+      );
+    } else if (selectedList?.id) {
+      setDisplayed("note");
+      setContent(
+        <Notes
+          notes={
+            currentFilter?.displayed === "note"
+              ? notes.filter((n) =>
+                  currentFilter.items.includes(n.title.toLowerCase())
+                )
+              : notes || []
+          }
+        />
+      );
+      return;
     } else {
-      setContent(<Notes />);
+      setContent(null);
     }
-  }, [selectedList]);
+  }, [
+    selectedCollection?.id,
+    selectedList?.id,
+    notesLists,
+    notes,
+    currentFilter?.displayed,
+    currentFilter?.items,
+    notesListsResult.error,
+    notesListsResult.fetching,
+  ]);
 
   return (
     <Box h={"100%"}>
@@ -222,23 +330,24 @@ const RightPaneContent = (): JSX.Element => {
         px={"1em"}
         py={"1em"}
       >
-        {!collection ? (
+        {!selectedCollection ? (
           <p>Select a collection</p>
         ) : (
           <Box w={"100%"}>
             <ListPaneHeader
-              collection={collection}
-              selectedList={selectedList}
+              collection={collection as Collection}
+              notesList={notesList as NotesList}
             />
             <Box mt={"1.75em"}>
               <InputGroup>
                 {/* eslint-disable-next-line */}
                 <InputLeftAddon children={<TriangleUpIcon />} />
-                <Input
-                  type="text"
-                  placeholder={
-                    selectedList === "" ? "Filter Lists..." : "Filter Notes..."
-                  }
+                <FilterInput
+                  selectedList={selectedList}
+                  notesLists={notesLists}
+                  notes={notes}
+                  displayed={displayed}
+                  setCurrentFilter={setCurrentFilter}
                 />
               </InputGroup>
             </Box>
