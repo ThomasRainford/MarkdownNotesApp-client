@@ -1,9 +1,11 @@
 import { Box } from "@chakra-ui/react";
+import "allotment/dist/style.css";
 import { withUrqlClient } from "next-urql";
 import SelectedDataProvider from "../../components/helper/SelectedDataProvider";
 import PrimaryLayout from "../../components/layouts/PrimaryLayout";
 import MyNotesContent from "../../components/my-notes/my-notes-content/MyNotesContent";
 import NavBar from "../../components/navbar/NavBar";
+import { MyNotesSmallDesktopViewPaneVisibleProvider } from "../../contexts/MyNotesSmallDesktopViewPaneVisibleContext";
 import { useMeQuery } from "../../generated/graphql";
 import { createUrqlClient } from "../../utils/createUrqlClient";
 import { useIsAuth } from "../../utils/hooks/useIsAuth";
@@ -19,7 +21,9 @@ const MyNotes: NextPageWithLayout = () => {
       <NavBar user={meResult} />
       {!meResult.fetching && meResult.data ? (
         <SelectedDataProvider>
-          <MyNotesContent />
+          <MyNotesSmallDesktopViewPaneVisibleProvider>
+            <MyNotesContent />
+          </MyNotesSmallDesktopViewPaneVisibleProvider>
         </SelectedDataProvider>
       ) : null}
     </Box>

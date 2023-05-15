@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 const useLocalStorage = (
   key: string,
   initialValue: string | null
-): [string, (value: string) => void] => {
+): [string, (_: string) => void] => {
   // State to store our value
   // Pass initial state function to useState so logic is only executed once
   const [storedValue, setStoredValue] = useState<string>(() => {

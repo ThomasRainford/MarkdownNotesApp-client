@@ -1,3 +1,4 @@
+import "allotment/dist/style.css";
 import { withUrqlClient } from "next-urql";
 import PrimaryLayout from "../components/layouts/PrimaryLayout";
 import NavBar from "../components/navbar/NavBar";
