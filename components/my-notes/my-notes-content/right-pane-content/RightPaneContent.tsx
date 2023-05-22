@@ -6,7 +6,7 @@ import {
   Input,
   InputGroup,
   InputLeftAddon,
-  Spinner,
+  Skeleton,
   Tooltip,
   useColorMode,
 } from "@chakra-ui/react";
@@ -34,7 +34,7 @@ import { SelectedNotesList } from "../../../../utils/types/types";
 import Lists from "../lists/Lists";
 import Notes from "../notes/Notes";
 
-const RightPaneContentCollectionsError = () => {
+const Error = () => {
   return (
     <Box>
       <Box display={"flex"} pl={"1.5em"} pr={"1em"} pt={"1em"} pb={"1em"}>
@@ -43,6 +43,14 @@ const RightPaneContentCollectionsError = () => {
     </Box>
   );
 };
+
+const Loading = () => (
+  <Box>
+    <Box mx={"0.5em"} mb={"1em"}>
+      <Skeleton height="60px" mb="0.5em" />
+    </Box>
+  </Box>
+);
 
 export const FilterInput = (props: {
   selectedList: SelectedNotesList | null;
@@ -273,10 +281,10 @@ const RightPaneContent = (): JSX.Element => {
 
   useEffect(() => {
     if (notesListsResult.error) {
-      setContent(<RightPaneContentCollectionsError />);
+      setContent(<Error />);
       return;
     } else if (notesListsResult.fetching) {
-      setContent(<Spinner />);
+      setContent(<Loading />);
       return;
     } else if (selectedCollection?.id && !selectedList?.id) {
       setDisplayed("notesList");

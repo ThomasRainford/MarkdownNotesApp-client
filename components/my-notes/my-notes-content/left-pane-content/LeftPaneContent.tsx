@@ -3,7 +3,7 @@ import {
   Box,
   Heading,
   IconButton,
-  Spinner,
+  Skeleton,
   useColorMode,
 } from "@chakra-ui/react";
 import { ReactNode, useEffect, useState } from "react";
@@ -19,7 +19,7 @@ import {
 import Collections from "../collections/Collections";
 import Lists from "../lists/Lists";
 
-const LeftPaneContentCollectionsError = () => {
+const Error = () => {
   return (
     <Box>
       <Box display={"flex"} pl={"1.5em"} pr={"1em"} pt={"1em"} pb={"1em"}>
@@ -28,6 +28,14 @@ const LeftPaneContentCollectionsError = () => {
     </Box>
   );
 };
+
+const Loading = () => (
+  <Box>
+    <Box mx={"0.5em"} mb={"1em"}>
+      <Skeleton height="60px" mb="0.5em" />
+    </Box>
+  </Box>
+);
 
 const LeftPaneContent = (): JSX.Element => {
   const [collectionsResult] = useCollectionsQuery();
@@ -48,10 +56,10 @@ const LeftPaneContent = (): JSX.Element => {
 
   useEffect(() => {
     if (collectionsResult.error) {
-      setContent(<LeftPaneContentCollectionsError />);
+      setContent(<Error />);
       return;
     } else if (collectionsResult.fetching) {
-      setContent(<Spinner />);
+      setContent(<Loading />);
       return;
     }
     if (!selectedList?.id) {
