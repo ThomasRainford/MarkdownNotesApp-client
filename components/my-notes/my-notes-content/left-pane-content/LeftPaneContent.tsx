@@ -1,19 +1,25 @@
-import { ArrowBackIcon } from "@chakra-ui/icons";
+import { ArrowBackIcon, ArrowLeftIcon } from "@chakra-ui/icons";
 import {
   Box,
   Heading,
   IconButton,
-  Spinner,
+  Skeleton,
   useColorMode,
 } from "@chakra-ui/react";
 import { ReactNode, useEffect, useState } from "react";
+import { MyNotesSmallDesktopViewPaneVisibleContext } from "../../../../contexts/MyNotesSmallDesktopViewPaneVisibleContext";
 import { Collection, useCollectionsQuery } from "../../../../generated/graphql";
 import { getSelectedCollection } from "../../../../utils/getSelectedValue";
 import { useAllLocalStorageValues } from "../../../../utils/hooks/useAllLocalStorageValues";
+import { useLocalStorageValue } from "../../../../utils/hooks/useLocalStorageValue";
+import {
+  LocalStorageContextType,
+  LocalStorageKeys,
+} from "../../../../utils/types/types";
 import Collections from "../collections/Collections";
 import Lists from "../lists/Lists";
 
-const LeftPaneContentCollectionsError = () => {
+const Error = () => {
   return (
     <Box>
       <Box display={"flex"} pl={"1.5em"} pr={"1em"} pt={"1em"} pb={"1em"}>
@@ -22,6 +28,14 @@ const LeftPaneContentCollectionsError = () => {
     </Box>
   );
 };
+
+const Loading = () => (
+  <Box>
+    <Box mx={"0.5em"} mb={"1em"}>
+      <Skeleton height="60px" mb="0.5em" />
+    </Box>
+  </Box>
+);
 
 const LeftPaneContent = (): JSX.Element => {
   const [collectionsResult] = useCollectionsQuery();
@@ -35,13 +49,17 @@ const LeftPaneContent = (): JSX.Element => {
   );
   const [content, setContent] = useState<ReactNode | null>(null);
   const { colorMode } = useColorMode();
+  const [, setPaneVisible] = useLocalStorageValue(
+    MyNotesSmallDesktopViewPaneVisibleContext,
+    LocalStorageKeys.MY_NOTES_VISIBLE_PANE
+  ) as LocalStorageContextType;
 
   useEffect(() => {
     if (collectionsResult.error) {
-      setContent(<LeftPaneContentCollectionsError />);
+      setContent(<Error />);
       return;
     } else if (collectionsResult.fetching) {
-      setContent(<Spinner />);
+      setContent(<Loading />);
       return;
     }
     if (!selectedList?.id) {
@@ -61,7 +79,21 @@ const LeftPaneContent = (): JSX.Element => {
       h={"100%"}
       backgroundColor={colorMode === "light" ? "gray.400" : "gray.800"}
     >
-      <Box h={"50px"} />
+      <Box display={"flex"} h={"50px"}>
+        <Box
+          display={{ base: "none", sm: "flex", md: "none" }}
+          justifyContent={"end"}
+          w={"100%"}
+          pr={"0.5em"}
+          pt={"0.45em"}
+        >
+          <ArrowLeftIcon
+            onClick={() => {
+              setPaneVisible("false");
+            }}
+          />
+        </Box>
+      </Box>
       <Box display={"flex"} px={"1em"} py={"1em"}>
         {selectedList ? (
           <Box visibility={selectedList ? "visible" : "hidden"}>
@@ -74,7 +106,7 @@ const LeftPaneContent = (): JSX.Element => {
             />
           </Box>
         ) : null}
-        <Box>
+        <Box display={"flex"} justifyContent={"center"}>
           {!selectedList ? (
             <Heading
               id="collection-heading"
@@ -89,11 +121,12 @@ const LeftPaneContent = (): JSX.Element => {
           ) : (
             <Heading
               id="list-heading"
-              as="h5"
-              size={"lg"}
+              as="h4"
+              size={"md"}
               fontWeight="normal"
+              fontSize={"30px"}
               textColor={colorMode === "light" ? "gray.700" : "gray.400"}
-              pl={"1em"}
+              pl={"0.5em"}
             >
               {collection?.title}
             </Heading>

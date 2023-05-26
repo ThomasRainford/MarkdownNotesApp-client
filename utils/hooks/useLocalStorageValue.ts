@@ -5,11 +5,13 @@ import useLocalStorage from "./useLocalStorage";
 export function useLocalStorageValue(
   context: React.Context<LocalStorageContextType | undefined>,
   key: string
-): [string, (value: string) => void] | string {
+): [string, (_: string) => void] | string {
   const value = useContext(context);
+  const [storedValue, setStoredValue] = useLocalStorage(key, null);
   if (value === undefined) {
-    const [storedValue, setStoredValue] = useLocalStorage(key, null);
     return [storedValue, setStoredValue];
   }
   return value;
 }
+
+// TODO: create new context for storing small desktop view pane visible

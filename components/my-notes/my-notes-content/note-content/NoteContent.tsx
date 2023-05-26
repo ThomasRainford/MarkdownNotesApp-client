@@ -1,5 +1,13 @@
 import { AddIcon, CloseIcon, EditIcon } from "@chakra-ui/icons";
-import { Box, Heading, IconButton, Input, Tag, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Heading,
+  IconButton,
+  Input,
+  Tag,
+  Text,
+  useColorMode,
+} from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import {
   Collection,
@@ -21,6 +29,17 @@ const NoteContentHeaderTitle = ({ note }: { note: Note }) => {
   const [updateItem] = useUpdateItem();
   const collections = collectionsResult.data?.collections as Collection[];
   const handelCrossEditing = useHandleCrossEditing({ collections });
+  const {
+    selectedNote: { selectedNote },
+  } = useAllLocalStorageValues();
+  const { colorMode } = useColorMode();
+
+  const collection = collections?.find(
+    (collection) => collection.id === selectedNote?.collectionId
+  );
+  const notesList = collection?.lists.find(
+    (list) => list.id === selectedNote?.notesListId
+  );
 
   useEffect(() => {
     setEditingValue(note?.title);
@@ -48,8 +67,26 @@ const NoteContentHeaderTitle = ({ note }: { note: Note }) => {
     <Box>
       {!isEditing ? (
         <Box display="flex" justifyContent={"space-between"}>
-          <Box display="flex">
-            <Heading id="note-header-note-title" size={"lg"} mr="0.75em">
+          <Box display="flex" alignItems={"center"}>
+            <Heading
+              size={"sm"}
+              color={colorMode === "light" ? "gray.500" : "gray.300"}
+            >
+              {collection?.title} /
+            </Heading>
+            <Heading
+              size={"sm"}
+              color={colorMode === "light" ? "gray.500" : "gray.300"}
+              ml="0.2em"
+            >
+              {notesList?.title} /
+            </Heading>
+            <Heading
+              id="note-header-note-title"
+              size={"lg"}
+              ml="0.3em"
+              mr="0.75em"
+            >
               {editingValue}
             </Heading>
           </Box>
@@ -67,43 +104,61 @@ const NoteContentHeaderTitle = ({ note }: { note: Note }) => {
           </Box>
         </Box>
       ) : (
-        <Box display={"flex"}>
-          <Input
-            mr="0.5em"
-            value={editingValue}
-            size="md"
-            onChange={(e) => {
-              setEditingValue(e.target.value);
-            }}
-            onKeyDown={async (e) => {
-              if (e.key === "Enter") {
+        <Box display={"flex"} justifyContent={"space-between"}>
+          <Box display={"flex"} alignItems={"center"}>
+            <Heading
+              size={"sm"}
+              color={colorMode === "light" ? "gray.500" : "gray.300"}
+            >
+              {collection?.title} /
+            </Heading>
+            <Heading
+              size={"sm"}
+              color={colorMode === "light" ? "gray.500" : "gray.300"}
+              ml="0.2em"
+            >
+              {notesList?.title} /
+            </Heading>
+          </Box>
+          <Box display={"flex"} flexGrow="2" ml="0.5em">
+            <Input
+              mr="0.5em"
+              value={editingValue}
+              size="md"
+              w="100%"
+              onChange={(e) => {
+                setEditingValue(e.target.value);
+              }}
+              onKeyDown={async (e) => {
+                if (e.key === "Enter") {
+                  await update();
+                  setIsEditing(false);
+                }
+              }}
+            />
+            <IconButton
+              mr="0.5em"
+              colorScheme="red"
+              size={"md"}
+              variant={"ghost"}
+              aria-label={`close-update-note-title`}
+              icon={<CloseIcon boxSize={3} />}
+              onClick={() => {
+                setIsEditing(false);
+              }}
+            />
+            <IconButton
+              colorScheme="blue"
+              size={"md"}
+              variant={"outline"}
+              aria-label={`update-note-title`}
+              icon={<AddIcon boxSize={3} />}
+              onClick={async () => {
                 await update();
                 setIsEditing(false);
-              }
-            }}
-          />
-          <IconButton
-            mr="0.5em"
-            colorScheme="red"
-            size={"md"}
-            variant={"ghost"}
-            aria-label={`close-update-note-title`}
-            icon={<CloseIcon boxSize={3} />}
-            onClick={() => {
-              setIsEditing(false);
-            }}
-          />
-          <IconButton
-            colorScheme="blue"
-            size={"md"}
-            variant={"outline"}
-            aria-label={`update-note-title`}
-            icon={<AddIcon boxSize={3} />}
-            onClick={async () => {
-              await update();
-              setIsEditing(false);
-            }}
-          />
+              }}
+            />
+          </Box>
         </Box>
       )}
     </Box>
@@ -155,7 +210,7 @@ const NoteContent = (): JSX.Element => {
       {!note ? (
         <Box>No Note Selected...</Box>
       ) : (
-        <Box pt={"1em"} px={"1em"} h={"100%"}>
+        <Box pt={"0.75em"} px={"1em"} h={"100%"}>
           <NoteContentHeader note={note} />
           <Box className="node-editor-container" height={"100%"} mt="1.5em">
             <NoteEditor note={note} />
