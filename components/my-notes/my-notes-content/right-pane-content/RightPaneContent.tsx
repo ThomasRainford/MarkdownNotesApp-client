@@ -278,6 +278,7 @@ const RightPaneContent = (): JSX.Element => {
   const notesList = notesLists?.find((nl) => nl.id === selectedList?.id);
   const notes = notesList?.notes as Note[];
   const [content, setContent] = useState<ReactNode | null>(null);
+  const { colorMode } = useColorMode();
 
   useEffect(() => {
     if (notesListsResult.error) {
@@ -330,7 +331,10 @@ const RightPaneContent = (): JSX.Element => {
   ]);
 
   return (
-    <Box h={"100%"}>
+    <Box
+      h={"100%"}
+      backgroundColor={colorMode === "light" ? "gray.400" : "gray.700"}
+    >
       <Box
         h={"122px"}
         display={"flex"}

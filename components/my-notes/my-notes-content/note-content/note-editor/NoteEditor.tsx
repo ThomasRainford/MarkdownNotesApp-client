@@ -138,7 +138,11 @@ const NoteEditor = ({ note }: Props): JSX.Element => {
   useAutosave({ data: text, onSave });
 
   useEffect(() => {
-    if (text !== note?.body) setSavingState("processing");
+    if (text !== note?.body) {
+      setSavingState("processing");
+    } else {
+      setSavingState("saved");
+    }
   }, [text, note?.body]);
 
   return (
