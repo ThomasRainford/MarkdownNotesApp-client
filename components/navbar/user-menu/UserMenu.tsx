@@ -9,6 +9,7 @@ import {
   MenuList,
   useToast,
 } from "@chakra-ui/react";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { AnyVariables, UseQueryState } from "urql";
 import { MeQuery, useLogoutMutation } from "../../../generated/graphql";
@@ -57,7 +58,11 @@ const UserMenu = ({ user: me }: Props): JSX.Element => {
         </Center>
         <br />
         <MenuDivider />
-        <MenuItem>Your Profile</MenuItem>
+        <MenuItem>
+          <Link href={`/profile/${username}`}>
+            <a>Profile page</a>
+          </Link>
+        </MenuItem>
         <MenuItem>Your Collections</MenuItem>
         <MenuItem>Account Settings</MenuItem>
         <MenuItem
