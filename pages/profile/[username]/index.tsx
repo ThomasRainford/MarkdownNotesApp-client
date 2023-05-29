@@ -1,6 +1,7 @@
 import { Box } from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
 import { useRouter } from "next/router";
+import PrimaryLayout from "../../../components/layouts/PrimaryLayout";
 import NavBar from "../../../components/navbar/NavBar";
 import ProfilePageContainer from "../../../components/profile/profile-page-container/ProfilePageContainer";
 import { useMeQuery, useUserQuery } from "../../../generated/graphql";
@@ -23,13 +24,17 @@ const Profile: NextPageWithLayout = () => {
   const isMe = meResult.data?.me?.username === username;
 
   return (
-    <Box className="my-notes-page" h={"100%"}>
+    <Box className="profile-page" h={"100%"}>
       <NavBar user={meResult} />
       {!meResult.fetching && meResult.data ? (
         <ProfilePageContainer user={userResult} isMe={isMe} />
       ) : null}
     </Box>
   );
+};
+
+Profile.getLayout = (page) => {
+  return <PrimaryLayout>{page}</PrimaryLayout>;
 };
 
 export default withUrqlClient(createUrqlClient)(Profile);
