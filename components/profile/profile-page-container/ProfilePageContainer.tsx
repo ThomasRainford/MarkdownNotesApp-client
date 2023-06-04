@@ -32,13 +32,53 @@ const Loading = () => {
         justifyContent={"center"}
         alignItems="center"
         h={"100%"}
-        w={"40%"}
+        w={{ base: "100%", md: "40%" }}
       >
         <Box bg="gray.800">
           <Spinner size={"xl"} />
         </Box>
       </Box>
     </ProfilePageContainerLayout>
+  );
+};
+
+const MobileView = ({ userData, isMe }: { userData: User; isMe: boolean }) => {
+  return (
+    <Box
+      display={{ base: "flex", sm: "flex", md: "none" }}
+      flexDir={"column"}
+      h={"100%"}
+      w={"100%"}
+    >
+      <Box display={"flex"} justifyContent={"center"} h={"100%"} w={"100%"}>
+        <UserDetails user={userData as User | null} isMe={isMe} />
+      </Box>
+      <Box h={"100%"} w={"100%"}>
+        user data
+      </Box>
+    </Box>
+  );
+};
+
+const DesktopView = ({ userData, isMe }: { userData: User; isMe: boolean }) => {
+  return (
+    <Box
+      display={{ base: "none", sm: "none", md: "flex" }}
+      h={"100%"}
+      w={"100%"}
+    >
+      <Box
+        display={"flex"}
+        justifyContent={"flex-end"}
+        h={"100%"}
+        w={{ base: "100%", md: "40%" }}
+      >
+        <UserDetails user={userData as User | null} isMe={isMe} />
+      </Box>
+      <Box h={"100%"} w={{ base: "100%", md: "60%" }}>
+        user data
+      </Box>
+    </Box>
   );
 };
 
@@ -55,12 +95,8 @@ const ProfilePageContainer = ({ user, isMe }: Props): JSX.Element => {
 
   return (
     <ProfilePageContainerLayout>
-      <Box display={"flex"} justifyContent={"flex-end"} h={"100%"} w={"40%"}>
-        <UserDetails user={userData as User | null} isMe={isMe} />
-      </Box>
-      <Box h={"100%"} w={"60%"}>
-        user data
-      </Box>
+      <MobileView userData={userData as User} isMe={isMe} />
+      <DesktopView userData={userData as User} isMe={isMe} />
     </ProfilePageContainerLayout>
   );
 };

@@ -13,13 +13,13 @@ const UserDetails = ({ user, isMe }: Props): JSX.Element => {
       flexDirection={"column"}
       alignItems={"center"}
       w={"60%"}
-      h={"100%"}
-      mt={"25%"}
+      mt={{ base: "5%", sm: "5%", md: "25%" }}
     >
       <Box
         display={"flex"}
         flexDir="column"
         justifyContent={"start"}
+        alignItems={{ base: "center", sm: "center", md: "start" }}
         w={"100%"}
         mb={"1.25em"}
       >

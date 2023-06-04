@@ -21,7 +21,7 @@ import { AnyVariables, UseQueryState } from "urql";
 import { MeQuery } from "../../generated/graphql";
 import UserMenu from "./user-menu/UserMenu";
 
-const Links = ["My Notes"];
+const Links = [{ name: "My Notes", route: "/my-notes" }];
 
 const NavLink = ({ children, href }: { children: ReactNode; href: string }) => (
   <NextLink href={href}>
@@ -73,7 +73,7 @@ const NavBar = ({ user }: Props) => {
           <HStack as={"nav"} spacing={4} display={{ base: "none", md: "flex" }}>
             {Links.map((link) => (
               <Button
-                key={link}
+                key={link.name}
                 role="link"
                 variant="link"
                 onClick={() => {
@@ -86,10 +86,10 @@ const NavBar = ({ user }: Props) => {
                       duration: 2000,
                     });
                   }
-                  router.push("/my-notes");
+                  router.push(link.route);
                 }}
               >
-                {link}
+                {link.name}
               </Button>
             ))}
           </HStack>
@@ -116,8 +116,8 @@ const NavBar = ({ user }: Props) => {
         <Box pb={4} display={{ md: "none" }}>
           <Stack as={"nav"} spacing={4}>
             {Links.map((link) => (
-              <NavLink key={link} href="">
-                {link}
+              <NavLink key={link.name} href={link.route}>
+                {link.name}
               </NavLink>
             ))}
           </Stack>
