@@ -1,6 +1,7 @@
 import { Box, Spinner } from "@chakra-ui/react";
 import { UseQueryState } from "urql";
 import { Exact, User, UserQuery } from "../../../generated/graphql";
+import ProfilePageContainerLayout from "../../layouts/component-layouts/ProfilePageContainerLayout";
 import UserDetails from "./user-details/UserDetails";
 
 export interface Props {
@@ -15,31 +16,29 @@ export interface Props {
 
 const Error = () => {
   return (
-    <Box id="profile-page-container" display={"flex"} h={"calc(100% - 64px)"}>
+    <ProfilePageContainerLayout>
       <Box display={"flex"} h={"100%"} w={"100%"} m="10px">
         An error has occured aquiring this users&apos; data.
       </Box>
-    </Box>
+    </ProfilePageContainerLayout>
   );
 };
 
 const Loading = () => {
   return (
-    <Box id="profile-page-container" display={"flex"} h={"calc(100% - 64px)"}>
-      <Box display={"flex"} h={"100%"} w={"100%"}>
-        <Box
-          display={"flex"}
-          justifyContent={"center"}
-          alignItems="center"
-          h={"100%"}
-          w={"40%"}
-        >
-          <Box bg="gray.800">
-            <Spinner size={"xl"} />
-          </Box>
+    <ProfilePageContainerLayout>
+      <Box
+        display={"flex"}
+        justifyContent={"center"}
+        alignItems="center"
+        h={"100%"}
+        w={"40%"}
+      >
+        <Box bg="gray.800">
+          <Spinner size={"xl"} />
         </Box>
       </Box>
-    </Box>
+    </ProfilePageContainerLayout>
   );
 };
 
@@ -55,16 +54,14 @@ const ProfilePageContainer = ({ user, isMe }: Props): JSX.Element => {
   }
 
   return (
-    <Box id="profile-page-container" display={"flex"} h={"calc(100% - 64px)"}>
-      <Box display={"flex"} h={"100%"} w={"100%"}>
-        <Box display={"flex"} justifyContent={"flex-end"} h={"100%"} w={"40%"}>
-          <UserDetails user={userData as User | null} isMe={isMe} />
-        </Box>
-        <Box h={"100%"} w={"60%"}>
-          user data
-        </Box>
+    <ProfilePageContainerLayout>
+      <Box display={"flex"} justifyContent={"flex-end"} h={"100%"} w={"40%"}>
+        <UserDetails user={userData as User | null} isMe={isMe} />
       </Box>
-    </Box>
+      <Box h={"100%"} w={"60%"}>
+        user data
+      </Box>
+    </ProfilePageContainerLayout>
   );
 };
 
