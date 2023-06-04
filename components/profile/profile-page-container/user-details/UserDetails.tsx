@@ -7,7 +7,6 @@ export interface Props {
 }
 
 const UserDetails = ({ user, isMe }: Props): JSX.Element => {
-  console.log(user);
   return (
     <Box
       display={"flex"}
