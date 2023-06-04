@@ -1,6 +1,7 @@
-import { Avatar, Box, Button, Heading } from "@chakra-ui/react";
+import { Box, Spinner } from "@chakra-ui/react";
 import { UseQueryState } from "urql";
-import { Exact, UserQuery } from "../../../generated/graphql";
+import { Exact, User, UserQuery } from "../../../generated/graphql";
+import UserDetails from "./user-details/UserDetails";
 
 export interface Props {
   user: UseQueryState<
@@ -13,11 +14,33 @@ export interface Props {
 }
 
 const Error = () => {
-  return <Box>Error</Box>;
+  return (
+    <Box id="profile-page-container" display={"flex"} h={"calc(100% - 64px)"}>
+      <Box display={"flex"} h={"100%"} w={"100%"} m="10px">
+        An error has occured aquiring this users&apos; data.
+      </Box>
+    </Box>
+  );
 };
 
 const Loading = () => {
-  return <Box>Loading</Box>;
+  return (
+    <Box id="profile-page-container" display={"flex"} h={"calc(100% - 64px)"}>
+      <Box display={"flex"} h={"100%"} w={"100%"}>
+        <Box
+          display={"flex"}
+          justifyContent={"center"}
+          alignItems="center"
+          h={"100%"}
+          w={"40%"}
+        >
+          <Box bg="gray.800">
+            <Spinner size={"xl"} />
+          </Box>
+        </Box>
+      </Box>
+    </Box>
+  );
 };
 
 const ProfilePageContainer = ({ user, isMe }: Props): JSX.Element => {
@@ -32,42 +55,11 @@ const ProfilePageContainer = ({ user, isMe }: Props): JSX.Element => {
   }
 
   return (
-    <Box id="profile-page-container" display={"flex"} h={"100%"}>
+    <Box id="profile-page-container" display={"flex"} h={"calc(100% - 64px)"}>
       <Box display={"flex"} h={"100%"} w={"100%"}>
         <Box display={"flex"} justifyContent={"flex-end"} h={"100%"} w={"40%"}>
-          <Box
-            display={"flex"}
-            flexDirection={"column"}
-            alignItems={"center"}
-            w={"60%"}
-          >
-            <Box
-              display={"flex"}
-              flexDir="column"
-              justifyContent={"start"}
-              w={"100%"}
-            >
-              <Avatar
-                size={"2xl"}
-                src={"https://avatars.dicebear.com/api/male/username.svg"}
-              />
-              <Heading>{userData?.username}</Heading>
-            </Box>
-            <Box display={"flex"} justifyContent={"center"} w={"100%"}>
-              <Button w={"100%"}>{isMe ? "Edit Profile" : "Follow"}</Button>
-            </Box>
-            <Box display={"flex"} justifyContent={"start"} w={"100%"}>
-              <Box display={"flex"}>
-                <Box mr={"2em"}>3 Following</Box>
-                <Box>3 Followers</Box>
-              </Box>
-            </Box>
-            <Box display={"flex"} justifyContent={"start"} w={"100%"}>
-              {userData?.email}
-            </Box>
-          </Box>
+          <UserDetails user={userData as User | null} isMe={isMe} />
         </Box>
-
         <Box h={"100%"} w={"60%"}>
           user data
         </Box>
