@@ -1,12 +1,13 @@
 import { Avatar, Box, Button, Heading, Text } from "@chakra-ui/react";
 import { User } from "../../../../generated/graphql";
 
-interface Props {
+export interface Props {
   user: User | null;
   isMe: boolean;
 }
 
 const UserDetails = ({ user, isMe }: Props): JSX.Element => {
+  console.log(user);
   return (
     <Box
       display={"flex"}
