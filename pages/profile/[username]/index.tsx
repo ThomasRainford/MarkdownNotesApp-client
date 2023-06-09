@@ -1,6 +1,7 @@
 import { Box } from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
 import { useRouter } from "next/router";
+import SelectedDataProvider from "../../../components/helper/SelectedDataProvider";
 import PrimaryLayout from "../../../components/layouts/PrimaryLayout";
 import NavBar from "../../../components/navbar/NavBar";
 import ProfilePageContainer from "../../../components/profile/profile-page-container/ProfilePageContainer";
@@ -25,10 +26,12 @@ const Profile: NextPageWithLayout = () => {
 
   return (
     <Box className="profile-page" h={"100%"}>
-      <NavBar user={meResult} />
-      {!meResult.fetching && meResult.data ? (
-        <ProfilePageContainer user={userResult} isMe={isMe} />
-      ) : null}
+      <SelectedDataProvider>
+        <NavBar user={meResult} />
+        {!meResult.fetching && meResult.data ? (
+          <ProfilePageContainer user={userResult} isMe={isMe} />
+        ) : null}
+      </SelectedDataProvider>
     </Box>
   );
 };

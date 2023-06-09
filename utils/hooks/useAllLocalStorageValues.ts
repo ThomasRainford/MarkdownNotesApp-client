@@ -4,7 +4,6 @@ import { SelectedNoteContext } from "../../contexts/SelectedNoteContext";
 import { getLocalStorageValue } from "../getLocalStorageValue";
 import {
   LocalStorageContextType,
-  LocalStorageKeys,
   SelectedCollection,
   SelectedNote,
   SelectedNotesList,
@@ -13,17 +12,12 @@ import { useLocalStorageValue } from "./useLocalStorageValue";
 
 export const useAllLocalStorageValues = () => {
   const [selectedCollectionString, setSelectedCollectionString] =
-    useLocalStorageValue(
-      SelectedCollectionContext,
-      LocalStorageKeys.SELECTED_COLLECTION
-    ) as LocalStorageContextType;
+    useLocalStorageValue(SelectedCollectionContext) as LocalStorageContextType;
   const [selectedListString, setSelectedListString] = useLocalStorageValue(
-    SelectedListContext,
-    LocalStorageKeys.SELECTED_LIST
+    SelectedListContext
   ) as LocalStorageContextType;
   const [selectedNoteString, setSelectedNoteString] = useLocalStorageValue(
-    SelectedNoteContext,
-    LocalStorageKeys.SELECTED_NOTE
+    SelectedNoteContext
   ) as LocalStorageContextType;
   const selectedCollection = getLocalStorageValue(
     selectedCollectionString

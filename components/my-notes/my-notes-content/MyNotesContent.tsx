@@ -15,10 +15,7 @@ import { Allotment } from "allotment";
 import { useRef } from "react";
 import { MyNotesSmallDesktopViewPaneVisibleContext } from "../../../contexts/MyNotesSmallDesktopViewPaneVisibleContext";
 import { useLocalStorageValue } from "../../../utils/hooks/useLocalStorageValue";
-import {
-  LocalStorageContextType,
-  LocalStorageKeys,
-} from "../../../utils/types/types";
+import { LocalStorageContextType } from "../../../utils/types/types";
 import LeftPaneContent from "./left-pane-content/LeftPaneContent";
 import NoteContent from "./note-content/NoteContent";
 import RightPaneContent from "./right-pane-content/RightPaneContent";
@@ -67,8 +64,7 @@ const DesktopView = () => {
 
 const SmallDesktopView = () => {
   const [paneVisible, setPaneVisible] = useLocalStorageValue(
-    MyNotesSmallDesktopViewPaneVisibleContext,
-    LocalStorageKeys.MY_NOTES_VISIBLE_PANE
+    MyNotesSmallDesktopViewPaneVisibleContext
   ) as LocalStorageContextType;
   const { colorMode } = useColorMode();
 

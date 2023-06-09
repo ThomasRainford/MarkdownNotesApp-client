@@ -12,10 +12,7 @@ import { Collection, useCollectionsQuery } from "../../../../generated/graphql";
 import { getSelectedCollection } from "../../../../utils/getSelectedValue";
 import { useAllLocalStorageValues } from "../../../../utils/hooks/useAllLocalStorageValues";
 import { useLocalStorageValue } from "../../../../utils/hooks/useLocalStorageValue";
-import {
-  LocalStorageContextType,
-  LocalStorageKeys,
-} from "../../../../utils/types/types";
+import { LocalStorageContextType } from "../../../../utils/types/types";
 import Collections from "../collections/Collections";
 import Lists from "../lists/Lists";
 
@@ -50,8 +47,7 @@ const LeftPaneContent = (): JSX.Element => {
   const [content, setContent] = useState<ReactNode | null>(null);
   const { colorMode } = useColorMode();
   const [, setPaneVisible] = useLocalStorageValue(
-    MyNotesSmallDesktopViewPaneVisibleContext,
-    LocalStorageKeys.MY_NOTES_VISIBLE_PANE
+    MyNotesSmallDesktopViewPaneVisibleContext
   ) as LocalStorageContextType;
 
   useEffect(() => {

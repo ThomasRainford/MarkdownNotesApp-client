@@ -18,14 +18,14 @@ const MyNotes: NextPageWithLayout = () => {
 
   return (
     <Box className="my-notes-page" h={"100%"}>
-      <NavBar user={meResult} />
-      {!meResult.fetching && meResult.data ? (
-        <SelectedDataProvider>
+      <SelectedDataProvider>
+        <NavBar user={meResult} />
+        {!meResult.fetching && meResult.data ? (
           <MyNotesSmallDesktopViewPaneVisibleProvider>
             <MyNotesContent />
           </MyNotesSmallDesktopViewPaneVisibleProvider>
-        </SelectedDataProvider>
-      ) : null}
+        ) : null}
+      </SelectedDataProvider>
     </Box>
   );
 };
