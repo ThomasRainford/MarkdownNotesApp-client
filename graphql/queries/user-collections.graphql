@@ -1,0 +1,14 @@
+query userCollections($id: String!) {
+  userCollections(id: $id) {
+    id
+    title
+    owner {
+      id
+      username
+    }
+    lists {
+      id
+      title
+    }
+  }
+}

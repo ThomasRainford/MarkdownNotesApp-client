@@ -1,7 +1,14 @@
 import { Box, Spinner } from "@chakra-ui/react";
 import { UseQueryState } from "urql";
-import { Exact, User, UserQuery } from "../../../generated/graphql";
+import {
+  Collection,
+  Exact,
+  User,
+  UserQuery,
+  useUserCollectionsQuery,
+} from "../../../generated/graphql";
 import ProfilePageContainerLayout from "../../layouts/component-layouts/ProfilePageContainerLayout";
+import UserData from "./user-data/UserData";
 import UserDetails from "./user-details/UserDetails";
 
 export interface Props {
@@ -42,7 +49,15 @@ const Loading = () => {
   );
 };
 
-const MobileView = ({ userData, isMe }: { userData: User; isMe: boolean }) => {
+const MobileView = ({
+  userData,
+  userCollectionsData,
+  isMe,
+}: {
+  userData: User;
+  userCollectionsData: Collection[];
+  isMe: boolean;
+}) => {
   return (
     <Box
       display={{ base: "flex", sm: "flex", md: "none" }}
@@ -54,13 +69,24 @@ const MobileView = ({ userData, isMe }: { userData: User; isMe: boolean }) => {
         <UserDetails user={userData as User | null} isMe={isMe} />
       </Box>
       <Box h={"100%"} w={"100%"}>
-        user data
+        <UserData
+          userData={userData}
+          userCollectionsData={userCollectionsData}
+        />
       </Box>
     </Box>
   );
 };
 
-const DesktopView = ({ userData, isMe }: { userData: User; isMe: boolean }) => {
+const DesktopView = ({
+  userData,
+  userCollectionsData,
+  isMe,
+}: {
+  userData: User;
+  userCollectionsData: Collection[];
+  isMe: boolean;
+}) => {
   return (
     <Box
       display={{ base: "none", sm: "none", md: "flex" }}
@@ -72,31 +98,50 @@ const DesktopView = ({ userData, isMe }: { userData: User; isMe: boolean }) => {
         justifyContent={"flex-end"}
         h={"100%"}
         w={{ base: "100%", md: "40%" }}
+        mr={"0.5em"}
       >
         <UserDetails user={userData as User | null} isMe={isMe} />
       </Box>
       <Box h={"100%"} w={{ base: "100%", md: "60%" }}>
-        user data
+        <UserData
+          userData={userData}
+          userCollectionsData={userCollectionsData}
+        />
       </Box>
     </Box>
   );
 };
 
 const ProfilePageContainer = ({ user, isMe }: Props): JSX.Element => {
-  const error = user.error;
-  const loading = user.fetching;
+  const userError = user.error;
+  const userLoading = user.fetching;
   const userData = user.data?.user;
 
-  if (error) {
+  const [userCollectionsResult] = useUserCollectionsQuery({
+    variables: { id: userData?._id || "" },
+  });
+  const userCollectionsError = userCollectionsResult.error;
+  const userCollectionsLoading = userCollectionsResult.fetching;
+  const userCollectionsData = userCollectionsResult.data?.userCollections;
+
+  if (userError || userCollectionsError) {
     return <Error />;
-  } else if (loading) {
+  } else if (userLoading || userCollectionsLoading) {
     return <Loading />;
   }
 
   return (
     <ProfilePageContainerLayout>
-      <MobileView userData={userData as User} isMe={isMe} />
-      <DesktopView userData={userData as User} isMe={isMe} />
+      <MobileView
+        userData={userData as User}
+        userCollectionsData={userCollectionsData as Collection[]}
+        isMe={isMe}
+      />
+      <DesktopView
+        userData={userData as User}
+        userCollectionsData={userCollectionsData as Collection[]}
+        isMe={isMe}
+      />
     </ProfilePageContainerLayout>
   );
 };

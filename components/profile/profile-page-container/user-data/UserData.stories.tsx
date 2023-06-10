@@ -1,22 +1,22 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
-import UserDetails from "./UserDetails";
-import { mockBaseTemplateProps } from "./UserDetails.mocks";
+import UserData, { Props } from "./UserData";
+import { mockUserDataProps } from "./UserData.mocks";
 
 export default {
-  title: "profile/profile-page-container/user-details",
-  component: UserDetails,
+  title: "profile/profile-page-container/user-data",
+  component: UserData,
   // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
   argTypes: {},
-} as ComponentMeta<typeof UserDetails>;
+} as ComponentMeta<typeof UserData>;
 
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
-const Template: ComponentStory<typeof UserDetails> = (args) => (
-  <UserDetails {...args} />
+const Template: ComponentStory<typeof UserData> = (args) => (
+  <UserData {...args} />
 );
 
 export const Base = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 
 Base.args = {
-  ...mockBaseTemplateProps.base,
-};
+  ...mockUserDataProps.base,
+} as Props;
