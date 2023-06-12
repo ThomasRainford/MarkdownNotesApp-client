@@ -5,6 +5,7 @@ import { fromValue } from "wonka";
 import { sourceT } from "wonka/dist/types/src/Wonka_types.gen";
 import { MeQuery, MeQueryVariables } from "../../../generated/graphql";
 import { createMockUrqlClient } from "../../../test-utils/createMockUrqlClient";
+import SelectedDataProvider from "../../helper/SelectedDataProvider";
 import Navbar from "../NavBar";
 
 describe("NavBar component", () => {
@@ -86,7 +87,9 @@ describe("NavBar component", () => {
     });
     const navbar = render(
       <Provider value={mockClient as unknown as Client}>
-        <Navbar user={mockMeResponse} />
+        <SelectedDataProvider>
+          <Navbar user={mockMeResponse} />
+        </SelectedDataProvider>
       </Provider>
     );
 

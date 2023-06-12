@@ -7,6 +7,7 @@ import {
   LogoutMutationVariables,
 } from "../../../../generated/graphql";
 import { createMockUrqlClient } from "../../../../test-utils/createMockUrqlClient";
+import SelectedDataProvider from "../../../helper/SelectedDataProvider";
 import UserMenu from "../UserMenu";
 
 describe("UserMenu component", () => {
@@ -40,7 +41,9 @@ describe("UserMenu component", () => {
     });
     render(
       <Provider value={mockClient as unknown as Client}>
-        <UserMenu user={me} />
+        <SelectedDataProvider>
+          <UserMenu user={me} />
+        </SelectedDataProvider>
       </Provider>
     );
 

@@ -412,6 +412,16 @@ export type CollectionsQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type CollectionsQuery = { __typename?: 'Query', collections: Array<{ __typename?: 'Collection', id: string, title: string, visibility: string, upvotes: number, createdAt: any, updatedAt: any, owner: { __typename?: 'User', id: string, username: string }, lists: Array<{ __typename?: 'NotesList', id: string, title: string, collection: { __typename?: 'Collection', id: string }, notes: Array<{ __typename?: 'Note', id: string, title: string, body: string, createdAt: any, updatedAt: any }> }> }> };
 
+export type FollowersQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type FollowersQuery = { __typename?: 'Query', followers: Array<{ __typename?: 'User', id: string, username: string, email: string, collections: Array<{ __typename?: 'Collection', id: string }> }> };
+
+export type FollowingQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type FollowingQuery = { __typename?: 'Query', following: Array<{ __typename?: 'User', id: string, username: string, email: string, collections: Array<{ __typename?: 'Collection', id: string }> }> };
+
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -436,7 +446,7 @@ export type UserCollectionsQueryVariables = Exact<{
 }>;
 
 
-export type UserCollectionsQuery = { __typename?: 'Query', userCollections: Array<{ __typename?: 'Collection', id: string, title: string, owner: { __typename?: 'User', id: string, username: string }, lists: Array<{ __typename?: 'NotesList', id: string, title: string }> }> };
+export type UserCollectionsQuery = { __typename?: 'Query', userCollections: Array<{ __typename?: 'Collection', id: string, title: string, visibility: string, upvotes: number, owner: { __typename?: 'User', id: string, username: string }, lists: Array<{ __typename?: 'NotesList', id: string, title: string }> }> };
 
 export type UserQueryVariables = Exact<{
   username: Scalars['String'];
@@ -694,6 +704,38 @@ export const CollectionsDocument = gql`
 export function useCollectionsQuery(options?: Omit<Urql.UseQueryArgs<CollectionsQueryVariables>, 'query'>) {
   return Urql.useQuery<CollectionsQuery, CollectionsQueryVariables>({ query: CollectionsDocument, ...options });
 };
+export const FollowersDocument = gql`
+    query Followers {
+  followers {
+    id
+    username
+    email
+    collections {
+      id
+    }
+  }
+}
+    `;
+
+export function useFollowersQuery(options?: Omit<Urql.UseQueryArgs<FollowersQueryVariables>, 'query'>) {
+  return Urql.useQuery<FollowersQuery, FollowersQueryVariables>({ query: FollowersDocument, ...options });
+};
+export const FollowingDocument = gql`
+    query Following {
+  following {
+    id
+    username
+    email
+    collections {
+      id
+    }
+  }
+}
+    `;
+
+export function useFollowingQuery(options?: Omit<Urql.UseQueryArgs<FollowingQueryVariables>, 'query'>) {
+  return Urql.useQuery<FollowingQuery, FollowingQueryVariables>({ query: FollowingDocument, ...options });
+};
 export const MeDocument = gql`
     query Me {
   me {
@@ -763,6 +805,8 @@ export const UserCollectionsDocument = gql`
   userCollections(id: $id) {
     id
     title
+    visibility
+    upvotes
     owner {
       id
       username

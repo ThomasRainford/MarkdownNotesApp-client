@@ -10,6 +10,7 @@ import {
   useBreakpointValue,
 } from "@chakra-ui/react";
 import { Collection, User } from "../../../../generated/graphql";
+import Collections from "./collections/Collections";
 
 export interface Props {
   userData: User;
@@ -58,16 +59,16 @@ const UserData = ({ userData, userCollectionsData }: Props): JSX.Element => {
           />
           <TabPanels>
             <TabPanel>
-              <p>Collections {JSON.stringify(userCollectionsData)}</p>
+              <Collections userCollectionsData={userCollectionsData} />
             </TabPanel>
             <TabPanel>
-              <p>Following {JSON.stringify(userData)}</p>
+              <p>Following {JSON.stringify(userData.following)}</p>
             </TabPanel>
             <TabPanel>
-              <p>Followers</p>
+              <p>Followers {JSON.stringify(userData.following)}</p>
             </TabPanel>
             <TabPanel>
-              <p>Votes</p>
+              <p>Votes {JSON.stringify(userData.upvoted)}</p>
             </TabPanel>
           </TabPanels>
         </Tabs>

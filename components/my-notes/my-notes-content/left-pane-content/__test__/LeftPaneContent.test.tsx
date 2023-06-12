@@ -1,6 +1,7 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { act } from "react-dom/test-utils";
 import { Client, Provider } from "urql";
+import { MyNotesSmallDesktopViewPaneVisibleProvider } from "../../../../../contexts/MyNotesSmallDesktopViewPaneVisibleContext";
 import { mockClient } from "../../../../../test-utils/mocks/gql-mocks";
 import {
   testNotesLists,
@@ -22,7 +23,9 @@ describe("LeftPaneContent component", () => {
     render(
       <Provider value={mockClient() as unknown as Client}>
         <SelectedDataProvider>
-          <LeftPaneContent />
+          <MyNotesSmallDesktopViewPaneVisibleProvider>
+            <LeftPaneContent />
+          </MyNotesSmallDesktopViewPaneVisibleProvider>
         </SelectedDataProvider>
       </Provider>
     );
@@ -43,7 +46,9 @@ describe("LeftPaneContent component", () => {
     render(
       <Provider value={mockClient() as unknown as Client}>
         <SelectedDataProvider>
-          <LeftPaneContent />
+          <MyNotesSmallDesktopViewPaneVisibleProvider>
+            <LeftPaneContent />
+          </MyNotesSmallDesktopViewPaneVisibleProvider>
         </SelectedDataProvider>
       </Provider>
     );
@@ -62,7 +67,9 @@ describe("LeftPaneContent component", () => {
     render(
       <Provider value={mockClient() as unknown as Client}>
         <SelectedDataProvider>
-          <LeftPaneContent />
+          <MyNotesSmallDesktopViewPaneVisibleProvider>
+            <LeftPaneContent />
+          </MyNotesSmallDesktopViewPaneVisibleProvider>
         </SelectedDataProvider>
       </Provider>
     );
@@ -104,7 +111,9 @@ describe("LeftPaneContent component", () => {
     render(
       <Provider value={mockClient() as unknown as Client}>
         <SelectedDataProvider>
-          <LeftPaneContent />
+          <MyNotesSmallDesktopViewPaneVisibleProvider>
+            <LeftPaneContent />
+          </MyNotesSmallDesktopViewPaneVisibleProvider>
         </SelectedDataProvider>
       </Provider>
     );

@@ -2,6 +2,8 @@ query userCollections($id: String!) {
   userCollections(id: $id) {
     id
     title
+    visibility
+    upvotes
     owner {
       id
       username

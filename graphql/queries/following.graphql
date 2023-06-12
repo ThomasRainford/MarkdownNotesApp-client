@@ -1,0 +1,10 @@
+query Following {
+  following {
+    id
+    username
+    email
+    collections {
+      id
+    }
+  }
+}

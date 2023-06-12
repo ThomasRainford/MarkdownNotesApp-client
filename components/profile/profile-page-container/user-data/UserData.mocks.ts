@@ -1,20 +1,10 @@
+import { Collection, User } from "../../../../generated/graphql";
+import { testUsers, _testCollections } from "../../../../test-utils/testData";
 import { Props } from "./UserData";
 
 const base: Props = {
-  userData: {
-    __typename: undefined,
-    _id: "",
-    collections: [],
-    createdAt: undefined,
-    email: "",
-    followers: [],
-    following: [],
-    id: "",
-    updatedAt: undefined,
-    upvoted: [],
-    username: "",
-  },
-  userCollectionsData: [],
+  userData: testUsers[0] as User,
+  userCollectionsData: _testCollections as Collection[],
 };
 
 export const mockUserDataProps = {

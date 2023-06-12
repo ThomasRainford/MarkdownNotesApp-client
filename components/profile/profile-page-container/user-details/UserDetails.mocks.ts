@@ -1,16 +1,9 @@
 import { User } from "../../../../generated/graphql";
+import { testUsers } from "../../../../test-utils/testData";
 import { Props } from "../user-details/UserDetails";
 
 const base: Props = {
-  user: {
-    _id: "62c112b482c8f5360ce6dfcb",
-    email: "user1@email.com",
-    username: "User01",
-    following: [],
-    followers: [],
-    upvoted: [],
-    __typename: "User",
-  } as unknown as User,
+  user: testUsers[0] as User,
   isMe: true,
 };
 

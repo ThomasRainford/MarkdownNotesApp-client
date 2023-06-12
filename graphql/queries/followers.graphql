@@ -1,0 +1,10 @@
+query Followers {
+  followers {
+    id
+    username
+    email
+    collections {
+      id
+    }
+  }
+}
