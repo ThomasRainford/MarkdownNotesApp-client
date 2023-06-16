@@ -1,12 +1,30 @@
 import { HamburgerIcon, TriangleUpIcon } from "@chakra-ui/icons";
-import { Box, Flex, Heading, SimpleGrid, Tag } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  Heading,
+  SimpleGrid,
+  Tag,
+  Tooltip,
+} from "@chakra-ui/react";
+import { useRouter } from "next/router";
 import { Collection } from "../../../../../generated/graphql";
+import { useAllLocalStorageValues } from "../../../../../utils/hooks/useAllLocalStorageValues";
 
 export interface Props {
   userCollectionsData: Collection[];
+  isMe: boolean;
 }
 
-const Collections = ({ userCollectionsData }: Props): JSX.Element => {
+const Collections = ({ userCollectionsData, isMe }: Props): JSX.Element => {
+  const router = useRouter();
+  const {
+    selectedCollection: { setSelectedCollection },
+    selectedNotesList: { setSelectedList },
+    selectedNote: { setSelectedNote },
+  } = useAllLocalStorageValues();
+
   return (
     <Box w="100%">
       <SimpleGrid columns={{ base: 1, md: 2, lg: 2 }} w="100%">
@@ -21,8 +39,19 @@ const Collections = ({ userCollectionsData }: Props): JSX.Element => {
               p="0.75em"
               mr="0.5em"
               mb="0.85em"
-              _hover={{
-                borderColor: "gray.500",
+              _hover={
+                isMe
+                  ? {
+                      borderColor: "gray.500",
+                    }
+                  : {}
+              }
+              onClick={() => {
+                if (!isMe) return;
+                setSelectedCollection(JSON.stringify({ id: collection.id }));
+                setSelectedList("");
+                setSelectedNote("");
+                router.push("/my-notes");
               }}
             >
               <Flex flexWrap={"wrap"} w="100%">
@@ -52,6 +81,15 @@ const Collections = ({ userCollectionsData }: Props): JSX.Element => {
                       </Heading>
                     </Box>
                   </Flex>
+                  {!isMe && collection.visibility === "public" && (
+                    <Flex>
+                      <Tooltip label="Save this collection to your collections">
+                        <Button colorScheme={"blue"} size={"xs"}>
+                          Save
+                        </Button>
+                      </Tooltip>
+                    </Flex>
+                  )}
                   <Flex mr="0.5em">
                     <Box mr="0.25em">
                       <TriangleUpIcon

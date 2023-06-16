@@ -18,6 +18,7 @@ export interface Props {
   userCollectionsData: Collection[];
   followingData: User[];
   followersData: User[];
+  isMe: boolean;
 }
 
 const UserData = ({
@@ -25,6 +26,7 @@ const UserData = ({
   userCollectionsData,
   followingData,
   followersData,
+  isMe,
 }: Props): JSX.Element => {
   const tabsIsFitted = useBreakpointValue({
     base: true,
@@ -67,7 +69,10 @@ const UserData = ({
           />
           <TabPanels>
             <TabPanel>
-              <Collections userCollectionsData={userCollectionsData} />
+              <Collections
+                userCollectionsData={userCollectionsData}
+                isMe={isMe}
+              />
             </TabPanel>
             <TabPanel>
               <UserList type="following" users={followingData} />

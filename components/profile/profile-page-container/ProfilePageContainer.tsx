@@ -80,6 +80,7 @@ const MobileView = ({
           userCollectionsData={userCollectionsData}
           followingData={followingData}
           followersData={followersData}
+          isMe={isMe}
         />
       </Box>
     </Box>
@@ -120,6 +121,7 @@ const DesktopView = ({
           userCollectionsData={userCollectionsData}
           followingData={followingData}
           followersData={followersData}
+          isMe={isMe}
         />
       </Box>
     </Box>
