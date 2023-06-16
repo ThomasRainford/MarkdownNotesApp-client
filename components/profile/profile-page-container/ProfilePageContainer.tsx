@@ -3,6 +3,8 @@ import { UseQueryState } from "urql";
 import {
   Collection,
   Exact,
+  useFollowersQuery,
+  useFollowingQuery,
   User,
   UserQuery,
   useUserCollectionsQuery,
@@ -52,10 +54,14 @@ const Loading = () => {
 const MobileView = ({
   userData,
   userCollectionsData,
+  followingData,
+  followersData,
   isMe,
 }: {
   userData: User;
   userCollectionsData: Collection[];
+  followingData: User[];
+  followersData: User[];
   isMe: boolean;
 }) => {
   return (
@@ -72,6 +78,8 @@ const MobileView = ({
         <UserData
           userData={userData}
           userCollectionsData={userCollectionsData}
+          followingData={followingData}
+          followersData={followersData}
         />
       </Box>
     </Box>
@@ -81,10 +89,14 @@ const MobileView = ({
 const DesktopView = ({
   userData,
   userCollectionsData,
+  followingData,
+  followersData,
   isMe,
 }: {
   userData: User;
   userCollectionsData: Collection[];
+  followingData: User[];
+  followersData: User[];
   isMe: boolean;
 }) => {
   return (
@@ -106,6 +118,8 @@ const DesktopView = ({
         <UserData
           userData={userData}
           userCollectionsData={userCollectionsData}
+          followingData={followingData}
+          followersData={followersData}
         />
       </Box>
     </Box>
@@ -116,17 +130,32 @@ const ProfilePageContainer = ({ user, isMe }: Props): JSX.Element => {
   const userError = user.error;
   const userLoading = user.fetching;
   const userData = user.data?.user;
-
+  // Fetch user collections.
   const [userCollectionsResult] = useUserCollectionsQuery({
     variables: { id: userData?._id || "" },
   });
   const userCollectionsError = userCollectionsResult.error;
   const userCollectionsLoading = userCollectionsResult.fetching;
   const userCollectionsData = userCollectionsResult.data?.userCollections;
+  // Fetch users' following.
+  const [followingResult] = useFollowingQuery();
+  const followingError = followingResult.error;
+  const followingLoading = followingResult.fetching;
+  const followingData = followingResult.data?.following;
+  // Fetch users' followers.
+  const [followersResult] = useFollowersQuery();
+  const followersError = followersResult.error;
+  const followersLoading = followersResult.fetching;
+  const followersData = followersResult.data?.followers;
 
-  if (userError || userCollectionsError) {
+  if (userError || userCollectionsError || followingError || followersError) {
     return <Error />;
-  } else if (userLoading || userCollectionsLoading) {
+  } else if (
+    userLoading ||
+    userCollectionsLoading ||
+    followingLoading ||
+    followersLoading
+  ) {
     return <Loading />;
   }
 
@@ -135,11 +164,15 @@ const ProfilePageContainer = ({ user, isMe }: Props): JSX.Element => {
       <MobileView
         userData={userData as User}
         userCollectionsData={userCollectionsData as Collection[]}
+        followingData={followingData as User[]}
+        followersData={followersData as User[]}
         isMe={isMe}
       />
       <DesktopView
         userData={userData as User}
         userCollectionsData={userCollectionsData as Collection[]}
+        followingData={followingData as User[]}
+        followersData={followersData as User[]}
         isMe={isMe}
       />
     </ProfilePageContainerLayout>

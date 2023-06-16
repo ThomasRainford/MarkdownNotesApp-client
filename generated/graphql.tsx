@@ -415,12 +415,12 @@ export type CollectionsQuery = { __typename?: 'Query', collections: Array<{ __ty
 export type FollowersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type FollowersQuery = { __typename?: 'Query', followers: Array<{ __typename?: 'User', id: string, username: string, email: string, collections: Array<{ __typename?: 'Collection', id: string }> }> };
+export type FollowersQuery = { __typename?: 'Query', followers: Array<{ __typename?: 'User', id: string, username: string, email: string, following: Array<string>, followers: Array<string>, collections: Array<{ __typename?: 'Collection', id: string }> }> };
 
 export type FollowingQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type FollowingQuery = { __typename?: 'Query', following: Array<{ __typename?: 'User', id: string, username: string, email: string, collections: Array<{ __typename?: 'Collection', id: string }> }> };
+export type FollowingQuery = { __typename?: 'Query', following: Array<{ __typename?: 'User', id: string, username: string, email: string, following: Array<string>, followers: Array<string>, collections: Array<{ __typename?: 'Collection', id: string }> }> };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -710,6 +710,8 @@ export const FollowersDocument = gql`
     id
     username
     email
+    following
+    followers
     collections {
       id
     }
@@ -726,6 +728,8 @@ export const FollowingDocument = gql`
     id
     username
     email
+    following
+    followers
     collections {
       id
     }

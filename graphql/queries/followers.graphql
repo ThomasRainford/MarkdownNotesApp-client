@@ -3,6 +3,8 @@ query Followers {
     id
     username
     email
+    following
+    followers
     collections {
       id
     }

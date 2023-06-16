@@ -1,3 +1,5 @@
+import { User } from "../generated/graphql";
+
 export const testNotesLists = {
   collection1: [
     {
@@ -308,7 +310,7 @@ export const testUsers = [
     following: [] as string[],
     upvoted: [] as string[],
   },
-];
+] as unknown as User[];
 
 export const testUser = {
   _id: "kdslfj34r89sdkflj02983kj",
