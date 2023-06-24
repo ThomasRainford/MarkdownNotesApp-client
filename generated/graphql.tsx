@@ -383,6 +383,14 @@ export type RegisterMutationVariables = Exact<{
 
 export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserResponse', user?: { __typename?: 'User', id: string, username: string, email: string } | null, errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null } };
 
+export type SavePublicCollectionMutationVariables = Exact<{
+  targetUserId: Scalars['String'];
+  collectionId: Scalars['String'];
+}>;
+
+
+export type SavePublicCollectionMutation = { __typename?: 'Mutation', savePublicCollection: { __typename?: 'CollectionResponse', collection?: { __typename?: 'Collection', id: string, title: string } | null, error?: { __typename?: 'Error', property: string, message: string } | null } };
+
 export type UpdateCollectionMutationVariables = Exact<{
   id: Scalars['String'];
   collectionInput: CollectionUpdateInput;
@@ -588,6 +596,24 @@ export const RegisterDocument = gql`
 
 export function useRegisterMutation() {
   return Urql.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument);
+};
+export const SavePublicCollectionDocument = gql`
+    mutation SavePublicCollection($targetUserId: String!, $collectionId: String!) {
+  savePublicCollection(targetUserId: $targetUserId, collectionId: $collectionId) {
+    collection {
+      id
+      title
+    }
+    error {
+      property
+      message
+    }
+  }
+}
+    `;
+
+export function useSavePublicCollectionMutation() {
+  return Urql.useMutation<SavePublicCollectionMutation, SavePublicCollectionMutationVariables>(SavePublicCollectionDocument);
 };
 export const UpdateCollectionDocument = gql`
     mutation UpdateCollection($id: String!, $collectionInput: CollectionUpdateInput!) {

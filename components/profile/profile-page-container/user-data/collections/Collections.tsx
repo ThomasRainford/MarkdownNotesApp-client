@@ -7,9 +7,13 @@ import {
   SimpleGrid,
   Tag,
   Tooltip,
+  useToast,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { Collection } from "../../../../../generated/graphql";
+import {
+  Collection,
+  useSavePublicCollectionMutation,
+} from "../../../../../generated/graphql";
 import { useAllLocalStorageValues } from "../../../../../utils/hooks/useAllLocalStorageValues";
 
 export interface Props {
@@ -18,12 +22,14 @@ export interface Props {
 }
 
 const Collections = ({ userCollectionsData, isMe }: Props): JSX.Element => {
+  const [result, savePublicCollection] = useSavePublicCollectionMutation();
   const router = useRouter();
   const {
     selectedCollection: { setSelectedCollection },
     selectedNotesList: { setSelectedList },
     selectedNote: { setSelectedNote },
   } = useAllLocalStorageValues();
+  const toast = useToast();
 
   return (
     <Box w="100%">
@@ -84,7 +90,34 @@ const Collections = ({ userCollectionsData, isMe }: Props): JSX.Element => {
                   {!isMe && collection.visibility === "public" && (
                     <Flex>
                       <Tooltip label="Save this collection to your collections">
-                        <Button colorScheme={"blue"} size={"xs"}>
+                        <Button
+                          colorScheme={"blue"}
+                          size={"xs"}
+                          isLoading={result.fetching}
+                          onClick={async () => {
+                            const test = await savePublicCollection({
+                              targetUserId: collection.owner.id,
+                              collectionId: collection.id,
+                            });
+                            if (test.data?.savePublicCollection.collection) {
+                              toast({
+                                id: "save-public-collection-success",
+                                title: `Successfuly saved ${collection.title}`,
+                                status: "success",
+                                position: "top",
+                                duration: 2000,
+                              });
+                            } else {
+                              toast({
+                                id: "save-public-collection-error",
+                                title: `Failed to save ${collection.title}`,
+                                status: "error",
+                                position: "top",
+                                duration: 2000,
+                              });
+                            }
+                          }}
+                        >
                           Save
                         </Button>
                       </Tooltip>

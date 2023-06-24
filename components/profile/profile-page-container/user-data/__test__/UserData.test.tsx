@@ -5,6 +5,7 @@ import {
   testUsers,
   _testCollections,
 } from "../../../../../test-utils/testData";
+import SelectedDataProvider from "../../../../helper/SelectedDataProvider";
 import UserData from "../UserData";
 
 describe("UserData component", () => {
@@ -13,7 +14,15 @@ describe("UserData component", () => {
     const userCollections = _testCollections as Collection[];
     render(
       <ChakraProvider>
-        <UserData userData={user} userCollectionsData={userCollections} />
+        <SelectedDataProvider>
+          <UserData
+            userData={user}
+            userCollectionsData={userCollections}
+            followingData={[]}
+            followersData={[]}
+            isMe={true}
+          />
+        </SelectedDataProvider>
       </ChakraProvider>
     );
   });
