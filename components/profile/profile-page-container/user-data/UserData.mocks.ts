@@ -5,6 +5,9 @@ import { Props } from "./UserData";
 const base: Props = {
   userData: testUsers[0] as User,
   userCollectionsData: _testCollections as Collection[],
+  followingData: [],
+  followersData: [],
+  isMe: true,
 };
 
 export const mockUserDataProps = {
