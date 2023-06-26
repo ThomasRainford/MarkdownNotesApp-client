@@ -415,6 +415,14 @@ export type UpdateNotesListMutationVariables = Exact<{
 
 export type UpdateNotesListMutation = { __typename?: 'Mutation', updateNotesList: { __typename?: 'NotesListResponse', notesList?: { __typename?: 'NotesList', id: string, title: string, createdAt: any, updatedAt: any, collection: { __typename?: 'Collection', id: string }, notes: Array<{ __typename?: 'Note', id: string, title: string, body: string, createdAt: any, updatedAt: any }> } | null, error?: { __typename?: 'Error', property: string, message: string } | null } };
 
+export type UpdateUserMutationVariables = Exact<{
+  username?: InputMaybe<Scalars['String']>;
+  password?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type UpdateUserMutation = { __typename?: 'Mutation', updateUser: { __typename?: 'UserResponse', user?: { __typename?: 'User', id: string, email: string, username: string } | null, errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null } };
+
 export type CollectionsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -695,6 +703,25 @@ export const UpdateNotesListDocument = gql`
 
 export function useUpdateNotesListMutation() {
   return Urql.useMutation<UpdateNotesListMutation, UpdateNotesListMutationVariables>(UpdateNotesListDocument);
+};
+export const UpdateUserDocument = gql`
+    mutation UpdateUser($username: String, $password: String) {
+  updateUser(username: $username, password: $password) {
+    user {
+      id
+      email
+      username
+    }
+    errors {
+      field
+      message
+    }
+  }
+}
+    `;
+
+export function useUpdateUserMutation() {
+  return Urql.useMutation<UpdateUserMutation, UpdateUserMutationVariables>(UpdateUserDocument);
 };
 export const CollectionsDocument = gql`
     query collections {

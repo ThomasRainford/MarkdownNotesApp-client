@@ -85,7 +85,6 @@ export const createUrqlClient = (ssrExchange: SSRExchange) => {
               invalidateMe(cache);
               invalidateUserCollections(cache);
               invalidateFollowing(cache);
-              invalidateFollowing(cache);
               invalidateFollowers(cache);
               invalidateCollections(cache);
               invalidateNotesLists(cache);
@@ -119,6 +118,9 @@ export const createUrqlClient = (ssrExchange: SSRExchange) => {
             savePublicCollection: (_result, _args, cache, _info) => {
               invalidateCollections(cache);
               invalidateNotesLists(cache);
+            },
+            updateUser: (_result, _args, cache, _info) => {
+              invalidateUser(cache);
             },
           },
         },
