@@ -23,10 +23,12 @@ const EditProfile = ({
 }) => {
   const [result, updateUser] = useUpdateUserMutation();
   const [value, setValue] = useState(user.username);
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) =>
-    setValue(event.target.value);
   const toast = useToast();
   const router = useRouter();
+
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setValue(event.target.value);
+  };
 
   return (
     <Box
@@ -103,12 +105,15 @@ const EditProfile = ({
 };
 
 export interface Props {
+  me: User | null;
   user: User | null;
-  isMe: boolean;
 }
 
-const UserDetails = ({ user, isMe }: Props): JSX.Element => {
+const UserDetails = ({ me, user }: Props): JSX.Element => {
   const [isEditing, setIsEditing] = useState(false);
+
+  const isMe = me?._id === user?._id;
+  const isMeFollowing = me?.following.includes(user?._id || "");
 
   return isEditing && user ? (
     <EditProfile user={user} setIsEditing={setIsEditing} />
@@ -136,8 +141,18 @@ const UserDetails = ({ user, isMe }: Props): JSX.Element => {
         <Heading>{user?.username}</Heading>
       </Box>
       <Box display={"flex"} justifyContent={"center"} w={"100%"} mb="0.55em">
-        <Button w={"100%"} onClick={() => setIsEditing(!isEditing)}>
-          {isMe ? "Edit Profile" : "Follow"}
+        <Button
+          w={"100%"}
+          onClick={() => {
+            if (isMe) {
+              // Edit profile.
+              setIsEditing(!isEditing);
+            } else {
+              // Follow user.
+            }
+          }}
+        >
+          {isMe ? "Edit Profile" : isMeFollowing ? "Unfollow" : "Follow"}
         </Button>
       </Box>
       <Box display={"flex"} justifyContent={"start"} w={"100%"} mb="1.0em">

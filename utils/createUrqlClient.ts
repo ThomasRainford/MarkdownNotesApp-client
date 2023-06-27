@@ -28,19 +28,23 @@ const invalidateUserCollections = (cache: Cache) => {
   });
 };
 
-const invalidateFollowing = (cache: Cache) => {
+const invalidateUserFollowing = (cache: Cache) => {
   const allFields = cache.inspectFields("Query");
-  const fieldInfos = allFields.filter((info) => info.fieldName === "following");
+  const fieldInfos = allFields.filter(
+    (info) => info.fieldName === "userFollowing"
+  );
   fieldInfos.forEach((fi) => {
-    cache.invalidate("Query", "following", fi.arguments || null);
+    cache.invalidate("Query", "userFollowing", fi.arguments || null);
   });
 };
 
-const invalidateFollowers = (cache: Cache) => {
+const invalidateUserFollowers = (cache: Cache) => {
   const allFields = cache.inspectFields("Query");
-  const fieldInfos = allFields.filter((info) => info.fieldName === "followers");
+  const fieldInfos = allFields.filter(
+    (info) => info.fieldName === "userFollowers"
+  );
   fieldInfos.forEach((fi) => {
-    cache.invalidate("Query", "followers", fi.arguments || null);
+    cache.invalidate("Query", "userFollowers", fi.arguments || null);
   });
 };
 
@@ -84,8 +88,8 @@ export const createUrqlClient = (ssrExchange: SSRExchange) => {
               invalidateUser(cache);
               invalidateMe(cache);
               invalidateUserCollections(cache);
-              invalidateFollowing(cache);
-              invalidateFollowers(cache);
+              invalidateUserFollowing(cache);
+              invalidateUserFollowers(cache);
               invalidateCollections(cache);
               invalidateNotesLists(cache);
               invalidateNotesList(cache);

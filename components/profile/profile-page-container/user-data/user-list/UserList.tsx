@@ -32,9 +32,10 @@ const UserButton = ({
 export interface Props {
   type: "following" | "followers";
   users: User[];
+  me: User;
 }
 
-const UserList = ({ type, users }: Props): JSX.Element => {
+const UserList = ({ type, users, me }: Props): JSX.Element => {
   return (
     <VStack
       divider={<StackDivider borderColor="gray.600" />}
@@ -61,7 +62,7 @@ const UserList = ({ type, users }: Props): JSX.Element => {
               </Flex>
             </Flex>
             <Flex align={"center"}>
-              <UserButton type={type} user={user} />
+              <UserButton type={type} user={me} />
             </Flex>
           </Flex>
         );

@@ -3,25 +3,16 @@ import { UseQueryState } from "urql";
 import {
   Collection,
   Exact,
-  useFollowersQuery,
-  useFollowingQuery,
+  MeQuery,
   User,
   UserQuery,
   useUserCollectionsQuery,
+  useUserFollowersQuery,
+  useUserFollowingQuery,
 } from "../../../generated/graphql";
 import ProfilePageContainerLayout from "../../layouts/component-layouts/ProfilePageContainerLayout";
 import UserData from "./user-data/UserData";
 import UserDetails from "./user-details/UserDetails";
-
-export interface Props {
-  user: UseQueryState<
-    UserQuery,
-    Exact<{
-      username: string;
-    }>
-  >;
-  isMe: boolean;
-}
 
 const Error = () => {
   return (
@@ -52,17 +43,17 @@ const Loading = () => {
 };
 
 const MobileView = ({
+  meData,
   userData,
   userCollectionsData,
   followingData,
   followersData,
-  isMe,
 }: {
+  meData: User;
   userData: User;
   userCollectionsData: Collection[];
   followingData: User[];
   followersData: User[];
-  isMe: boolean;
 }) => {
   return (
     <Box
@@ -72,15 +63,15 @@ const MobileView = ({
       w={"100%"}
     >
       <Box display={"flex"} justifyContent={"center"} h={"100%"} w={"100%"}>
-        <UserDetails user={userData as User | null} isMe={isMe} />
+        <UserDetails me={meData} user={userData} />
       </Box>
       <Box h={"100%"} w={"100%"}>
         <UserData
+          meData={meData}
           userData={userData}
           userCollectionsData={userCollectionsData}
           followingData={followingData}
           followersData={followersData}
-          isMe={isMe}
         />
       </Box>
     </Box>
@@ -88,17 +79,17 @@ const MobileView = ({
 };
 
 const DesktopView = ({
+  meData,
   userData,
   userCollectionsData,
   followingData,
   followersData,
-  isMe,
 }: {
+  meData: User;
   userData: User;
   userCollectionsData: Collection[];
   followingData: User[];
   followersData: User[];
-  isMe: boolean;
 }) => {
   return (
     <Box
@@ -113,22 +104,42 @@ const DesktopView = ({
         w={{ base: "100%", md: "40%" }}
         mr={"0.5em"}
       >
-        <UserDetails user={userData as User | null} isMe={isMe} />
+        <UserDetails me={meData} user={userData} />
       </Box>
       <Box h={"100%"} w={{ base: "100%", md: "60%" }}>
         <UserData
+          meData={meData}
           userData={userData}
           userCollectionsData={userCollectionsData}
           followingData={followingData}
           followersData={followersData}
-          isMe={isMe}
         />
       </Box>
     </Box>
   );
 };
 
-const ProfilePageContainer = ({ user, isMe }: Props): JSX.Element => {
+export interface Props {
+  user: UseQueryState<
+    UserQuery,
+    Exact<{
+      username: string;
+    }>
+  >;
+  me: UseQueryState<
+    MeQuery,
+    Exact<{
+      [key: string]: never;
+    }>
+  >;
+}
+
+const ProfilePageContainer = ({ user, me }: Props): JSX.Element => {
+  // Current authenticated user
+  const meError = me.error;
+  const meLoading = me.fetching;
+  const meData = me.data?.me;
+  // Current user's profile
   const userError = user.error;
   const userLoading = user.fetching;
   const userData = user.data?.user;
@@ -140,19 +151,30 @@ const ProfilePageContainer = ({ user, isMe }: Props): JSX.Element => {
   const userCollectionsLoading = userCollectionsResult.fetching;
   const userCollectionsData = userCollectionsResult.data?.userCollections;
   // Fetch users' following.
-  const [followingResult] = useFollowingQuery();
+  const [followingResult] = useUserFollowingQuery({
+    variables: { userId: user.data?.user?._id || "" },
+  });
   const followingError = followingResult.error;
   const followingLoading = followingResult.fetching;
-  const followingData = followingResult.data?.following;
+  const followingData = followingResult.data?.userFollowing;
   // Fetch users' followers.
-  const [followersResult] = useFollowersQuery();
+  const [followersResult] = useUserFollowersQuery({
+    variables: { userId: user.data?.user?._id || "" },
+  });
   const followersError = followersResult.error;
   const followersLoading = followersResult.fetching;
-  const followersData = followersResult.data?.followers;
+  const followersData = followersResult.data?.userFollowers;
 
-  if (userError || userCollectionsError || followingError || followersError) {
+  if (
+    meError ||
+    userError ||
+    userCollectionsError ||
+    followingError ||
+    followersError
+  ) {
     return <Error />;
   } else if (
+    meLoading ||
     userLoading ||
     userCollectionsLoading ||
     followingLoading ||
@@ -164,18 +186,18 @@ const ProfilePageContainer = ({ user, isMe }: Props): JSX.Element => {
   return (
     <ProfilePageContainerLayout>
       <MobileView
+        meData={meData as User}
         userData={userData as User}
         userCollectionsData={userCollectionsData as Collection[]}
         followingData={followingData as User[]}
         followersData={followersData as User[]}
-        isMe={isMe}
       />
       <DesktopView
+        meData={meData as User}
         userData={userData as User}
         userCollectionsData={userCollectionsData as Collection[]}
         followingData={followingData as User[]}
         followersData={followersData as User[]}
-        isMe={isMe}
       />
     </ProfilePageContainerLayout>
   );

@@ -254,6 +254,8 @@ export type Query = {
   publicNotes?: Maybe<Array<Collection>>;
   user?: Maybe<User>;
   userCollections: Array<Collection>;
+  userFollowers: Array<User>;
+  userFollowing: Array<User>;
 };
 
 
@@ -290,6 +292,16 @@ export type QueryUserArgs = {
 
 export type QueryUserCollectionsArgs = {
   id: Scalars['String'];
+};
+
+
+export type QueryUserFollowersArgs = {
+  userId: Scalars['String'];
+};
+
+
+export type QueryUserFollowingArgs = {
+  userId: Scalars['String'];
 };
 
 export type User = {
@@ -463,6 +475,20 @@ export type UserCollectionsQueryVariables = Exact<{
 
 
 export type UserCollectionsQuery = { __typename?: 'Query', userCollections: Array<{ __typename?: 'Collection', id: string, title: string, visibility: string, upvotes: number, owner: { __typename?: 'User', id: string, username: string }, lists: Array<{ __typename?: 'NotesList', id: string, title: string }> }> };
+
+export type UserFollowersQueryVariables = Exact<{
+  userId: Scalars['String'];
+}>;
+
+
+export type UserFollowersQuery = { __typename?: 'Query', userFollowers: Array<{ __typename?: 'User', id: string, username: string, email: string, collections: Array<{ __typename?: 'Collection', id: string }> }> };
+
+export type UserFollowingQueryVariables = Exact<{
+  userId: Scalars['String'];
+}>;
+
+
+export type UserFollowingQuery = { __typename?: 'Query', userFollowing: Array<{ __typename?: 'User', id: string, username: string, email: string, collections: Array<{ __typename?: 'Collection', id: string }> }> };
 
 export type UserQueryVariables = Exact<{
   username: Scalars['String'];
@@ -878,6 +904,38 @@ export const UserCollectionsDocument = gql`
 
 export function useUserCollectionsQuery(options: Omit<Urql.UseQueryArgs<UserCollectionsQueryVariables>, 'query'>) {
   return Urql.useQuery<UserCollectionsQuery, UserCollectionsQueryVariables>({ query: UserCollectionsDocument, ...options });
+};
+export const UserFollowersDocument = gql`
+    query UserFollowers($userId: String!) {
+  userFollowers(userId: $userId) {
+    id
+    username
+    email
+    collections {
+      id
+    }
+  }
+}
+    `;
+
+export function useUserFollowersQuery(options: Omit<Urql.UseQueryArgs<UserFollowersQueryVariables>, 'query'>) {
+  return Urql.useQuery<UserFollowersQuery, UserFollowersQueryVariables>({ query: UserFollowersDocument, ...options });
+};
+export const UserFollowingDocument = gql`
+    query UserFollowing($userId: String!) {
+  userFollowing(userId: $userId) {
+    id
+    username
+    email
+    collections {
+      id
+    }
+  }
+}
+    `;
+
+export function useUserFollowingQuery(options: Omit<Urql.UseQueryArgs<UserFollowingQueryVariables>, 'query'>) {
+  return Urql.useQuery<UserFollowingQuery, UserFollowingQueryVariables>({ query: UserFollowingDocument, ...options });
 };
 export const UserDocument = gql`
     query User($username: String!) {

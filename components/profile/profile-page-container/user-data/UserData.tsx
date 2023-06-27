@@ -14,19 +14,19 @@ import Collections from "./collections/Collections";
 import UserList from "./user-list/UserList";
 
 export interface Props {
+  meData: User;
   userData: User;
   userCollectionsData: Collection[];
   followingData: User[];
   followersData: User[];
-  isMe: boolean;
 }
 
 const UserData = ({
+  meData,
   userData,
   userCollectionsData,
   followingData,
   followersData,
-  isMe,
 }: Props): JSX.Element => {
   const tabsIsFitted = useBreakpointValue({
     base: true,
@@ -36,6 +36,8 @@ const UserData = ({
     base: "center",
     md: "start",
   }) as "start" | "center" | "end" | undefined;
+
+  const isMe = meData._id === userData._id;
 
   return (
     <Box display={"flex"} w="100%" mt={{ base: "5%", sm: "5%", md: "17%" }}>
@@ -75,10 +77,10 @@ const UserData = ({
               />
             </TabPanel>
             <TabPanel>
-              <UserList type="following" users={followingData} />
+              <UserList type="following" users={followingData} me={meData} />
             </TabPanel>
             <TabPanel>
-              <UserList type="followers" users={followersData} />
+              <UserList type="followers" users={followersData} me={meData} />
             </TabPanel>
             <TabPanel>
               <p>Votes {JSON.stringify(userData.upvoted)}</p>

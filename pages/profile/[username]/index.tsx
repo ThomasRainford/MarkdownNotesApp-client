@@ -22,14 +22,12 @@ const Profile: NextPageWithLayout = () => {
 
   useIsAuth(meResult);
 
-  const isMe = meResult.data?.me?.username === username;
-
   return (
     <Box className="profile-page" h={"100%"}>
       <SelectedDataProvider>
         <NavBar user={meResult} />
         {!meResult.fetching && meResult.data ? (
-          <ProfilePageContainer user={userResult} isMe={isMe} />
+          <ProfilePageContainer user={userResult} me={meResult} />
         ) : null}
       </SelectedDataProvider>
     </Box>
