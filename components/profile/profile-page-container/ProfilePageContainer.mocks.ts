@@ -12,7 +12,16 @@ const base: Props = {
       },
     },
   },
-  isMe: false,
+  me: {
+    stale: false,
+    fetching: false,
+    error: undefined,
+    data: {
+      me: {
+        ...testUser,
+      },
+    },
+  },
 };
 
 export const mockBaseTemplateProps = {

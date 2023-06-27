@@ -7,7 +7,7 @@ const base: Props = {
   userCollectionsData: _testCollections as Collection[],
   followingData: [],
   followersData: [],
-  isMe: true,
+  meData: testUsers[0] as User,
 };
 
 export const mockUserDataProps = {

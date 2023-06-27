@@ -4,7 +4,7 @@ import { Props } from "../user-details/UserDetails";
 
 const base: Props = {
   user: testUsers[0] as User,
-  isMe: true,
+  me: testUsers[0] as User,
 };
 
 export const mockBaseTemplateProps = {
