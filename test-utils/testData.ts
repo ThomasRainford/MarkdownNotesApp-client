@@ -314,6 +314,7 @@ export const testUsers = [
 
 export const testUser = {
   _id: "kdslfj34r89sdkflj02983kj",
+  id: "kdslfj34r89sdkflj02983kj",
   email: "user1@email.com",
   username: "User01",
   following: [],

@@ -126,6 +126,12 @@ export const createUrqlClient = (ssrExchange: SSRExchange) => {
             updateUser: (_result, _args, cache, _info) => {
               invalidateUser(cache);
             },
+            follow: (_result, _args, cache, _info) => {
+              invalidateMe(cache);
+              invalidateUser(cache);
+              invalidateUserFollowing(cache);
+              invalidateUserFollowers(cache);
+            },
           },
         },
       }),

@@ -63,7 +63,7 @@ const MobileView = ({
       w={"100%"}
     >
       <Box display={"flex"} justifyContent={"center"} h={"100%"} w={"100%"}>
-        <UserDetails me={meData} user={userData} />
+        <UserDetails user={userData} me={meData} />
       </Box>
       <Box h={"100%"} w={"100%"}>
         <UserData

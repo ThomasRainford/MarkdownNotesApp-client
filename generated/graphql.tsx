@@ -375,6 +375,13 @@ export type DeleteNotesListMutationVariables = Exact<{
 
 export type DeleteNotesListMutation = { __typename?: 'Mutation', deleteNotesList: boolean };
 
+export type FollowMutationVariables = Exact<{
+  targetUserId: Scalars['String'];
+}>;
+
+
+export type FollowMutation = { __typename?: 'Mutation', follow: boolean };
+
 export type LoginMutationVariables = Exact<{
   usernameOrEmail: Scalars['String'];
   password: Scalars['String'];
@@ -453,7 +460,7 @@ export type FollowingQuery = { __typename?: 'Query', following: Array<{ __typena
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', _id: string, email: string, username: string, following: Array<string>, followers: Array<string>, upvoted: Array<string> } | null };
+export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', _id: string, id: string, email: string, username: string, following: Array<string>, followers: Array<string>, upvoted: Array<string> } | null };
 
 export type NotesListsQueryVariables = Exact<{
   collectionId: Scalars['String'];
@@ -495,7 +502,7 @@ export type UserQueryVariables = Exact<{
 }>;
 
 
-export type UserQuery = { __typename?: 'Query', user?: { __typename?: 'User', _id: string, email: string, username: string, following: Array<string>, followers: Array<string>, upvoted: Array<string> } | null };
+export type UserQuery = { __typename?: 'Query', user?: { __typename?: 'User', _id: string, id: string, email: string, username: string, following: Array<string>, followers: Array<string>, upvoted: Array<string> } | null };
 
 
 export const AddNoteDocument = gql`
@@ -581,6 +588,15 @@ export const DeleteNotesListDocument = gql`
 
 export function useDeleteNotesListMutation() {
   return Urql.useMutation<DeleteNotesListMutation, DeleteNotesListMutationVariables>(DeleteNotesListDocument);
+};
+export const FollowDocument = gql`
+    mutation Follow($targetUserId: String!) {
+  follow(targetUserId: $targetUserId)
+}
+    `;
+
+export function useFollowMutation() {
+  return Urql.useMutation<FollowMutation, FollowMutationVariables>(FollowDocument);
 };
 export const LoginDocument = gql`
     mutation Login($usernameOrEmail: String!, $password: String!) {
@@ -823,6 +839,7 @@ export const MeDocument = gql`
     query Me {
   me {
     _id
+    id
     email
     username
     following
@@ -941,6 +958,7 @@ export const UserDocument = gql`
     query User($username: String!) {
   user(username: $username) {
     _id
+    id
     email
     username
     following

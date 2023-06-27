@@ -12,7 +12,11 @@ import {
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
-import { User, useUpdateUserMutation } from "../../../../generated/graphql";
+import {
+  useFollowMutation,
+  User,
+  useUpdateUserMutation,
+} from "../../../../generated/graphql";
 
 const EditProfile = ({
   user,
@@ -105,12 +109,14 @@ const EditProfile = ({
 };
 
 export interface Props {
-  me: User | null;
   user: User | null;
+  me: User | null;
 }
 
-const UserDetails = ({ me, user }: Props): JSX.Element => {
+const UserDetails = ({ user, me }: Props): JSX.Element => {
+  const [, follow] = useFollowMutation();
   const [isEditing, setIsEditing] = useState(false);
+  const toast = useToast();
 
   const isMe = me?._id === user?._id;
   const isMeFollowing = me?.following.includes(user?._id || "");
@@ -143,12 +149,33 @@ const UserDetails = ({ me, user }: Props): JSX.Element => {
       <Box display={"flex"} justifyContent={"center"} w={"100%"} mb="0.55em">
         <Button
           w={"100%"}
-          onClick={() => {
+          onClick={async () => {
             if (isMe) {
               // Edit profile.
               setIsEditing(!isEditing);
             } else {
               // Follow user.
+              const followResult = await follow({
+                targetUserId: user?.id || "",
+              });
+              if (followResult.error) {
+                toast({
+                  id: "follow-error",
+                  title: `Failed to follow ${user?.username}`,
+                  status: "error",
+                  position: "top",
+                  duration: 2000,
+                });
+              }
+              if (followResult.data?.follow !== null) {
+                toast({
+                  id: "follow-success",
+                  title: `Followed ${user?.username}`,
+                  status: "success",
+                  position: "top",
+                  duration: 2000,
+                });
+              }
             }
           }}
         >

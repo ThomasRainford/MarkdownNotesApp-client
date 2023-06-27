@@ -5,6 +5,7 @@ const base: Props = {
     data: {
       me: {
         _id: "id",
+        id: "id",
         username: "User01",
         email: "User01@mail.com",
         followers: [] as string[],
