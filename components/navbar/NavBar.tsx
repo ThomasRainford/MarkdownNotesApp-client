@@ -50,7 +50,7 @@ const NavBar = ({ user }: Props) => {
   const loggedIn = user.data?.me;
 
   return (
-    <Box bg={useColorModeValue("gray.300", "gray.900")} px={4}>
+    <Box bg={useColorModeValue("gray.700", "gray.900")} px={4}>
       <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
         <IconButton
           size={"md"}
@@ -63,6 +63,7 @@ const NavBar = ({ user }: Props) => {
           <Box>
             <Heading
               size="lg"
+              color={useColorModeValue("gray.300", "gray.100")}
               onClick={() => {
                 if (router.pathname !== "/") router.push("/");
               }}
@@ -76,6 +77,7 @@ const NavBar = ({ user }: Props) => {
                 key={link.name}
                 role="link"
                 variant="link"
+                textColor={colorMode === "light" ? "gray.100" : "gray.200"}
                 onClick={() => {
                   if (!loggedIn) {
                     toast({

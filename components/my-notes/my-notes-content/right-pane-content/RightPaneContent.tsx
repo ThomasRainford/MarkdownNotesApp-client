@@ -333,7 +333,7 @@ const RightPaneContent = (): JSX.Element => {
   return (
     <Box
       h={"100%"}
-      backgroundColor={colorMode === "light" ? "gray.400" : "gray.700"}
+      backgroundColor={colorMode === "light" ? "gray.300" : "gray.700"}
     >
       <Box
         h={"122px"}
