@@ -5,6 +5,6 @@ import UserList from "../UserList";
 describe("UserList component", () => {
   test("Displays the UserList component", () => {
     const users = testUsers;
-    render(<UserList users={users} />);
+    render(<UserList users={users} type={"following"} me={testUsers[0]} />);
   });
 });

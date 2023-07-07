@@ -1,6 +1,6 @@
 import { render } from "@testing-library/react";
 import { UseQueryState } from "urql";
-import { Exact, UserQuery } from "../../../../generated/graphql";
+import { Exact, MeQuery, UserQuery } from "../../../../generated/graphql";
 import { testUsers } from "../../../../test-utils/testData";
 import ProfilePageContainer from "../ProfilePageContainer";
 
@@ -21,7 +21,22 @@ describe("ProfilePageContainer component", () => {
         username: string;
       }>
     >;
-    render(<ProfilePageContainer user={userResult} isMe={true} />);
+    const meResult = {
+      stale: false,
+      fetching: true,
+      error: undefined,
+      data: {
+        user: {
+          ...testUsers[0],
+        },
+      },
+    } as unknown as UseQueryState<
+      MeQuery,
+      Exact<{
+        [key: string]: never;
+      }>
+    >;
+    render(<ProfilePageContainer user={userResult} me={meResult} />);
   });
 
   test("displays loading component", () => {
@@ -40,8 +55,23 @@ describe("ProfilePageContainer component", () => {
         username: string;
       }>
     >;
+    const meResult = {
+      stale: false,
+      fetching: true,
+      error: undefined,
+      data: {
+        user: {
+          ...testUsers[0],
+        },
+      },
+    } as unknown as UseQueryState<
+      MeQuery,
+      Exact<{
+        [key: string]: never;
+      }>
+    >;
     const screen = render(
-      <ProfilePageContainer user={userResult} isMe={true} />
+      <ProfilePageContainer user={userResult} me={meResult} />
     );
 
     const spinner = screen.getByText("Loading...");
@@ -63,8 +93,23 @@ describe("ProfilePageContainer component", () => {
         username: string;
       }>
     >;
+    const meResult = {
+      stale: false,
+      fetching: true,
+      error: undefined,
+      data: {
+        user: {
+          ...testUsers[0],
+        },
+      },
+    } as unknown as UseQueryState<
+      MeQuery,
+      Exact<{
+        [key: string]: never;
+      }>
+    >;
     const screen = render(
-      <ProfilePageContainer user={userResult} isMe={true} />
+      <ProfilePageContainer user={userResult} me={meResult} />
     );
 
     const errorText = screen.getByText(

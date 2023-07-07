@@ -11,16 +11,17 @@ import UserData from "../UserData";
 describe("UserData component", () => {
   test("Displays the given children", () => {
     const user = testUsers[0] as User;
+    const me = testUsers[1] as User;
     const userCollections = _testCollections as Collection[];
     render(
       <ChakraProvider>
         <SelectedDataProvider>
           <UserData
+            meData={me}
             userData={user}
             userCollectionsData={userCollections}
             followingData={[]}
             followersData={[]}
-            isMe={true}
           />
         </SelectedDataProvider>
       </ChakraProvider>

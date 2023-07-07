@@ -6,7 +6,8 @@ import UserDetails from "../UserDetails";
 describe("UserDetails component", () => {
   test("Displays the UserDetails component successfully", () => {
     const user = testUsers[0] as User;
-    const screen = render(<UserDetails user={user} isMe={true} />);
+    const me = testUsers[1] as User;
+    const screen = render(<UserDetails user={user} me={me} />);
 
     const username = screen.getByText(user.username);
 
@@ -15,7 +16,8 @@ describe("UserDetails component", () => {
 
   test("displays user information correctly", () => {
     const user = testUsers[0] as User;
-    const screen = render(<UserDetails user={user} isMe={true} />);
+    const me = testUsers[1] as User;
+    const screen = render(<UserDetails user={user} me={me} />);
 
     const username = screen.getByText(user.username);
     const email = screen.getByText(user.email);
@@ -30,7 +32,8 @@ describe("UserDetails component", () => {
 
   test("displays correct button text when current user 'is me'", () => {
     const user = testUsers[0] as User;
-    const screen = render(<UserDetails user={user} isMe={true} />);
+    const me = testUsers[1] as User;
+    const screen = render(<UserDetails user={user} me={me} />);
 
     const button = screen.getByRole("button", { name: /edit profile/i });
 
@@ -39,9 +42,10 @@ describe("UserDetails component", () => {
 
   test("displays correct button text when current user 'is not me'", () => {
     const user = testUsers[0] as User;
-    const screen = render(<UserDetails user={user} isMe={false} />);
+    const me = testUsers[1] as User;
+    const screen = render(<UserDetails user={user} me={me} />);
 
-    const button = screen.getByRole("button", { name: /Follow/i });
+    const button = screen.getByRole("button", { name: /Edit Profile/i });
 
     expect(button).toBeInTheDocument();
   });

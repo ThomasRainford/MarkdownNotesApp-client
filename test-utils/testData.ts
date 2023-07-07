@@ -310,6 +310,14 @@ export const testUsers = [
     following: [] as string[],
     upvoted: [] as string[],
   },
+  {
+    id: "id2",
+    username: "User02",
+    email: "User02@mail.com",
+    followers: [] as string[],
+    following: [] as string[],
+    upvoted: [] as string[],
+  },
 ] as unknown as User[];
 
 export const testUser = {
