@@ -9,6 +9,7 @@ import {
   useUserCollectionsQuery,
   useUserFollowersQuery,
   useUserFollowingQuery,
+  useUserVotesQuery,
 } from "../../../generated/graphql";
 import ProfilePageContainerLayout from "../../layouts/component-layouts/ProfilePageContainerLayout";
 import UserData from "./user-data/UserData";
@@ -48,12 +49,14 @@ const MobileView = ({
   userCollectionsData,
   followingData,
   followersData,
+  votesData,
 }: {
   meData: User;
   userData: User;
   userCollectionsData: Collection[];
   followingData: User[];
   followersData: User[];
+  votesData: Collection[];
 }) => {
   return (
     <Box
@@ -72,6 +75,7 @@ const MobileView = ({
           userCollectionsData={userCollectionsData}
           followingData={followingData}
           followersData={followersData}
+          votesData={votesData}
         />
       </Box>
     </Box>
@@ -84,12 +88,14 @@ const DesktopView = ({
   userCollectionsData,
   followingData,
   followersData,
+  votesData,
 }: {
   meData: User;
   userData: User;
   userCollectionsData: Collection[];
   followingData: User[];
   followersData: User[];
+  votesData: Collection[];
 }) => {
   return (
     <Box
@@ -113,6 +119,7 @@ const DesktopView = ({
           userCollectionsData={userCollectionsData}
           followingData={followingData}
           followersData={followersData}
+          votesData={votesData}
         />
       </Box>
     </Box>
@@ -164,13 +171,21 @@ const ProfilePageContainer = ({ user, me }: Props): JSX.Element => {
   const followersError = followersResult.error;
   const followersLoading = followersResult.fetching;
   const followersData = followersResult.data?.userFollowers;
+  // Fetch user votes.
+  const [votesResult] = useUserVotesQuery({
+    variables: { userId: user.data?.user?._id || "" },
+  });
+  const votesError = votesResult.error;
+  const votesLoading = votesResult.fetching;
+  const votesData = votesResult.data?.userVotes;
 
   if (
     meError ||
     userError ||
     userCollectionsError ||
     followingError ||
-    followersError
+    followersError ||
+    votesError
   ) {
     return <Error />;
   } else if (
@@ -178,7 +193,8 @@ const ProfilePageContainer = ({ user, me }: Props): JSX.Element => {
     userLoading ||
     userCollectionsLoading ||
     followingLoading ||
-    followersLoading
+    followersLoading ||
+    votesLoading
   ) {
     return <Loading />;
   }
@@ -191,6 +207,7 @@ const ProfilePageContainer = ({ user, me }: Props): JSX.Element => {
         userCollectionsData={userCollectionsData as Collection[]}
         followingData={followingData as User[]}
         followersData={followersData as User[]}
+        votesData={votesData as Collection[]}
       />
       <DesktopView
         meData={meData as User}
@@ -198,6 +215,7 @@ const ProfilePageContainer = ({ user, me }: Props): JSX.Element => {
         userCollectionsData={userCollectionsData as Collection[]}
         followingData={followingData as User[]}
         followersData={followersData as User[]}
+        votesData={votesData as Collection[]}
       />
     </ProfilePageContainerLayout>
   );

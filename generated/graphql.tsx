@@ -256,6 +256,7 @@ export type Query = {
   userCollections: Array<Collection>;
   userFollowers: Array<User>;
   userFollowing: Array<User>;
+  userVotes: Array<Collection>;
 };
 
 
@@ -301,6 +302,11 @@ export type QueryUserFollowersArgs = {
 
 
 export type QueryUserFollowingArgs = {
+  userId: Scalars['String'];
+};
+
+
+export type QueryUserVotesArgs = {
   userId: Scalars['String'];
 };
 
@@ -496,6 +502,13 @@ export type UserFollowingQueryVariables = Exact<{
 
 
 export type UserFollowingQuery = { __typename?: 'Query', userFollowing: Array<{ __typename?: 'User', id: string, username: string, email: string, collections: Array<{ __typename?: 'Collection', id: string }> }> };
+
+export type UserVotesQueryVariables = Exact<{
+  userId: Scalars['String'];
+}>;
+
+
+export type UserVotesQuery = { __typename?: 'Query', userVotes: Array<{ __typename?: 'Collection', id: string, title: string, visibility: string, upvotes: number, owner: { __typename?: 'User', id: string, username: string }, lists: Array<{ __typename?: 'NotesList', id: string, title: string }> }> };
 
 export type UserQueryVariables = Exact<{
   username: Scalars['String'];
@@ -953,6 +966,28 @@ export const UserFollowingDocument = gql`
 
 export function useUserFollowingQuery(options: Omit<Urql.UseQueryArgs<UserFollowingQueryVariables>, 'query'>) {
   return Urql.useQuery<UserFollowingQuery, UserFollowingQueryVariables>({ query: UserFollowingDocument, ...options });
+};
+export const UserVotesDocument = gql`
+    query UserVotes($userId: String!) {
+  userVotes(userId: $userId) {
+    id
+    title
+    visibility
+    upvotes
+    owner {
+      id
+      username
+    }
+    lists {
+      id
+      title
+    }
+  }
+}
+    `;
+
+export function useUserVotesQuery(options: Omit<Urql.UseQueryArgs<UserVotesQueryVariables>, 'query'>) {
+  return Urql.useQuery<UserVotesQuery, UserVotesQueryVariables>({ query: UserVotesDocument, ...options });
 };
 export const UserDocument = gql`
     query User($username: String!) {

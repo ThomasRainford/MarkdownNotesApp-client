@@ -10,6 +10,7 @@ import {
   useBreakpointValue,
 } from "@chakra-ui/react";
 import { Collection, User } from "../../../../generated/graphql";
+import CollectionList from "./collection-list/CollectionList";
 import Collections from "./collections/Collections";
 import UserList from "./user-list/UserList";
 
@@ -19,6 +20,7 @@ export interface Props {
   userCollectionsData: Collection[];
   followingData: User[];
   followersData: User[];
+  votesData: Collection[];
 }
 
 const UserData = ({
@@ -27,6 +29,7 @@ const UserData = ({
   userCollectionsData,
   followingData,
   followersData,
+  votesData,
 }: Props): JSX.Element => {
   const tabsIsFitted = useBreakpointValue({
     base: true,
@@ -83,7 +86,7 @@ const UserData = ({
               <UserList type="followers" users={followersData} me={meData} />
             </TabPanel>
             <TabPanel>
-              <p>Votes {JSON.stringify(userData.upvoted)}</p>
+              <CollectionList collections={votesData} />
             </TabPanel>
           </TabPanels>
         </Tabs>
