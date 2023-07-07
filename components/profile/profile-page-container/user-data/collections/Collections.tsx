@@ -48,7 +48,7 @@ const Collections = ({ userCollectionsData, isMe }: Props): JSX.Element => {
               _hover={
                 isMe
                   ? {
-                      borderColor: "gray.500",
+                      borderColor: "gray.300",
                     }
                   : {}
               }

@@ -129,7 +129,7 @@ const UserDetails = ({ user, me }: Props): JSX.Element => {
       flexDirection={"column"}
       alignItems={"center"}
       w={"60%"}
-      mt={{ base: "5%", sm: "5%", md: "25%" }}
+      mt={{ base: "5%", sm: "5%", md: "15%" }}
     >
       <Box
         display={"flex"}
