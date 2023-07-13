@@ -26,7 +26,10 @@ const Profile: NextPageWithLayout = () => {
     <Box className="profile-page" h={"100%"}>
       <SelectedDataProvider>
         <NavBar user={meResult} />
-        {!meResult.fetching && meResult.data ? (
+        {!meResult.fetching &&
+        !userResult.fetching &&
+        meResult.data &&
+        userResult.data ? (
           <ProfilePageContainer user={userResult} me={meResult} />
         ) : null}
       </SelectedDataProvider>
