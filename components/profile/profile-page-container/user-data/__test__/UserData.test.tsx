@@ -22,6 +22,7 @@ describe("UserData component", () => {
             userCollectionsData={userCollections}
             followingData={[]}
             followersData={[]}
+            votesData={[]}
           />
         </SelectedDataProvider>
       </ChakraProvider>
