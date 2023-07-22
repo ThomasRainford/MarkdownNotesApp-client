@@ -1,15 +1,15 @@
 import { Box } from "@chakra-ui/react";
 import "allotment/dist/style.css";
 import { withUrqlClient } from "next-urql";
-import SelectedDataProvider from "../../components/helper/SelectedDataProvider";
-import PrimaryLayout from "../../components/layouts/PrimaryLayout";
-import MyNotesContent from "../../components/my-notes/my-notes-content/MyNotesContent";
-import NavBar from "../../components/navbar/NavBar";
-import { MyNotesSmallDesktopViewPaneVisibleProvider } from "../../contexts/MyNotesSmallDesktopViewPaneVisibleContext";
-import { useMeQuery } from "../../generated/graphql";
-import { createUrqlClient } from "../../utils/createUrqlClient";
-import { useIsAuth } from "../../utils/hooks/useIsAuth";
-import { NextPageWithLayout } from "../page";
+import SelectedDataProvider from "../../../components/helper/SelectedDataProvider";
+import PrimaryLayout from "../../../components/layouts/PrimaryLayout";
+import NavBar from "../../../components/navbar/NavBar";
+import NotesContent from "../../../components/notes/notes-content/NotesContent";
+import { MyNotesSmallDesktopViewPaneVisibleProvider } from "../../../contexts/MyNotesSmallDesktopViewPaneVisibleContext";
+import { useMeQuery } from "../../../generated/graphql";
+import { createUrqlClient } from "../../../utils/createUrqlClient";
+import { useIsAuth } from "../../../utils/hooks/useIsAuth";
+import { NextPageWithLayout } from "../../page";
 
 const MyNotes: NextPageWithLayout = () => {
   const [meResult] = useMeQuery();
@@ -22,7 +22,7 @@ const MyNotes: NextPageWithLayout = () => {
         <NavBar user={meResult} />
         {!meResult.fetching && meResult.data ? (
           <MyNotesSmallDesktopViewPaneVisibleProvider>
-            <MyNotesContent />
+            <NotesContent />
           </MyNotesSmallDesktopViewPaneVisibleProvider>
         ) : null}
       </SelectedDataProvider>

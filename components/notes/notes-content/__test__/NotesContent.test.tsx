@@ -4,21 +4,21 @@ import { mockClient } from "../../../../test-utils/mocks/gql-mocks";
 import { _testCollections } from "../../../../test-utils/testData";
 import { LocalStorageKeys } from "../../../../utils/types/types";
 import SelectedDataProvider from "../../../helper/SelectedDataProvider";
-import MyNotesContent from "../MyNotesContent";
+import NotesContent from "../NotesContent";
 
-describe("MyNotesContent component", () => {
+describe("NotesContent component", () => {
   beforeEach(() => {
     localStorage.removeItem(LocalStorageKeys.SELECTED_COLLECTION);
     localStorage.removeItem(LocalStorageKeys.SELECTED_LIST);
     localStorage.removeItem(LocalStorageKeys.SELECTED_NOTE);
   });
 
-  test("Displays MyNotesContent", async () => {
+  test("Displays NotesContent", async () => {
     // Render
     render(
       <Provider value={mockClient() as unknown as Client}>
         <SelectedDataProvider>
-          <MyNotesContent />
+          <NotesContent />
         </SelectedDataProvider>
       </Provider>
     );
@@ -37,7 +37,7 @@ describe("MyNotesContent component", () => {
     render(
       <Provider value={mockClient() as unknown as Client}>
         <SelectedDataProvider>
-          <MyNotesContent />
+          <NotesContent />
         </SelectedDataProvider>
       </Provider>
     );
@@ -64,7 +64,7 @@ describe("MyNotesContent component", () => {
     render(
       <Provider value={mockClient() as unknown as Client}>
         <SelectedDataProvider>
-          <MyNotesContent />
+          <NotesContent />
         </SelectedDataProvider>
       </Provider>
     );
@@ -93,7 +93,7 @@ describe("MyNotesContent component", () => {
     render(
       <Provider value={mockClient() as unknown as Client}>
         <SelectedDataProvider>
-          <MyNotesContent />
+          <NotesContent />
         </SelectedDataProvider>
       </Provider>
     );
@@ -125,7 +125,7 @@ describe("MyNotesContent component", () => {
     render(
       <Provider value={mockClient() as unknown as Client}>
         <SelectedDataProvider>
-          <MyNotesContent />
+          <NotesContent />
         </SelectedDataProvider>
       </Provider>
     );
@@ -154,7 +154,7 @@ describe("MyNotesContent component", () => {
     render(
       <Provider value={mockClient() as unknown as Client}>
         <SelectedDataProvider>
-          <MyNotesContent />
+          <NotesContent />
         </SelectedDataProvider>
       </Provider>
     );

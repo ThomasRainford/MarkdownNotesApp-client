@@ -3,11 +3,13 @@ import {
   Button,
   Flex,
   Heading,
+  Link,
   StackDivider,
   Text,
   useToast,
   VStack,
 } from "@chakra-ui/react";
+import NextLink from "next/link";
 import { useState } from "react";
 import { OperationContext, OperationResult } from "urql";
 import {
@@ -116,8 +118,17 @@ const UserList = ({ type, users, me }: Props): JSX.Element => {
                 />
               </Flex>
               <Flex flexDirection={"column"} justify="space-between">
-                <Heading size={"md"} color={"gray.300"}>
-                  {user.username}
+                <Heading
+                  size={"md"}
+                  color={"gray.300"}
+                  _hover={{
+                    color: "blue.400",
+                    textDecoration: "underline",
+                  }}
+                >
+                  <Link as={NextLink} href={`/profile/${user.username}`}>
+                    {user.username}
+                  </Link>
                 </Heading>
                 <Text fontSize={"xs"} color={"gray.400"}>
                   {user.email}

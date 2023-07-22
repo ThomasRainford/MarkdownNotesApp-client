@@ -20,9 +20,9 @@ import LeftPaneContent from "./left-pane-content/LeftPaneContent";
 import NoteContent from "./note-content/NoteContent";
 import RightPaneContent from "./right-pane-content/RightPaneContent";
 
-const MyNotesContent = (): JSX.Element => {
+const NotesContent = (): JSX.Element => {
   return (
-    <Box className="my-notes-content" h={"calc(100% - 64px)"}>
+    <Box className="notes-page-content" h={"calc(100% - 64px)"}>
       <DesktopView />
       <SmallDesktopView />
       <MobileView />
@@ -183,4 +183,4 @@ const MobileView = () => {
   );
 };
 
-export default MyNotesContent;
+export default NotesContent;

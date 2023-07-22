@@ -21,8 +21,6 @@ import { AnyVariables, UseQueryState } from "urql";
 import { MeQuery } from "../../generated/graphql";
 import UserMenu from "./user-menu/UserMenu";
 
-const Links = [{ name: "My Notes", route: "/my-notes" }];
-
 const NavLink = ({ children, href }: { children: ReactNode; href: string }) => (
   <NextLink href={href}>
     <Link
@@ -48,6 +46,10 @@ const NavBar = ({ user }: Props) => {
 
   const loginFetching = user.fetching;
   const loggedIn = user.data?.me;
+
+  const Links = [
+    { name: "My Notes", route: `/notes/${user.data?.me?.username}` },
+  ];
 
   return (
     <Box bg={useColorModeValue("gray.700", "gray.900")} px={4}>
