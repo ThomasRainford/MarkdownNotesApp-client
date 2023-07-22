@@ -15,17 +15,14 @@ import { Allotment } from "allotment";
 import { useRef } from "react";
 import { MyNotesSmallDesktopViewPaneVisibleContext } from "../../../contexts/MyNotesSmallDesktopViewPaneVisibleContext";
 import { useLocalStorageValue } from "../../../utils/hooks/useLocalStorageValue";
-import {
-  LocalStorageContextType,
-  LocalStorageKeys,
-} from "../../../utils/types/types";
+import { LocalStorageContextType } from "../../../utils/types/types";
 import LeftPaneContent from "./left-pane-content/LeftPaneContent";
 import NoteContent from "./note-content/NoteContent";
 import RightPaneContent from "./right-pane-content/RightPaneContent";
 
-const MyNotesContent = (): JSX.Element => {
+const NotesContent = (): JSX.Element => {
   return (
-    <Box className="my-notes-content" h={"calc(100% - 64px)"}>
+    <Box className="notes-page-content" h={"calc(100% - 64px)"}>
       <DesktopView />
       <SmallDesktopView />
       <MobileView />
@@ -67,8 +64,7 @@ const DesktopView = () => {
 
 const SmallDesktopView = () => {
   const [paneVisible, setPaneVisible] = useLocalStorageValue(
-    MyNotesSmallDesktopViewPaneVisibleContext,
-    LocalStorageKeys.MY_NOTES_VISIBLE_PANE
+    MyNotesSmallDesktopViewPaneVisibleContext
   ) as LocalStorageContextType;
   const { colorMode } = useColorMode();
 
@@ -187,4 +183,4 @@ const MobileView = () => {
   );
 };
 
-export default MyNotesContent;
+export default NotesContent;

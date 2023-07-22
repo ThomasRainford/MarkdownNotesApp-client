@@ -1,6 +1,7 @@
 query User($username: String!) {
   user(username: $username) {
     _id
+    id
     email
     username
     following

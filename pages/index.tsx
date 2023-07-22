@@ -1,5 +1,6 @@
 import "allotment/dist/style.css";
 import { withUrqlClient } from "next-urql";
+import SelectedDataProvider from "../components/helper/SelectedDataProvider";
 import PrimaryLayout from "../components/layouts/PrimaryLayout";
 import NavBar from "../components/navbar/NavBar";
 import { useMeQuery } from "../generated/graphql";
@@ -11,7 +12,9 @@ const Home: NextPageWithLayout = () => {
 
   return (
     <>
-      <NavBar user={meResult} />
+      <SelectedDataProvider>
+        <NavBar user={meResult} />
+      </SelectedDataProvider>
     </>
   );
 };

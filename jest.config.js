@@ -14,7 +14,7 @@ const customJestConfig = {
   testPathIgnorePatterns: [
     "<rootDir>/e2e",
     // Temporarily skip test suite due to issue.
-    "<rootDir>/components/my-notes/my-notes-content/__test__/MyNotesContent.test.tsx",
+    "<rootDir>/components/notes/notes-content/__test__/NotesContent.test.tsx",
   ],
 };
 

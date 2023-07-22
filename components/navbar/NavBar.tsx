@@ -21,8 +21,6 @@ import { AnyVariables, UseQueryState } from "urql";
 import { MeQuery } from "../../generated/graphql";
 import UserMenu from "./user-menu/UserMenu";
 
-const Links = ["My Notes"];
-
 const NavLink = ({ children, href }: { children: ReactNode; href: string }) => (
   <NextLink href={href}>
     <Link
@@ -49,8 +47,12 @@ const NavBar = ({ user }: Props) => {
   const loginFetching = user.fetching;
   const loggedIn = user.data?.me;
 
+  const Links = [
+    { name: "My Notes", route: `/notes/${user.data?.me?.username}` },
+  ];
+
   return (
-    <Box bg={useColorModeValue("gray.300", "gray.900")} px={4}>
+    <Box bg={useColorModeValue("gray.700", "gray.900")} px={4}>
       <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
         <IconButton
           size={"md"}
@@ -63,6 +65,7 @@ const NavBar = ({ user }: Props) => {
           <Box>
             <Heading
               size="lg"
+              color={useColorModeValue("gray.300", "gray.100")}
               onClick={() => {
                 if (router.pathname !== "/") router.push("/");
               }}
@@ -73,9 +76,10 @@ const NavBar = ({ user }: Props) => {
           <HStack as={"nav"} spacing={4} display={{ base: "none", md: "flex" }}>
             {Links.map((link) => (
               <Button
-                key={link}
+                key={link.name}
                 role="link"
                 variant="link"
+                textColor={colorMode === "light" ? "gray.100" : "gray.200"}
                 onClick={() => {
                   if (!loggedIn) {
                     toast({
@@ -86,10 +90,10 @@ const NavBar = ({ user }: Props) => {
                       duration: 2000,
                     });
                   }
-                  router.push("/my-notes");
+                  router.push(link.route);
                 }}
               >
-                {link}
+                {link.name}
               </Button>
             ))}
           </HStack>
@@ -116,8 +120,8 @@ const NavBar = ({ user }: Props) => {
         <Box pb={4} display={{ md: "none" }}>
           <Stack as={"nav"} spacing={4}>
             {Links.map((link) => (
-              <NavLink key={link} href="">
-                {link}
+              <NavLink key={link.name} href={link.route}>
+                {link.name}
               </NavLink>
             ))}
           </Stack>

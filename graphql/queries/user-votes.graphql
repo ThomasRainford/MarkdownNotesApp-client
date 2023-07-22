@@ -1,0 +1,16 @@
+query UserVotes($userId: String!) {
+  userVotes(userId: $userId) {
+    id
+    title
+    visibility
+    upvotes
+    owner {
+      id
+      username
+    }
+    lists {
+      id
+      title
+    }
+  }
+}

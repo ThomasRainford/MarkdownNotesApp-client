@@ -1,0 +1,10 @@
+query UserFollowers($userId: String!) {
+  userFollowers(userId: $userId) {
+    id
+    username
+    email
+    collections {
+      id
+    }
+  }
+}
