@@ -15,7 +15,6 @@ import {
   NotesList,
   useAddNoteMutation,
   useDeleteNoteMutation,
-  useNotesListQuery,
 } from "../../../../generated/graphql";
 import { handleAddNoteErrors } from "../../../../utils/error-handlers/note-errors";
 import { getTimeSince } from "../../../../utils/getTimeSince";
@@ -89,10 +88,12 @@ const NoteDeleteButton = ({
 };
 
 export interface Props {
+  isMe: boolean;
   notes: Note[];
+  notesList: NotesList;
 }
 
-const Notes = ({ notes }: Props): JSX.Element => {
+const Notes = ({ isMe, notes, notesList }: Props): JSX.Element => {
   const [isAddingNewNote, setIsAddingNewNote] = useState(false);
   const { colorMode } = useColorMode();
   const toast = useToast();
@@ -101,15 +102,6 @@ const Notes = ({ notes }: Props): JSX.Element => {
     selectedNotesList: { selectedList },
     selectedNote: { setSelectedNote },
   } = useAllLocalStorageValues();
-  const [notesListResult] = useNotesListQuery({
-    variables: {
-      listLocation: {
-        collectionId: selectedCollection?.id || "",
-        listId: selectedList?.id || "",
-      },
-    },
-  });
-  const notesList = notesListResult.data?.notesList;
   const [, addNote] = useAddNoteMutation();
 
   return (
@@ -160,13 +152,15 @@ const Notes = ({ notes }: Props): JSX.Element => {
                     </Text>
                   </Box>
                 </Box>
-                <Box>
-                  <NoteDeleteButton
-                    note={note}
-                    collectionId={selectedCollection?.id || ""}
-                    notesListId={selectedList?.id || ""}
-                  />
-                </Box>
+                {isMe && (
+                  <Box>
+                    <NoteDeleteButton
+                      note={note}
+                      collectionId={selectedCollection?.id || ""}
+                      notesListId={selectedList?.id || ""}
+                    />
+                  </Box>
+                )}
               </Box>
             ))}
           </>

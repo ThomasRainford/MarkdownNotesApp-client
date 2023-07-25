@@ -22,10 +22,10 @@ import {
   Collection,
   Note,
   NotesList,
-  useCollectionsQuery,
-  useNotesListsQuery,
+  User,
   useUpdateCollectionMutation,
   useUpdateNotesListMutation,
+  useUserNotesListsQuery,
 } from "../../../../generated/graphql";
 import { getSelectedCollection } from "../../../../utils/getSelectedValue";
 import { useAllLocalStorageValues } from "../../../../utils/hooks/useAllLocalStorageValues";
@@ -254,19 +254,29 @@ const ListPaneHeader = ({
   );
 };
 
-const RightPaneContent = (): JSX.Element => {
-  const [collectionsResult] = useCollectionsQuery();
+export interface Props {
+  isMe: boolean;
+  userData: User;
+  userCollectionsData: Collection[];
+}
+
+const RightPaneContent = ({
+  isMe,
+  userData,
+  userCollectionsData,
+}: Props): JSX.Element => {
   const {
     selectedCollection: { selectedCollection },
     selectedNotesList: { selectedList },
   } = useAllLocalStorageValues();
   const collection = getSelectedCollection(
     selectedCollection,
-    collectionsResult.data?.collections as Collection[]
+    userCollectionsData
   );
-  const [notesListsResult] = useNotesListsQuery({
+  const [userNotesListsResult] = useUserNotesListsQuery({
     variables: {
-      collectionId: selectedCollection?.id || "",
+      collectionId: collection?.id || "",
+      userId: userData.id,
     },
   });
   const [displayed, setDisplayed] = useState<string>("");
@@ -274,23 +284,24 @@ const RightPaneContent = (): JSX.Element => {
     displayed: string;
     items: string[];
   }>();
-  const notesLists = notesListsResult.data?.notesLists as NotesList[];
+  const notesLists = userNotesListsResult.data?.userNotesLists as NotesList[];
   const notesList = notesLists?.find((nl) => nl.id === selectedList?.id);
   const notes = notesList?.notes as Note[];
   const [content, setContent] = useState<ReactNode | null>(null);
   const { colorMode } = useColorMode();
 
   useEffect(() => {
-    if (notesListsResult.error) {
+    if (userNotesListsResult.error) {
       setContent(<Error />);
       return;
-    } else if (notesListsResult.fetching) {
+    } else if (userNotesListsResult.fetching) {
       setContent(<Loading />);
       return;
     } else if (selectedCollection?.id && !selectedList?.id) {
       setDisplayed("notesList");
       setContent(
         <Lists
+          isMe={isMe}
           notesLists={
             currentFilter?.displayed === "list"
               ? notesLists.filter(
@@ -302,10 +313,11 @@ const RightPaneContent = (): JSX.Element => {
           }
         />
       );
-    } else if (selectedList?.id) {
+    } else if (selectedList?.id && notesList) {
       setDisplayed("note");
       setContent(
         <Notes
+          isMe={isMe}
           notes={
             currentFilter?.displayed === "note"
               ? notes.filter((n) =>
@@ -313,6 +325,7 @@ const RightPaneContent = (): JSX.Element => {
                 )
               : notes || []
           }
+          notesList={notesList}
         />
       );
       return;
@@ -326,8 +339,10 @@ const RightPaneContent = (): JSX.Element => {
     notes,
     currentFilter?.displayed,
     currentFilter?.items,
-    notesListsResult.error,
-    notesListsResult.fetching,
+    userNotesListsResult.error,
+    userNotesListsResult.fetching,
+    notesList,
+    isMe,
   ]);
 
   return (

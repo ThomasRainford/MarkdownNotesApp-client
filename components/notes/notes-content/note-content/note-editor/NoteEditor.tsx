@@ -1,5 +1,5 @@
 import { CheckIcon } from "@chakra-ui/icons";
-import { Box, Spinner, Tag } from "@chakra-ui/react";
+import { Alert, AlertIcon, Box, Spinner, Tag } from "@chakra-ui/react";
 import { EditorState } from "@codemirror/state";
 import { useCallback, useEffect, useState } from "react";
 import { useAutosave } from "react-autosave";
@@ -16,13 +16,16 @@ import { useUpdateItem } from "../../../../../utils/hooks/useUpdateItem";
 const Editor = ({
   markdownText,
   handleChange,
+  readOnly,
 }: {
   markdownText: string;
   handleChange: ((_: EditorState) => void) | undefined;
+  readOnly: boolean;
 }): JSX.Element => {
   const [refContainer, editorView] = useCodeMirror<HTMLDivElement>({
     initialDoc: markdownText,
     onChange: handleChange,
+    readOnly,
   });
 
   const replaceEditorContent = useCallback(
@@ -86,9 +89,10 @@ const SavingTag = ({
 
 export interface Props {
   note: Note;
+  readOnly: boolean;
 }
 
-const NoteEditor = ({ note }: Props): JSX.Element => {
+const NoteEditor = ({ note, readOnly }: Props): JSX.Element => {
   const [, updateNote] = useUpdateNoteMutation();
   const [updateItem] = useUpdateItem();
   const [savingState, setSavingState] = useState<
@@ -99,9 +103,14 @@ const NoteEditor = ({ note }: Props): JSX.Element => {
     selectedNote: { selectedNote },
   } = useAllLocalStorageValues();
 
-  const handleTextChange = useCallback((newText: string) => {
-    setText(newText);
-  }, []);
+  const handleTextChange = useCallback(
+    (newText: string) => {
+      if (!readOnly) {
+        setText(newText);
+      }
+    },
+    [readOnly]
+  );
 
   const handleChange = useCallback(
     (state: EditorState) => {
@@ -147,8 +156,18 @@ const NoteEditor = ({ note }: Props): JSX.Element => {
 
   return (
     <Box>
-      <SavingTag state={savingState} />
-      <Editor markdownText={note.body} handleChange={handleChange} />
+      {readOnly && (
+        <Alert status="info">
+          <AlertIcon />
+          This note is read-only.
+        </Alert>
+      )}
+      {!readOnly && <SavingTag state={savingState} />}
+      <Editor
+        markdownText={note.body}
+        handleChange={handleChange}
+        readOnly={readOnly}
+      />
     </Box>
   );
 };

@@ -1,14 +1,8 @@
 import { ArrowBackIcon, ArrowLeftIcon } from "@chakra-ui/icons";
-import {
-  Box,
-  Heading,
-  IconButton,
-  Skeleton,
-  useColorMode,
-} from "@chakra-ui/react";
+import { Box, Heading, IconButton, useColorMode } from "@chakra-ui/react";
 import { ReactNode, useEffect, useState } from "react";
 import { MyNotesSmallDesktopViewPaneVisibleContext } from "../../../../contexts/MyNotesSmallDesktopViewPaneVisibleContext";
-import { Collection, useCollectionsQuery } from "../../../../generated/graphql";
+import { Collection } from "../../../../generated/graphql";
 import { getSelectedCollection } from "../../../../utils/getSelectedValue";
 import { useAllLocalStorageValues } from "../../../../utils/hooks/useAllLocalStorageValues";
 import { useLocalStorageValue } from "../../../../utils/hooks/useLocalStorageValue";
@@ -16,33 +10,19 @@ import { LocalStorageContextType } from "../../../../utils/types/types";
 import Collections from "../collections/Collections";
 import Lists from "../lists/Lists";
 
-const Error = () => {
-  return (
-    <Box>
-      <Box display={"flex"} pl={"1.5em"} pr={"1em"} pt={"1em"} pb={"1em"}>
-        Something went wrong fetching your collections!
-      </Box>
-    </Box>
-  );
-};
+export interface Props {
+  isMe: boolean;
+  userCollectionsData: Collection[];
+}
 
-const Loading = () => (
-  <Box>
-    <Box mx={"0.5em"} mb={"1em"}>
-      <Skeleton height="60px" mb="0.5em" />
-    </Box>
-  </Box>
-);
-
-const LeftPaneContent = (): JSX.Element => {
-  const [collectionsResult] = useCollectionsQuery();
+const LeftPaneContent = ({ isMe, userCollectionsData }: Props): JSX.Element => {
   const {
     selectedCollection: { selectedCollection },
     selectedNotesList: { selectedList, setSelectedList },
   } = useAllLocalStorageValues();
   const collection = getSelectedCollection(
     selectedCollection,
-    collectionsResult.data?.collections as Collection[]
+    userCollectionsData as Collection[]
   );
   const [content, setContent] = useState<ReactNode | null>(null);
   const { colorMode } = useColorMode();
@@ -51,24 +31,14 @@ const LeftPaneContent = (): JSX.Element => {
   ) as LocalStorageContextType;
 
   useEffect(() => {
-    if (collectionsResult.error) {
-      setContent(<Error />);
-      return;
-    } else if (collectionsResult.fetching) {
-      setContent(<Loading />);
-      return;
-    }
     if (!selectedList?.id) {
-      setContent(<Collections />);
+      setContent(
+        <Collections isMe={isMe} userCollectionsData={userCollectionsData} />
+      );
     } else {
-      setContent(<Lists notesLists={collection?.lists || []} />);
+      setContent(<Lists isMe={isMe} notesLists={collection?.lists || []} />);
     }
-  }, [
-    selectedList?.id,
-    collection?.lists,
-    collectionsResult.error,
-    collectionsResult.fetching,
-  ]);
+  }, [selectedList?.id, collection?.lists, userCollectionsData, isMe]);
 
   return (
     <Box

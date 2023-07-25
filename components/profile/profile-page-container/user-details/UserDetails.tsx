@@ -72,7 +72,6 @@ const EditProfile = ({
             aria-label={"edit-profile-check"}
             isLoading={result.fetching}
             onClick={async () => {
-              console.log("submit");
               const result = await updateUser({
                 username: value,
               });

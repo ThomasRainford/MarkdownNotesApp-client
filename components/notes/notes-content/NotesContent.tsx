@@ -14,23 +14,22 @@ import {
 import { Allotment } from "allotment";
 import { useRef } from "react";
 import { MyNotesSmallDesktopViewPaneVisibleContext } from "../../../contexts/MyNotesSmallDesktopViewPaneVisibleContext";
+import { Collection, User } from "../../../generated/graphql";
 import { useLocalStorageValue } from "../../../utils/hooks/useLocalStorageValue";
 import { LocalStorageContextType } from "../../../utils/types/types";
 import LeftPaneContent from "./left-pane-content/LeftPaneContent";
 import NoteContent from "./note-content/NoteContent";
 import RightPaneContent from "./right-pane-content/RightPaneContent";
 
-const NotesContent = (): JSX.Element => {
-  return (
-    <Box className="notes-page-content" h={"calc(100% - 64px)"}>
-      <DesktopView />
-      <SmallDesktopView />
-      <MobileView />
-    </Box>
-  );
-};
-
-const DesktopView = () => {
+const DesktopView = ({
+  isMe,
+  userData,
+  userCollectionsData,
+}: {
+  isMe: boolean;
+  userData: User;
+  userCollectionsData: Collection[];
+}) => {
   return (
     <Box
       h={"100%"}
@@ -39,11 +38,18 @@ const DesktopView = () => {
     >
       <Allotment>
         <Allotment.Pane preferredSize={250} minSize={225} maxSize={350}>
-          <LeftPaneContent />
+          <LeftPaneContent
+            isMe={isMe}
+            userCollectionsData={userCollectionsData}
+          />
         </Allotment.Pane>
         <Allotment>
           <Allotment.Pane preferredSize={225} minSize={225} maxSize={300}>
-            <RightPaneContent />
+            <RightPaneContent
+              isMe={isMe}
+              userData={userData}
+              userCollectionsData={userCollectionsData}
+            />
           </Allotment.Pane>
           <Allotment.Pane>
             <Box
@@ -53,7 +59,10 @@ const DesktopView = () => {
               className="note-content-container"
               backgroundColor={useColorModeValue("gray.200", "gray.600")}
             >
-              <NoteContent />
+              <NoteContent
+                isMe={isMe}
+                userCollectionsData={userCollectionsData}
+              />
             </Box>
           </Allotment.Pane>
         </Allotment>
@@ -62,7 +71,15 @@ const DesktopView = () => {
   );
 };
 
-const SmallDesktopView = () => {
+const SmallDesktopView = ({
+  isMe,
+  userData,
+  userCollectionsData,
+}: {
+  isMe: boolean;
+  userData: User;
+  userCollectionsData: Collection[];
+}) => {
   const [paneVisible, setPaneVisible] = useLocalStorageValue(
     MyNotesSmallDesktopViewPaneVisibleContext
   ) as LocalStorageContextType;
@@ -79,10 +96,17 @@ const SmallDesktopView = () => {
           <Allotment.Pane minSize={250} maxSize={400}>
             <Allotment vertical>
               <Allotment.Pane>
-                <LeftPaneContent />
+                <LeftPaneContent
+                  isMe={isMe}
+                  userCollectionsData={userCollectionsData}
+                />
               </Allotment.Pane>
               <Allotment.Pane>
-                <RightPaneContent />
+                <RightPaneContent
+                  isMe={isMe}
+                  userData={userData}
+                  userCollectionsData={userCollectionsData}
+                />
               </Allotment.Pane>
             </Allotment>
           </Allotment.Pane>
@@ -113,7 +137,10 @@ const SmallDesktopView = () => {
               className="note-content-container"
               backgroundColor={useColorModeValue("gray.200", "gray.600")}
             >
-              <NoteContent />
+              <NoteContent
+                isMe={isMe}
+                userCollectionsData={userCollectionsData}
+              />
             </Box>
           </Allotment.Pane>
         </Allotment>
@@ -122,7 +149,15 @@ const SmallDesktopView = () => {
   );
 };
 
-const MobileView = () => {
+const MobileView = ({
+  isMe,
+  userData,
+  userCollectionsData,
+}: {
+  isMe: boolean;
+  userData: User;
+  userCollectionsData: Collection[];
+}) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = useRef();
 
@@ -165,10 +200,17 @@ const MobileView = () => {
                   <Allotment.Pane minSize={250} maxSize={400}>
                     <Allotment vertical>
                       <Allotment.Pane>
-                        <LeftPaneContent />
+                        <LeftPaneContent
+                          isMe={isMe}
+                          userCollectionsData={userCollectionsData}
+                        />
                       </Allotment.Pane>
                       <Allotment.Pane>
-                        <RightPaneContent />
+                        <RightPaneContent
+                          isMe={isMe}
+                          userData={userData}
+                          userCollectionsData={userCollectionsData}
+                        />
                       </Allotment.Pane>
                     </Allotment>
                   </Allotment.Pane>
@@ -177,8 +219,40 @@ const MobileView = () => {
             </DrawerBody>
           </DrawerContent>
         </Drawer>
-        <NoteContent />
+        <NoteContent isMe={isMe} userCollectionsData={userCollectionsData} />
       </Box>
+    </Box>
+  );
+};
+
+export interface Props {
+  isMe: boolean;
+  userData: User;
+  userCollectionsData: Collection[];
+}
+
+const NotesContent = ({
+  isMe,
+  userData,
+  userCollectionsData,
+}: Props): JSX.Element => {
+  return (
+    <Box className="notes-page-content" h={"calc(100% - 64px)"}>
+      <DesktopView
+        isMe={isMe}
+        userData={userData}
+        userCollectionsData={userCollectionsData}
+      />
+      <SmallDesktopView
+        isMe={isMe}
+        userData={userData}
+        userCollectionsData={userCollectionsData}
+      />
+      <MobileView
+        isMe={isMe}
+        userData={userData}
+        userCollectionsData={userCollectionsData}
+      />
     </Box>
   );
 };

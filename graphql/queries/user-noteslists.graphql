@@ -1,5 +1,5 @@
-query NotesLists($collectionId: String!) {
-  notesLists(collectionId: $collectionId) {
+query UserNotesLists($collectionId: String!, $userId: String!) {
+  userNotesLists(collectionId: $collectionId, userId: $userId) {
     id
     title
     createdAt
