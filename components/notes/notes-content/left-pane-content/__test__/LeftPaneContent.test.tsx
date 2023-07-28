@@ -2,6 +2,7 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { act } from "react-dom/test-utils";
 import { Client, Provider } from "urql";
 import { MyNotesSmallDesktopViewPaneVisibleProvider } from "../../../../../contexts/MyNotesSmallDesktopViewPaneVisibleContext";
+import { Collection } from "../../../../../generated/graphql";
 import { mockClient } from "../../../../../test-utils/mocks/gql-mocks";
 import {
   testNotesLists,
@@ -24,7 +25,10 @@ describe("LeftPaneContent component", () => {
       <Provider value={mockClient() as unknown as Client}>
         <SelectedDataProvider>
           <MyNotesSmallDesktopViewPaneVisibleProvider>
-            <LeftPaneContent />
+            <LeftPaneContent
+              isMe={true}
+              userCollectionsData={_testCollections as Collection[]}
+            />
           </MyNotesSmallDesktopViewPaneVisibleProvider>
         </SelectedDataProvider>
       </Provider>
@@ -47,7 +51,10 @@ describe("LeftPaneContent component", () => {
       <Provider value={mockClient() as unknown as Client}>
         <SelectedDataProvider>
           <MyNotesSmallDesktopViewPaneVisibleProvider>
-            <LeftPaneContent />
+            <LeftPaneContent
+              isMe={true}
+              userCollectionsData={_testCollections as Collection[]}
+            />
           </MyNotesSmallDesktopViewPaneVisibleProvider>
         </SelectedDataProvider>
       </Provider>
@@ -68,7 +75,10 @@ describe("LeftPaneContent component", () => {
       <Provider value={mockClient() as unknown as Client}>
         <SelectedDataProvider>
           <MyNotesSmallDesktopViewPaneVisibleProvider>
-            <LeftPaneContent />
+            <LeftPaneContent
+              isMe={true}
+              userCollectionsData={_testCollections as Collection[]}
+            />
           </MyNotesSmallDesktopViewPaneVisibleProvider>
         </SelectedDataProvider>
       </Provider>
@@ -112,7 +122,10 @@ describe("LeftPaneContent component", () => {
       <Provider value={mockClient() as unknown as Client}>
         <SelectedDataProvider>
           <MyNotesSmallDesktopViewPaneVisibleProvider>
-            <LeftPaneContent />
+            <LeftPaneContent
+              isMe={true}
+              userCollectionsData={_testCollections as Collection[]}
+            />
           </MyNotesSmallDesktopViewPaneVisibleProvider>
         </SelectedDataProvider>
       </Provider>

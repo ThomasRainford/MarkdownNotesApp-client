@@ -1,4 +1,6 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
+import { Collection } from "../../../../generated/graphql";
+import { _testCollections } from "../../../../test-utils/testData";
 import LeftPaneContent from "./LeftPaneContent";
 import { mockCollectionsProps } from "./LeftPaneContent.mocks";
 
@@ -11,7 +13,10 @@ export default {
 
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
 const Template: ComponentStory<typeof LeftPaneContent> = () => (
-  <LeftPaneContent />
+  <LeftPaneContent
+    isMe={true}
+    userCollectionsData={_testCollections as Collection[]}
+  />
 );
 
 export const Base = Template.bind({});

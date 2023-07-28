@@ -9,6 +9,7 @@ export const testNotesLists = {
       updatedAt: "2023-01-03T08:52:02.025+00:00",
       collection: {
         id: "1",
+        visibility: "public",
       },
       notes: [
         {
@@ -29,6 +30,7 @@ export const testNotesLists = {
       updatedAt: "2023-01-03T08:52:02.025+00:00",
       collection: {
         id: "2",
+        visibility: "public",
       },
       notes: [
         {
@@ -47,6 +49,7 @@ export const testNotesLists = {
       updatedAt: "2023-01-03T08:52:02.025+00:00",
       collection: {
         id: "2",
+        visibility: "public",
       },
       notes: [
         {
@@ -67,6 +70,7 @@ export const testNotesLists = {
       updatedAt: "2023-01-03T08:52:02.025+00:00",
       collection: {
         id: "3",
+        visibility: "public",
       },
       notes: [
         {
@@ -85,6 +89,7 @@ export const testNotesLists = {
       updatedAt: "2023-01-03T08:52:02.025+00:00",
       collection: {
         id: "3",
+        visibility: "public",
       },
       notes: [
         {
@@ -103,6 +108,7 @@ export const testNotesLists = {
       updatedAt: "2023-01-03T08:52:02.025+00:00",
       collection: {
         id: "3",
+        visibility: "public",
       },
       notes: [
         {
@@ -185,6 +191,7 @@ export const createNotesListNoteLists = [
     updatedAt: "2023-01-03T08:52:02.025+00:00",
     collection: {
       id: "1",
+      visibility: "public",
     },
     notes: [],
   },

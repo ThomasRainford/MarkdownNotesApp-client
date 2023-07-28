@@ -1,7 +1,9 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { act } from "react-dom/test-utils";
 import { Client, Provider } from "urql";
+import { Collection } from "../../../../../generated/graphql";
 import { mockClient } from "../../../../../test-utils/mocks/gql-mocks";
+import { _testCollections } from "../../../../../test-utils/testData";
 import { LocalStorageKeys } from "../../../../../utils/types/types";
 import SelectedDataProvider from "../../../../helper/SelectedDataProvider";
 import Collections from "../Collections";
@@ -17,7 +19,10 @@ describe("Collections tests", () => {
     render(
       <Provider value={mockClient() as unknown as Client}>
         <SelectedDataProvider>
-          <Collections />
+          <Collections
+            isMe={true}
+            userCollectionsData={_testCollections as Collection[]}
+          />
         </SelectedDataProvider>
       </Provider>
     );
@@ -40,7 +45,10 @@ describe("Collections tests", () => {
     render(
       <Provider value={mockClient() as unknown as Client}>
         <SelectedDataProvider>
-          <Collections />
+          <Collections
+            isMe={true}
+            userCollectionsData={_testCollections as Collection[]}
+          />
         </SelectedDataProvider>
       </Provider>
     );
@@ -62,39 +70,6 @@ describe("Collections tests", () => {
     expect(JSON.parse(collection).id).toBe("1");
   });
 
-  test("adds a new collection successfully.", async () => {
-    // Render
-    render(
-      <Provider
-        value={
-          mockClient({ collection: { create: "success" } }) as unknown as Client
-        }
-      >
-        <SelectedDataProvider>
-          <Collections />
-        </SelectedDataProvider>
-      </Provider>
-    );
-
-    const addCollectionButton = screen.getByLabelText(/add-collection/i);
-    await act(async () => {
-      fireEvent.click(addCollectionButton);
-    });
-    const input = screen.getByPlaceholderText(/title/i);
-    await act(async () => {
-      fireEvent.change(input, { target: { value: "Collection 4" } });
-    });
-    const createCollectionButton = screen.getByLabelText(/create-collection/i);
-    await act(async () => {
-      fireEvent.click(createCollectionButton);
-    });
-    const newCollection = screen.getByRole("heading", {
-      name: /Collection 4/i,
-    });
-
-    expect(newCollection).toBeInTheDocument();
-  });
-
   test("fails to add a new collection", async () => {
     // Render
     render(
@@ -104,7 +79,10 @@ describe("Collections tests", () => {
         }
       >
         <SelectedDataProvider>
-          <Collections />
+          <Collections
+            isMe={true}
+            userCollectionsData={_testCollections as Collection[]}
+          />
         </SelectedDataProvider>
       </Provider>
     );

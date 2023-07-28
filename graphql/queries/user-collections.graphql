@@ -15,6 +15,7 @@ query userCollections($id: String!) {
       title
       collection {
         id
+        visibility
       }
       notes {
         id

@@ -68,6 +68,16 @@ const invalidateNotesLists = (cache: Cache) => {
   });
 };
 
+const invalidateUserNotesLists = (cache: Cache) => {
+  const allFields = cache.inspectFields("Query");
+  const fieldInfos = allFields.filter(
+    (info) => info.fieldName === "userNotesLists"
+  );
+  fieldInfos.forEach((fi) => {
+    cache.invalidate("Query", "userNotesLists", fi.arguments || null);
+  });
+};
+
 const invalidateNotesList = (cache: Cache) => {
   const allFields = cache.inspectFields("Query");
   const fieldInfos = allFields.filter((info) => info.fieldName === "notesList");
@@ -92,36 +102,47 @@ export const createUrqlClient = (ssrExchange: SSRExchange) => {
               invalidateUserFollowers(cache);
               invalidateCollections(cache);
               invalidateNotesLists(cache);
+              invalidateUserNotesLists(cache);
               invalidateNotesList(cache);
             },
             createCollection: (_result, _args, cache, _info) => {
               invalidateCollections(cache);
+              invalidateUserCollections(cache);
             },
             createNotesList: (_result, _args, cache, _info) => {
               invalidateCollections(cache);
               invalidateNotesLists(cache);
+              invalidateUserNotesLists(cache);
             },
             addNote: (_result, _args, cache, _info) => {
               invalidateNotesList(cache);
+              invalidateUserNotesLists(cache);
             },
             updateCollection: (_result, _args, cache, _info) => {
               invalidateCollections(cache);
+              invalidateUserCollections(cache);
             },
             updateNotesList: (_result, _args, cache, _info) => {
               invalidateCollections(cache);
+              invalidateUserCollections(cache);
             },
             deleteCollection: (_result, _args, cache, _info) => {
               invalidateCollections(cache);
+              invalidateUserCollections(cache);
             },
             deleteNotesList: (_result, _args, cache, _info) => {
               invalidateNotesLists(cache);
+              invalidateUserNotesLists(cache);
             },
             deleteNote: (_result, _args, cache, _info) => {
               invalidateNotesLists(cache);
+              invalidateUserNotesLists(cache);
             },
             savePublicCollection: (_result, _args, cache, _info) => {
               invalidateCollections(cache);
+              invalidateUserCollections(cache);
               invalidateNotesLists(cache);
+              invalidateUserNotesLists(cache);
             },
             updateUser: (_result, _args, cache, _info) => {
               invalidateUser(cache);
