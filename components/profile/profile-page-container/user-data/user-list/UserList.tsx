@@ -125,6 +125,7 @@ const UserList = ({ type, users, me }: Props): JSX.Element => {
                     _hover={{
                       color: "blue.400",
                       textDecoration: "underline",
+                      cursor: "pointer",
                     }}
                   >
                     {user.username}

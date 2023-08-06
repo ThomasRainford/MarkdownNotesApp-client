@@ -455,6 +455,13 @@ export type UpdateUserMutationVariables = Exact<{
 
 export type UpdateUserMutation = { __typename?: 'Mutation', updateUser: { __typename?: 'UserResponse', user?: { __typename?: 'User', id: string, email: string, username: string } | null, errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null } };
 
+export type VoteMutationVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type VoteMutation = { __typename?: 'Mutation', vote: { __typename?: 'CollectionResponse', collection?: { __typename?: 'Collection', id: string, title: string, visibility: string, upvotes: number, createdAt: any, updatedAt: any, owner: { __typename?: 'User', id: string, username: string }, lists: Array<{ __typename?: 'NotesList', id: string, title: string }> } | null, error?: { __typename?: 'Error', property: string, message: string } | null } };
+
 export type CollectionsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -792,6 +799,36 @@ export const UpdateUserDocument = gql`
 
 export function useUpdateUserMutation() {
   return Urql.useMutation<UpdateUserMutation, UpdateUserMutationVariables>(UpdateUserDocument);
+};
+export const VoteDocument = gql`
+    mutation Vote($id: String!) {
+  vote(id: $id) {
+    collection {
+      id
+      title
+      visibility
+      upvotes
+      createdAt
+      updatedAt
+      owner {
+        id
+        username
+      }
+      lists {
+        id
+        title
+      }
+    }
+    error {
+      property
+      message
+    }
+  }
+}
+    `;
+
+export function useVoteMutation() {
+  return Urql.useMutation<VoteMutation, VoteMutationVariables>(VoteDocument);
 };
 export const CollectionsDocument = gql`
     query collections {

@@ -70,15 +70,15 @@ const CollectionList = ({ collections }: Props): JSX.Element => {
             </Flex>
             <Flex>
               <Flex mr="2em">
-                <Box mr="0.25em">
-                  <HamburgerIcon color={"gray.400"} boxSize={"5"} mb="7px" />
-                </Box>
-                <Box>
+                <Flex align={"center"} mr="0.25em">
+                  <HamburgerIcon color={"gray.400"} boxSize={"5"} />
+                </Flex>
+                <Flex align={"center"}>
                   <Heading size={"sm"} color="gray.400">
                     {collection.lists.length}{" "}
                     {collection.lists.length > 1 ? "Lists" : "List"}
                   </Heading>
-                </Box>
+                </Flex>
               </Flex>
               <Flex mr="0.5em">
                 <Box mr="0.25em">

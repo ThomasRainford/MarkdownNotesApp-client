@@ -48,6 +48,14 @@ const invalidateUserFollowers = (cache: Cache) => {
   });
 };
 
+const invalidateUserVotes = (cache: Cache) => {
+  const allFields = cache.inspectFields("Query");
+  const fieldInfos = allFields.filter((info) => info.fieldName === "userVotes");
+  fieldInfos.forEach((fi) => {
+    cache.invalidate("Query", "userVotes", fi.arguments || null);
+  });
+};
+
 const invalidateCollections = (cache: Cache) => {
   const allFields = cache.inspectFields("Query");
   const fieldInfos = allFields.filter(
@@ -143,6 +151,13 @@ export const createUrqlClient = (ssrExchange: SSRExchange) => {
               invalidateUserCollections(cache);
               invalidateNotesLists(cache);
               invalidateUserNotesLists(cache);
+            },
+            vote: (_result, _args, cache, _info) => {
+              invalidateUser(cache);
+              invalidateMe(cache);
+              invalidateCollections(cache);
+              invalidateUserCollections(cache);
+              invalidateUserVotes(cache);
             },
             updateUser: (_result, _args, cache, _info) => {
               invalidateUser(cache);
