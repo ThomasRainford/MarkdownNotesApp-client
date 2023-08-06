@@ -117,19 +117,19 @@ const UserList = ({ type, users, me }: Props): JSX.Element => {
                   src={"https://avatars.dicebear.com/api/male/username.svg"}
                 />
               </Flex>
-              <Flex flexDirection={"column"} justify="space-between">
-                <Heading
-                  size={"md"}
-                  color={"gray.300"}
-                  _hover={{
-                    color: "blue.400",
-                    textDecoration: "underline",
-                  }}
-                >
-                  <Link as={NextLink} href={`/profile/${user.username}`}>
+              <Flex flexDirection={"column"} align="start">
+                <Link as={NextLink} href={`/profile/${user.username}`}>
+                  <Heading
+                    size={"md"}
+                    color={"gray.300"}
+                    _hover={{
+                      color: "blue.400",
+                      textDecoration: "underline",
+                    }}
+                  >
                     {user.username}
-                  </Link>
-                </Heading>
+                  </Heading>
+                </Link>
                 <Text fontSize={"xs"} color={"gray.400"}>
                   {user.email}
                 </Text>

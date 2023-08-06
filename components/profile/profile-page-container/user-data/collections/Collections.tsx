@@ -12,16 +12,22 @@ import {
 import { useRouter } from "next/router";
 import {
   Collection,
+  User,
   useSavePublicCollectionMutation,
 } from "../../../../../generated/graphql";
 import { useAllLocalStorageValues } from "../../../../../utils/hooks/useAllLocalStorageValues";
 
 export interface Props {
   userCollectionsData: Collection[];
+  userData: User;
   isMe: boolean;
 }
 
-const Collections = ({ userCollectionsData, isMe }: Props): JSX.Element => {
+const Collections = ({
+  userCollectionsData,
+  userData,
+  isMe,
+}: Props): JSX.Element => {
   const [result, savePublicCollection] = useSavePublicCollectionMutation();
   const router = useRouter();
   const {
@@ -45,19 +51,24 @@ const Collections = ({ userCollectionsData, isMe }: Props): JSX.Element => {
               p="0.75em"
               mr="0.5em"
               mb="0.85em"
-              _hover={
-                isMe
-                  ? {
-                      borderColor: "gray.300",
-                    }
-                  : {}
-              }
+              _hover={{
+                borderColor: "gray.300",
+              }}
               onClick={() => {
-                if (!isMe) return;
+                if (!userData.username) {
+                  toast({
+                    id: "profile-collection-click",
+                    title: "Could not access this collection.",
+                    status: "error",
+                    position: "top",
+                    duration: 2000,
+                  });
+                  return;
+                }
                 setSelectedCollection(JSON.stringify({ id: collection.id }));
                 setSelectedList("");
                 setSelectedNote("");
-                router.push("/my-notes");
+                router.push(`/notes/${userData.username}`);
               }}
             >
               <Flex flexWrap={"wrap"} w="100%">

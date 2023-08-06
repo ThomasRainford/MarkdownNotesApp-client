@@ -40,7 +40,7 @@ const UserData = ({
     md: "start",
   }) as "start" | "center" | "end" | undefined;
 
-  const isMe = meData._id === userData._id;
+  const isMe = meData.id === userData.id;
 
   return (
     <Box display={"flex"} w="100%" mt={{ base: "5%", sm: "5%", md: "17%" }}>
@@ -73,9 +73,10 @@ const UserData = ({
             borderRadius="1px"
           />
           <TabPanels>
-            <TabPanel>
+            <TabPanel pl={!tabsIsFitted ? 0 : undefined}>
               <Collections
                 userCollectionsData={userCollectionsData}
+                userData={userData}
                 isMe={isMe}
               />
             </TabPanel>

@@ -10,13 +10,22 @@ import {
   Tag,
   VStack,
 } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 import { Collection } from "../../../../../generated/graphql";
+import { useAllLocalStorageValues } from "../../../../../utils/hooks/useAllLocalStorageValues";
 
 export interface Props {
   collections: Collection[];
 }
 
 const CollectionList = ({ collections }: Props): JSX.Element => {
+  const router = useRouter();
+  const {
+    selectedCollection: { setSelectedCollection },
+    selectedNotesList: { setSelectedList },
+    selectedNote: { setSelectedNote },
+  } = useAllLocalStorageValues();
+
   return (
     <VStack
       divider={<StackDivider borderColor="gray.600" />}
@@ -24,6 +33,7 @@ const CollectionList = ({ collections }: Props): JSX.Element => {
       align="stretch"
     >
       {collections.map((collection) => {
+        const username = collection.owner.username;
         return (
           <Flex key={collection.id} direction="column">
             <Flex w="100%" justifyContent={"space-between"} mb="1.5em">
@@ -31,14 +41,24 @@ const CollectionList = ({ collections }: Props): JSX.Element => {
                 <Breadcrumb color={"blue.300"} fontSize="lg">
                   <BreadcrumbItem>
                     <BreadcrumbLink
-                      href={`/profile/${collection.owner.username}`}
+                      href={`/profile/${username}`}
                       color={"blue.300"}
                     >
-                      {collection.owner.username}
+                      {username}
                     </BreadcrumbLink>
                   </BreadcrumbItem>
                   <BreadcrumbItem isCurrentPage>
-                    <BreadcrumbLink color={"blue.300"}>
+                    <BreadcrumbLink
+                      color={"blue.300"}
+                      onClick={() => {
+                        setSelectedCollection(
+                          JSON.stringify({ id: collection.id })
+                        );
+                        setSelectedList("");
+                        setSelectedNote("");
+                        router.push(`/notes/${username}`);
+                      }}
+                    >
                       {collection.title}
                     </BreadcrumbLink>
                   </BreadcrumbItem>
