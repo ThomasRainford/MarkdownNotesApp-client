@@ -10,6 +10,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
+import { useState } from "react";
 import {
   Collection,
   User,
@@ -39,6 +40,9 @@ const Collections = ({
     selectedNote: { setSelectedNote },
   } = useAllLocalStorageValues();
   const toast = useToast();
+  const [votingCollection, setVotingCollection] = useState<string>();
+  const [savingPublicCollection, setSavingPublicCollection] =
+    useState<string>();
 
   const isMe = meData.id === userData.id;
 
@@ -93,7 +97,14 @@ const Collections = ({
                     </Heading>
                   </Flex>
                   <Flex>
-                    <Tag colorScheme={"teal"}>{collection.visibility}</Tag>
+                    <Tag
+                      variant={
+                        collection.visibility === "public" ? "solid" : "outline"
+                      }
+                      colorScheme={"teal"}
+                    >
+                      {collection.visibility}
+                    </Tag>
                   </Flex>
                 </Flex>
                 <Flex w="100%" justifyContent={"space-between"}>
@@ -114,8 +125,12 @@ const Collections = ({
                         <Button
                           colorScheme={"blue"}
                           size={"xs"}
-                          isLoading={savePublicCollectionResult.fetching}
+                          isLoading={
+                            savePublicCollectionResult.fetching &&
+                            savingPublicCollection === collection.id
+                          }
                           onClick={async () => {
+                            setSavingPublicCollection(collection.id);
                             const result = await savePublicCollection({
                               targetUserId: collection.owner.id,
                               collectionId: collection.id,
@@ -147,7 +162,10 @@ const Collections = ({
                   <Flex align={"center"} mr="0.5em">
                     <Button
                       size={"sm"}
-                      isLoading={voteResult.fetching}
+                      isLoading={
+                        voteResult.fetching &&
+                        votingCollection === collection.id
+                      }
                       leftIcon={
                         <TriangleUpIcon
                           color={hasVoted ? "yellow" : "blue.400"}
@@ -155,6 +173,7 @@ const Collections = ({
                         />
                       }
                       onClick={async () => {
+                        setVotingCollection(collection.id);
                         const result = await vote({
                           id: collection.id,
                         });

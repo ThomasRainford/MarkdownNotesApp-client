@@ -14,7 +14,6 @@ export const setNotesListValue = (notesList: NotesList) => {
 };
 
 export const setNoteValue = (note: Note, notesList: NotesList) => {
-  console.log(notesList.collection);
   return {
     id: note.id,
     collectionId: notesList.collection.id,

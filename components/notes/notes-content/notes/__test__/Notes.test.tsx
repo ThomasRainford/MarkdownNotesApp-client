@@ -70,7 +70,6 @@ describe("Notes component", () => {
 
     const noteInStorage = localStorage.getItem(LocalStorageKeys.SELECTED_NOTE);
     const selectedNote = JSON.parse(noteInStorage || "{}");
-    console.log(selectedNote);
     expect(selectedNote).not.toBeNull();
     expect(JSON.parse(selectedNote).id).toBe("1");
   });

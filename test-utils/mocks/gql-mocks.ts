@@ -99,7 +99,6 @@ export const mockClient = (options?: MockClientOptions) =>
       const queryType = (
         query.definitions[0].name.value as string
       ).toLowerCase();
-      console.log(queryType);
       switch (queryType) {
         case "collections": {
           let collections = _testCollections;
@@ -114,7 +113,6 @@ export const mockClient = (options?: MockClientOptions) =>
         }
         case "userCollections": {
           let userCollections = _testCollections;
-          console.log(options);
           if (options?.userCollection?.create === "success") {
             userCollections = createCollectionCollections;
           }

@@ -94,7 +94,6 @@ export interface Props {
 }
 
 const Notes = ({ isMe, notes, notesList }: Props): JSX.Element => {
-  console.log(notesList);
   const [isAddingNewNote, setIsAddingNewNote] = useState(false);
   const { colorMode } = useColorMode();
   const toast = useToast();
