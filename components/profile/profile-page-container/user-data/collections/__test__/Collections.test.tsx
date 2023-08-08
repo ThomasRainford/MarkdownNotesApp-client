@@ -1,6 +1,9 @@
 import { render } from "@testing-library/react";
-import { Collection } from "../../../../../../generated/graphql";
-import { _testCollections } from "../../../../../../test-utils/testData";
+import { Collection, User } from "../../../../../../generated/graphql";
+import {
+  testUser,
+  _testCollections,
+} from "../../../../../../test-utils/testData";
 import SelectedDataProvider from "../../../../../helper/SelectedDataProvider";
 import Collections from "../Collections";
 
@@ -10,7 +13,8 @@ describe("Collections component", () => {
       <SelectedDataProvider>
         <Collections
           userCollectionsData={_testCollections as Collection[]}
-          isMe={true}
+          userData={testUser as unknown as User}
+          meData={testUser as unknown as User}
         />
       </SelectedDataProvider>
     );
