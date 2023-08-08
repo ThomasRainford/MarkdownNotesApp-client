@@ -4,6 +4,8 @@ query userCollections($id: String!) {
     title
     visibility
     upvotes
+    createdAt
+    updatedAt
     owner {
       id
       username
@@ -11,6 +13,17 @@ query userCollections($id: String!) {
     lists {
       id
       title
+      collection {
+        id
+        visibility
+      }
+      notes {
+        id
+        title
+        body
+        createdAt
+        updatedAt
+      }
     }
   }
 }

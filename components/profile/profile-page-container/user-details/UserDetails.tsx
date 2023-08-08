@@ -8,6 +8,7 @@ import {
   IconButton,
   Input,
   Text,
+  Tooltip,
   useToast,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
@@ -32,6 +33,48 @@ const EditProfile = ({
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setValue(event.target.value);
+  };
+
+  const handleConfirm = async () => {
+    // If username has not changed then close editor.
+    if (value === user.username) {
+      setIsEditing(false);
+      return;
+    }
+    const result = await updateUser({
+      username: value,
+    });
+    // If request failed then show error toast.
+    if (!result.data?.updateUser.user) {
+      const errorMessage = result.data?.updateUser.errors
+        ? result.data?.updateUser.errors[0].message
+        : undefined;
+      toast({
+        id: "edit-profile-error",
+        title: (
+          <div>
+            <p>Failed to update profile:</p>
+            <p>{`${errorMessage || "No reason provided."}`}</p>
+          </div>
+        ),
+        status: "error",
+        position: "top",
+        duration: 2000,
+      });
+      setIsEditing(false);
+      return;
+    }
+    // Request succeeded show show success toast and update
+    // page route with new username.
+    toast({
+      id: "edit-profile-success",
+      title: `Profile updated`,
+      status: "success",
+      position: "top",
+      duration: 2000,
+    });
+    router.replace(`/profile/${value}`);
+    setIsEditing(false);
   };
 
   return (
@@ -61,6 +104,11 @@ const EditProfile = ({
           autoComplete="off"
           value={value}
           onChange={handleChange}
+          onKeyUp={async (event) => {
+            if (event.key === "Enter") {
+              await handleConfirm();
+            }
+          }}
         />
       </Box>
       <Box display={"flex"} justifyContent={"center"}>
@@ -71,31 +119,7 @@ const EditProfile = ({
             color="gray.400"
             aria-label={"edit-profile-check"}
             isLoading={result.fetching}
-            onClick={async () => {
-              console.log("submit");
-              const result = await updateUser({
-                username: value,
-              });
-              if (result.data?.updateUser.user) {
-                toast({
-                  id: "edit-profile-success",
-                  title: `Profile updated`,
-                  status: "success",
-                  position: "top",
-                  duration: 2000,
-                });
-              } else {
-                toast({
-                  id: "edit-profile-error",
-                  title: `Failed to update profile`,
-                  status: "error",
-                  position: "top",
-                  duration: 2000,
-                });
-              }
-              router.replace(`/profile/${value}`);
-              setIsEditing(false);
-            }}
+            onClick={handleConfirm}
           />
           <IconButton
             icon={<CloseIcon />}
@@ -144,7 +168,14 @@ const UserDetails = ({ user, me }: Props): JSX.Element => {
           mb={"0.45em"}
           src={"https://avatars.dicebear.com/api/male/username.svg"}
         />
-        <Heading>{user?.username}</Heading>
+        <Tooltip
+          isDisabled={!isMe}
+          label="👈 This is you!"
+          aria-label="is-me-tooltip"
+          placement="right"
+        >
+          <Heading color={isMe ? "blue.300" : ""}>{user?.username}</Heading>
+        </Tooltip>
       </Box>
       <Box display={"flex"} justifyContent={"center"} w={"100%"} mb="0.55em">
         <Button

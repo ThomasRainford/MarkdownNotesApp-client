@@ -53,7 +53,8 @@ const mySyntaxHighlighting = HighlightStyle.define([
 
 interface Props {
   initialDoc: string;
-  onChange?: (state: EditorState) => void;
+  onChange?: (_: EditorState) => void;
+  readOnly: boolean;
 }
 
 const useCodeMirror = <T extends Element>(
@@ -69,6 +70,7 @@ const useCodeMirror = <T extends Element>(
     const startState = EditorState.create({
       doc: props.initialDoc,
       extensions: [
+        EditorState.readOnly.of(props.readOnly),
         keymap.of([
           ...defaultKeymap,
           ...historyKeymap,
@@ -104,7 +106,7 @@ const useCodeMirror = <T extends Element>(
     setEditorView(view);
 
     return () => view.destroy();
-  }, [refContainer]);
+  }, [refContainer, onChange, props.initialDoc, props.readOnly]);
 
   return [refContainer, editorView];
 };

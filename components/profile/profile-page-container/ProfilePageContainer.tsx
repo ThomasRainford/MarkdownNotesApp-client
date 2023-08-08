@@ -108,7 +108,7 @@ const DesktopView = ({
         justifyContent={"flex-end"}
         h={"100%"}
         w={{ base: "100%", md: "40%" }}
-        mr={"0.5em"}
+        mr={"1.5em"}
       >
         <UserDetails me={meData} user={userData} />
       </Box>

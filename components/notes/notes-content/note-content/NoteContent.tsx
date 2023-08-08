@@ -12,7 +12,6 @@ import { useEffect, useState } from "react";
 import {
   Collection,
   Note,
-  useCollectionsQuery,
   useUpdateNoteMutation,
 } from "../../../../generated/graphql";
 import { getTimeSince } from "../../../../utils/getTimeSince";
@@ -21,13 +20,19 @@ import { useHandleCrossEditing } from "../../../../utils/hooks/useHandleCrossEdi
 import { useUpdateItem } from "../../../../utils/hooks/useUpdateItem";
 import NoteEditor from "./note-editor/NoteEditor";
 
-const NoteContentHeaderTitle = ({ note }: { note: Note }) => {
-  const [collectionsResult] = useCollectionsQuery();
+const NoteContentHeaderTitle = ({
+  isMe,
+  note,
+  collections,
+}: {
+  isMe: boolean;
+  note: Note;
+  collections: Collection[];
+}) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editingValue, setEditingValue] = useState(note?.title);
   const [, updateNote] = useUpdateNoteMutation();
   const [updateItem] = useUpdateItem();
-  const collections = collectionsResult.data?.collections as Collection[];
   const handelCrossEditing = useHandleCrossEditing({ collections });
   const {
     selectedNote: { selectedNote },
@@ -90,18 +95,20 @@ const NoteContentHeaderTitle = ({ note }: { note: Note }) => {
               {editingValue}
             </Heading>
           </Box>
-          <Box display="flex">
-            <IconButton
-              colorScheme="blue"
-              size={"md"}
-              variant={"outline"}
-              aria-label={`update-note-title`}
-              icon={<EditIcon boxSize={4} />}
-              onClick={() => {
-                setIsEditing(true);
-              }}
-            />
-          </Box>
+          {isMe && (
+            <Box display="flex">
+              <IconButton
+                colorScheme="blue"
+                size={"md"}
+                variant={"outline"}
+                aria-label={`update-note-title`}
+                icon={<EditIcon boxSize={4} />}
+                onClick={() => {
+                  setIsEditing(true);
+                }}
+              />
+            </Box>
+          )}
         </Box>
       ) : (
         <Box display={"flex"} justifyContent={"space-between"}>
@@ -165,12 +172,24 @@ const NoteContentHeaderTitle = ({ note }: { note: Note }) => {
   );
 };
 
-const NoteContentHeader = ({ note }: { note: Note }) => {
+const NoteContentHeader = ({
+  isMe,
+  note,
+  collections,
+}: {
+  isMe: boolean;
+  note: Note;
+  collections: Collection[];
+}) => {
   return (
     <Box>
       {note && (
         <Box>
-          <NoteContentHeaderTitle note={note} />
+          <NoteContentHeaderTitle
+            isMe={isMe}
+            note={note}
+            collections={collections}
+          />
           <Box display={"flex"} alignItems="center" mt="1em">
             <Box mr={"0.5em"}>
               <Text>Last Modified</Text>
@@ -194,13 +213,17 @@ const NoteContentHeader = ({ note }: { note: Note }) => {
   );
 };
 
-const NoteContent = (): JSX.Element => {
-  const [collectionsResult] = useCollectionsQuery();
+export interface Props {
+  isMe: boolean;
+  userCollectionsData: Collection[];
+}
+
+const NoteContent = ({ isMe, userCollectionsData }: Props): JSX.Element => {
   const {
     selectedNote: { selectedNote },
   } = useAllLocalStorageValues();
 
-  const note: Note | undefined = collectionsResult.data?.collections
+  const note: Note | undefined = userCollectionsData
     .find((c) => c.id === selectedNote?.collectionId)
     ?.lists.find((l) => l.id === selectedNote?.notesListId)
     ?.notes.find((n) => n.id === selectedNote?.id);
@@ -211,9 +234,13 @@ const NoteContent = (): JSX.Element => {
         <Box>No Note Selected...</Box>
       ) : (
         <Box pt={"0.75em"} px={"1em"} h={"100%"}>
-          <NoteContentHeader note={note} />
+          <NoteContentHeader
+            isMe={isMe}
+            note={note}
+            collections={userCollectionsData}
+          />
           <Box className="node-editor-container" height={"100%"} mt="1.5em">
-            <NoteEditor note={note} />
+            <NoteEditor note={note} readOnly={!isMe} />
           </Box>
         </Box>
       )}

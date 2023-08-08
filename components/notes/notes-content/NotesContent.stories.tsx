@@ -1,6 +1,8 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
 import { SelectedCollectionProvider } from "../../../contexts/SelectedCollectionContext";
 import { SelectedListProvider } from "../../../contexts/SelectedListContext";
+import { Collection, User } from "../../../generated/graphql";
+import { testUser, _testCollections } from "../../../test-utils/testData";
 import NotesContent from "./NotesContent";
 import { mockNotesContentProps } from "./NotesContent.mocks";
 
@@ -15,7 +17,11 @@ export default {
 const Template: ComponentStory<typeof NotesContent> = () => (
   <SelectedCollectionProvider>
     <SelectedListProvider>
-      <NotesContent />
+      <NotesContent
+        isMe={true}
+        userData={testUser as unknown as User}
+        userCollectionsData={_testCollections as Collection[]}
+      />
     </SelectedListProvider>
   </SelectedCollectionProvider>
 );

@@ -237,10 +237,11 @@ const NotesListsUpdate = ({ notesList }: { notesList: NotesList }) => {
 };
 
 export interface Props {
+  isMe: boolean;
   notesLists: NotesList[];
 }
 
-const Lists = ({ notesLists }: Props): JSX.Element => {
+const Lists = ({ isMe, notesLists }: Props): JSX.Element => {
   const [isAddingNewList, setIsAddingNewList] = useState(false);
   const { colorMode } = useColorMode();
   const toast = useToast();
@@ -294,7 +295,7 @@ const Lists = ({ notesLists }: Props): JSX.Element => {
                     </Heading>
                     <Box display={"flex"}>
                       <Box mr="0.5em">
-                        {_notesList.id === notesList?.id && (
+                        {isMe && _notesList.id === notesList?.id && (
                           <NotesListsUpdate notesList={_notesList} />
                         )}
                         <Tag mt="1px">{notes.length}</Tag>

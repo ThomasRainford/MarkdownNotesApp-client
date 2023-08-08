@@ -1,5 +1,9 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
-import { testCollections } from "../../../../test-utils/testData";
+import { NotesList } from "../../../../generated/graphql";
+import {
+  testCollections,
+  testNotesLists,
+} from "../../../../test-utils/testData";
 import { LocalStorageKeys } from "../../../../utils/types/types";
 import Notes from "./Notes";
 import { mockNotesProps } from "./Notes.mocks";
@@ -21,7 +25,13 @@ localStorage.setItem(
 );
 
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
-const Template: ComponentStory<typeof Notes> = () => <Notes notes={[]} />;
+const Template: ComponentStory<typeof Notes> = () => (
+  <Notes
+    notes={testNotesLists.collection1[0].notes}
+    isMe={true}
+    notesList={testNotesLists.collection1[0] as NotesList}
+  />
+);
 
 export const Base = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args

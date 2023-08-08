@@ -1,8 +1,9 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { act } from "react-dom/test-utils";
 import { Client, Provider } from "urql";
+import { Collection, User } from "../../../../../generated/graphql";
 import { mockClient } from "../../../../../test-utils/mocks/gql-mocks";
-import { _testCollections } from "../../../../../test-utils/testData";
+import { testUser, _testCollections } from "../../../../../test-utils/testData";
 import { LocalStorageKeys } from "../../../../../utils/types/types";
 import SelectedDataProvider from "../../../../helper/SelectedDataProvider";
 import RightPaneContent from "../RightPaneContent";
@@ -25,7 +26,11 @@ describe("RightPaneContent component", () => {
     render(
       <Provider value={mockClient() as unknown as Client}>
         <SelectedDataProvider>
-          <RightPaneContent />
+          <RightPaneContent
+            isMe={true}
+            userData={testUser as unknown as User}
+            userCollectionsData={_testCollections as Collection[]}
+          />
         </SelectedDataProvider>
       </Provider>
     );
@@ -42,7 +47,11 @@ describe("RightPaneContent component", () => {
     render(
       <Provider value={mockClient() as unknown as Client}>
         <SelectedDataProvider>
-          <RightPaneContent />
+          <RightPaneContent
+            isMe={true}
+            userData={testUser as unknown as User}
+            userCollectionsData={_testCollections as Collection[]}
+          />
         </SelectedDataProvider>
       </Provider>
     );
@@ -67,7 +76,11 @@ describe("RightPaneContent component", () => {
     render(
       <Provider value={mockClient() as unknown as Client}>
         <SelectedDataProvider>
-          <RightPaneContent />
+          <RightPaneContent
+            isMe={true}
+            userData={testUser as unknown as User}
+            userCollectionsData={_testCollections as Collection[]}
+          />
         </SelectedDataProvider>
       </Provider>
     );
@@ -88,7 +101,11 @@ describe("RightPaneContent component", () => {
     render(
       <Provider value={mockClient() as unknown as Client}>
         <SelectedDataProvider>
-          <RightPaneContent />
+          <RightPaneContent
+            isMe={true}
+            userData={testUser as unknown as User}
+            userCollectionsData={_testCollections as Collection[]}
+          />
         </SelectedDataProvider>
       </Provider>
     );
@@ -118,7 +135,11 @@ describe("RightPaneContent component", () => {
     render(
       <Provider value={mockClient() as unknown as Client}>
         <SelectedDataProvider>
-          <RightPaneContent />
+          <RightPaneContent
+            isMe={true}
+            userData={testUser as unknown as User}
+            userCollectionsData={_testCollections as Collection[]}
+          />
         </SelectedDataProvider>
       </Provider>
     );

@@ -1,0 +1,24 @@
+mutation Vote($id: String!) {
+  vote(id: $id) {
+    collection {
+      id
+      title
+      visibility
+      upvotes
+      createdAt
+      updatedAt
+      owner {
+        id
+        username
+      }
+      lists {
+        id
+        title
+      }
+    }
+    error {
+      property
+      message
+    }
+  }
+}

@@ -48,6 +48,14 @@ const invalidateUserFollowers = (cache: Cache) => {
   });
 };
 
+const invalidateUserVotes = (cache: Cache) => {
+  const allFields = cache.inspectFields("Query");
+  const fieldInfos = allFields.filter((info) => info.fieldName === "userVotes");
+  fieldInfos.forEach((fi) => {
+    cache.invalidate("Query", "userVotes", fi.arguments || null);
+  });
+};
+
 const invalidateCollections = (cache: Cache) => {
   const allFields = cache.inspectFields("Query");
   const fieldInfos = allFields.filter(
@@ -65,6 +73,16 @@ const invalidateNotesLists = (cache: Cache) => {
   );
   fieldInfos.forEach((fi) => {
     cache.invalidate("Query", "notesLists", fi.arguments || null);
+  });
+};
+
+const invalidateUserNotesLists = (cache: Cache) => {
+  const allFields = cache.inspectFields("Query");
+  const fieldInfos = allFields.filter(
+    (info) => info.fieldName === "userNotesLists"
+  );
+  fieldInfos.forEach((fi) => {
+    cache.invalidate("Query", "userNotesLists", fi.arguments || null);
   });
 };
 
@@ -92,36 +110,54 @@ export const createUrqlClient = (ssrExchange: SSRExchange) => {
               invalidateUserFollowers(cache);
               invalidateCollections(cache);
               invalidateNotesLists(cache);
+              invalidateUserNotesLists(cache);
               invalidateNotesList(cache);
             },
             createCollection: (_result, _args, cache, _info) => {
               invalidateCollections(cache);
+              invalidateUserCollections(cache);
             },
             createNotesList: (_result, _args, cache, _info) => {
               invalidateCollections(cache);
               invalidateNotesLists(cache);
+              invalidateUserNotesLists(cache);
             },
             addNote: (_result, _args, cache, _info) => {
               invalidateNotesList(cache);
+              invalidateUserNotesLists(cache);
             },
             updateCollection: (_result, _args, cache, _info) => {
               invalidateCollections(cache);
+              invalidateUserCollections(cache);
             },
             updateNotesList: (_result, _args, cache, _info) => {
               invalidateCollections(cache);
+              invalidateUserCollections(cache);
             },
             deleteCollection: (_result, _args, cache, _info) => {
               invalidateCollections(cache);
+              invalidateUserCollections(cache);
             },
             deleteNotesList: (_result, _args, cache, _info) => {
               invalidateNotesLists(cache);
+              invalidateUserNotesLists(cache);
             },
             deleteNote: (_result, _args, cache, _info) => {
               invalidateNotesLists(cache);
+              invalidateUserNotesLists(cache);
             },
             savePublicCollection: (_result, _args, cache, _info) => {
               invalidateCollections(cache);
+              invalidateUserCollections(cache);
               invalidateNotesLists(cache);
+              invalidateUserNotesLists(cache);
+            },
+            vote: (_result, _args, cache, _info) => {
+              invalidateUser(cache);
+              invalidateMe(cache);
+              invalidateCollections(cache);
+              invalidateUserCollections(cache);
+              invalidateUserVotes(cache);
             },
             updateUser: (_result, _args, cache, _info) => {
               invalidateUser(cache);

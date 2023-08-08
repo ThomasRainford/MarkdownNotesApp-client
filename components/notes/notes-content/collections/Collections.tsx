@@ -29,7 +29,6 @@ import * as Yup from "yup";
 import {
   Collection,
   UpdateCollectionMutation,
-  useCollectionsQuery,
   useCreateCollectionMutation,
   useDeleteCollectionMutation,
   useUpdateCollectionMutation,
@@ -221,8 +220,12 @@ const CollectionsUpdate = ({ collection }: { collection: Collection }) => {
   );
 };
 
-const Collections = (): JSX.Element => {
-  const [collectionsResult] = useCollectionsQuery();
+export interface Props {
+  isMe: boolean;
+  userCollectionsData: Collection[];
+}
+
+const Collections = ({ isMe, userCollectionsData }: Props): JSX.Element => {
   const [, createCollection] = useCreateCollectionMutation();
   const [isAddingNewCollection, setIsAddingNewCollection] = useState(false);
   const { colorMode } = useColorMode();
@@ -233,10 +236,10 @@ const Collections = (): JSX.Element => {
   } = useAllLocalStorageValues();
   const collection = getSelectedCollection(
     selectedCollection,
-    collectionsResult.data?.collections as Collection[]
+    userCollectionsData as Collection[]
   );
 
-  const collections = collectionsResult.data?.collections;
+  const collections = userCollectionsData;
 
   return (
     <Box>
@@ -277,7 +280,7 @@ const Collections = (): JSX.Element => {
                 </Heading>
                 <Box display={"flex"}>
                   <Box mr="0.5em">
-                    {_collection.id === collection?.id && (
+                    {isMe && _collection.id === collection?.id && (
                       <CollectionsUpdate collection={collection} />
                     )}
                     <Tag mt="1px">{lists.length}</Tag>

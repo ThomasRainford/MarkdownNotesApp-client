@@ -1,6 +1,7 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { act } from "react-dom/test-utils";
 import { Client, Provider } from "urql";
+import { NotesList } from "../../../../../generated/graphql";
 import { mockClient } from "../../../../../test-utils/mocks/gql-mocks";
 import { testNotesLists } from "../../../../../test-utils/testData";
 import { LocalStorageKeys } from "../../../../../utils/types/types";
@@ -22,7 +23,11 @@ describe("Notes component", () => {
     render(
       <Provider value={mockClient() as unknown as Client}>
         <SelectedDataProvider>
-          <Notes notes={testNotesLists.collection1[0].notes} />
+          <Notes
+            notes={testNotesLists.collection1[0].notes}
+            isMe={true}
+            notesList={testNotesLists.collection1[0] as NotesList}
+          />
         </SelectedDataProvider>
       </Provider>
     );
@@ -46,7 +51,11 @@ describe("Notes component", () => {
     render(
       <Provider value={mockClient() as unknown as Client}>
         <SelectedDataProvider>
-          <Notes notes={testNotesLists.collection1[0].notes} />
+          <Notes
+            notes={testNotesLists.collection1[0].notes}
+            isMe={true}
+            notesList={testNotesLists.collection1[0] as NotesList}
+          />
         </SelectedDataProvider>
       </Provider>
     );
@@ -61,7 +70,6 @@ describe("Notes component", () => {
 
     const noteInStorage = localStorage.getItem(LocalStorageKeys.SELECTED_NOTE);
     const selectedNote = JSON.parse(noteInStorage || "{}");
-
     expect(selectedNote).not.toBeNull();
     expect(JSON.parse(selectedNote).id).toBe("1");
   });

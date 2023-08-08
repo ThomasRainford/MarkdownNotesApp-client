@@ -25,6 +25,8 @@ import {
   UpdateNoteMutationVariables,
   UpdateNotesListMutation,
   UpdateNotesListMutationVariables,
+  UserCollectionsQuery,
+  UserNotesListsQuery,
 } from "../../generated/graphql";
 import { createMockUrqlClient } from "../createMockUrqlClient";
 import {
@@ -41,7 +43,13 @@ type MockClientOptions = {
   collection?: {
     create?: "success" | "error";
   };
+  userCollection?: {
+    create?: "success" | "error";
+  };
   noteslist?: {
+    create?: "success" | "error";
+  };
+  userNoteslist?: {
     create?: "success" | "error";
   };
   note?: {
@@ -56,7 +64,9 @@ type MockClientOptions = {
 export const mockClient = (options?: MockClientOptions) =>
   createMockUrqlClient<
     | CollectionsQueryVariables
+    | UserCollectionsQuery
     | NotesListsQueryVariables
+    | UserNotesListsQuery
     | NotesListQueryVariables
     | MeQueryVariables
     | LoginMutationVariables
@@ -70,8 +80,10 @@ export const mockClient = (options?: MockClientOptions) =>
     sourceT<{
       data:
         | CollectionsQuery
+        | UserCollectionsQuery
         | NotesListsQuery
         | NotesListQuery
+        | UserNotesListsQuery
         | MeQuery
         | LoginMutation
         | RegisterMutation
@@ -88,7 +100,7 @@ export const mockClient = (options?: MockClientOptions) =>
         query.definitions[0].name.value as string
       ).toLowerCase();
       switch (queryType) {
-        case "collections":
+        case "collections": {
           let collections = _testCollections;
           if (options?.collection?.create === "success") {
             collections = createCollectionCollections;
@@ -98,7 +110,19 @@ export const mockClient = (options?: MockClientOptions) =>
               collections,
             },
           });
-        case "noteslists":
+        }
+        case "userCollections": {
+          let userCollections = _testCollections;
+          if (options?.userCollection?.create === "success") {
+            userCollections = createCollectionCollections;
+          }
+          return fromValue({
+            data: {
+              userCollections,
+            },
+          });
+        }
+        case "noteslists": {
           let notesLists = testNotesLists.collection1;
           if (options?.noteslist?.create === "success") {
             notesLists = createNotesListNoteLists;
@@ -108,7 +132,19 @@ export const mockClient = (options?: MockClientOptions) =>
               notesLists,
             },
           });
-        case "noteslist":
+        }
+        case "userNotesList": {
+          let userNotesLists = testNotesLists.collection1;
+          if (options?.userNoteslist?.create === "success") {
+            userNotesLists = createNotesListNoteLists;
+          }
+          return fromValue({
+            data: {
+              userNotesLists,
+            },
+          });
+        }
+        case "noteslist": {
           let notesList = testNotesLists.collection1[0];
           if (options?.note?.create === "success") {
             notesList = createNoteNotesList;
@@ -118,6 +154,7 @@ export const mockClient = (options?: MockClientOptions) =>
               notesList,
             },
           });
+        }
         case "me":
           return fromValue({
             data: {
