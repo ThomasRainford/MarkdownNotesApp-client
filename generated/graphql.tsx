@@ -708,6 +708,16 @@ export type ChatMessagesQueryVariables = Exact<{
 
 export type ChatMessagesQuery = { __typename?: 'Query', chatMessages: Array<{ __typename?: 'Message', id: string, content: string, sender: { __typename?: 'User', username: string } }> };
 
+export type ChatPrivatesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ChatPrivatesQuery = { __typename?: 'Query', chatPrivates: Array<{ __typename?: 'ChatPrivate', id: string, participants: Array<{ __typename?: 'User', id: string, username: string }>, messages: Array<{ __typename?: 'Message', id: string, content: string, sender: { __typename?: 'User', id: string, username: string } }> }> };
+
+export type ChatRoomsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ChatRoomsQuery = { __typename?: 'Query', chatRooms: Array<{ __typename?: 'ChatRoom', id: string, members: Array<{ __typename?: 'User', id: string, username: string }>, messages: Array<{ __typename?: 'Message', id: string, content: string, sender: { __typename?: 'User', id: string, username: string } }> }> };
+
 export type CollectionsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1090,6 +1100,52 @@ export const ChatMessagesDocument = gql`
 
 export function useChatMessagesQuery(options: Omit<Urql.UseQueryArgs<ChatMessagesQueryVariables>, 'query'>) {
   return Urql.useQuery<ChatMessagesQuery, ChatMessagesQueryVariables>({ query: ChatMessagesDocument, ...options });
+};
+export const ChatPrivatesDocument = gql`
+    query chatPrivates {
+  chatPrivates {
+    id
+    participants {
+      id
+      username
+    }
+    messages {
+      id
+      content
+      sender {
+        id
+        username
+      }
+    }
+  }
+}
+    `;
+
+export function useChatPrivatesQuery(options?: Omit<Urql.UseQueryArgs<ChatPrivatesQueryVariables>, 'query'>) {
+  return Urql.useQuery<ChatPrivatesQuery, ChatPrivatesQueryVariables>({ query: ChatPrivatesDocument, ...options });
+};
+export const ChatRoomsDocument = gql`
+    query chatRooms {
+  chatRooms {
+    id
+    members {
+      id
+      username
+    }
+    messages {
+      id
+      content
+      sender {
+        id
+        username
+      }
+    }
+  }
+}
+    `;
+
+export function useChatRoomsQuery(options?: Omit<Urql.UseQueryArgs<ChatRoomsQueryVariables>, 'query'>) {
+  return Urql.useQuery<ChatRoomsQuery, ChatRoomsQueryVariables>({ query: ChatRoomsDocument, ...options });
 };
 export const CollectionsDocument = gql`
     query collections {

@@ -1,9 +1,5 @@
-import { Props } from "./ChatContainer";
+//const base: Props = {};
 
-const base: Props = {
-  children: "Hello World!",
-};
-
-export const mockChatPageContainerProps = {
-  base,
+export const mockChatsProps = {
+  //base,
 };
