@@ -9,6 +9,7 @@ const useLocalStorage = (
   const [storedValue, setStoredValue] = useState<string>(() => {
     try {
       // Get from local storage by key
+      if (typeof window === "undefined") return;
       const item = window.localStorage.getItem(key);
       // Parse stored json or if none return initialValue
       return item ? JSON.parse(item) : initialValue || "";
@@ -23,6 +24,7 @@ const useLocalStorage = (
   // Use effect to update local storage when value changes
   useEffect(() => {
     try {
+      if (typeof window === "undefined") return;
       // Save state
       window.localStorage.setItem(key, JSON.stringify(storedValue));
     } catch (error) {
