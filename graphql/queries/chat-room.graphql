@@ -1,0 +1,17 @@
+query chatRooms {
+  chatRooms {
+    id
+    members {
+      id
+      username
+    }
+    messages {
+      id
+      content
+      sender {
+        id
+        username
+      }
+    }
+  }
+}

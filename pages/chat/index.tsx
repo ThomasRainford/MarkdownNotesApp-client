@@ -1,5 +1,6 @@
 import { Box } from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
+import ChatPageContainer from "../../components/chat/chat-container/ChatContainer";
 import SelectedDataProvider from "../../components/helper/SelectedDataProvider";
 import PrimaryLayout from "../../components/layouts/PrimaryLayout";
 import NavBar from "../../components/navbar/NavBar";
@@ -17,7 +18,7 @@ const Chat: NextPageWithLayout = () => {
     <Box className="profile-page" h={"100%"}>
       <SelectedDataProvider>
         <NavBar user={meResult} />
-        {!meResult.fetching && meResult.data ? <>chat page</> : null}
+        {!meResult.fetching && meResult.data ? <ChatPageContainer /> : null}
       </SelectedDataProvider>
     </Box>
   );
