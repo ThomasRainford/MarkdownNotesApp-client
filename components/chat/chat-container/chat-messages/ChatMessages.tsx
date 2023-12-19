@@ -1,15 +1,16 @@
 import { Avatar, Box } from "@chakra-ui/react";
-import { ChatPrivate, ChatRoom, Message } from "../../../../generated/graphql";
+import { ChatPrivate, ChatRoom } from "../../../../generated/graphql";
 
 export interface Props {
   chat: ChatPrivate | ChatRoom | undefined;
-  messages: Message[];
 }
 
-const ChatMessages = ({ chat, messages }: Props): JSX.Element => {
+const ChatMessages = ({ chat }: Props): JSX.Element => {
   if (!chat) {
     return <Box>No chat selected</Box>;
   }
+
+  const messages = chat.messages.reverse();
 
   return (
     <Box

@@ -10,8 +10,8 @@ export default {
 } as ComponentMeta<typeof ChatPageContainer>;
 
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
-const Template: ComponentStory<typeof ChatPageContainer> = () => (
-  <ChatPageContainer />
+const Template: ComponentStory<typeof ChatPageContainer> = (args) => (
+  <ChatPageContainer {...args} />
 );
 
 export const Base = Template.bind({});

@@ -60,10 +60,7 @@ const DesktopView = ({
       w={"100%"}
     >
       <Chats chats={allChats} selectedChatState={selectedChatState} />
-      <ChatMessages
-        chat={selectedChatData}
-        messages={selectedChatData?.messages.reverse() || []}
-      />
+      <ChatMessages chat={selectedChatData} />
       <Chatinfo chat={selectedChatData} />
     </Box>
   );

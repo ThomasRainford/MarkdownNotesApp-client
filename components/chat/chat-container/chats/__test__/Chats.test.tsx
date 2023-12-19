@@ -7,6 +7,11 @@ import Chats from "../Chats";
 
 describe("Chats component", () => {
   test("Displays the component successfully", () => {
-    render(<Chats chats={[...testChatPrivates, ...testChatRooms]} />);
+    render(
+      <Chats
+        chats={[...testChatPrivates, ...testChatRooms]}
+        selectedChatState={["selectedChat", jest.fn()]}
+      />
+    );
   });
 });

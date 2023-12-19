@@ -1,7 +1,9 @@
+import { testChatPrivates } from "../../../../test-utils/testData";
 import { Props } from "./Chats";
 
 const base: Props = {
-  children: "Hello World!",
+  chats: testChatPrivates,
+  selectedChatState: ["selectedChat", () => {}],
 };
 
 export const mockBaseTemplateProps = {
