@@ -1,9 +1,11 @@
 query chatRooms {
   chatRooms {
     id
+    name
     members {
       id
       username
+      email
     }
     messages {
       id

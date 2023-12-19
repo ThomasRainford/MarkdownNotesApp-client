@@ -1,11 +1,9 @@
 import { render } from "@testing-library/react";
-import { Message } from "../../../../../generated/graphql";
+import { testMessages } from "../../../../../test-utils/testData";
 import ChatMessages from "../ChatMessages";
 
-describe("BaseTemplate component", () => {
-  test("Displays the given children", () => {
-    const messages: Message[] = [];
-
-    render(<ChatMessages messages={messages} />);
+describe("ChatMessages component", () => {
+  test("Displays the component successfully", () => {
+    render(<ChatMessages messages={testMessages} />);
   });
 });

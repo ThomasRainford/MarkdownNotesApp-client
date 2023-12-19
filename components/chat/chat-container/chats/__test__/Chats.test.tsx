@@ -1,8 +1,12 @@
 import { render } from "@testing-library/react";
+import {
+  testChatPrivates,
+  testChatRooms,
+} from "../../../../../test-utils/testData";
 import Chats from "../Chats";
 
 describe("Chats component", () => {
-  test("Displays the given children", () => {
-    render(<Chats chats={[]} />);
+  test("Displays the component successfully", () => {
+    render(<Chats chats={[...testChatPrivates, ...testChatRooms]} />);
   });
 });

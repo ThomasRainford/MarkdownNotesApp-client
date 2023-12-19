@@ -716,7 +716,7 @@ export type ChatPrivatesQuery = { __typename?: 'Query', chatPrivates: Array<{ __
 export type ChatRoomsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ChatRoomsQuery = { __typename?: 'Query', chatRooms: Array<{ __typename?: 'ChatRoom', id: string, members: Array<{ __typename?: 'User', id: string, username: string }>, messages: Array<{ __typename?: 'Message', id: string, content: string, sender: { __typename?: 'User', id: string, username: string } }> }> };
+export type ChatRoomsQuery = { __typename?: 'Query', chatRooms: Array<{ __typename?: 'ChatRoom', id: string, name: string, members: Array<{ __typename?: 'User', id: string, username: string, email: string }>, messages: Array<{ __typename?: 'Message', id: string, content: string, sender: { __typename?: 'User', id: string, username: string } }> }> };
 
 export type CollectionsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1128,9 +1128,11 @@ export const ChatRoomsDocument = gql`
     query chatRooms {
   chatRooms {
     id
+    name
     members {
       id
       username
+      email
     }
     messages {
       id

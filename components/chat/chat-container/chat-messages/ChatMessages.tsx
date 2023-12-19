@@ -1,11 +1,16 @@
 import { Box } from "@chakra-ui/react";
-import { Message } from "../../../../generated/graphql";
+import { ChatPrivate, ChatRoom, Message } from "../../../../generated/graphql";
 
 export interface Props {
+  chat: ChatPrivate | ChatRoom | undefined;
   messages: Message[];
 }
 
-const ChatMessages = ({ messages }: Props): JSX.Element => {
+const ChatMessages = ({ chat, messages }: Props): JSX.Element => {
+  if (!chat) {
+    return <Box>No chat selected</Box>;
+  }
+
   return (
     <Box
       display={"flex"}
@@ -15,7 +20,23 @@ const ChatMessages = ({ messages }: Props): JSX.Element => {
       padding="1em"
       bg="gray.600"
     >
-      Chat messages here
+      <Box mb={"2em"}>
+        {chat.__typename === "ChatPrivate" ? (
+          <Box>{chat.participants[1].username}</Box>
+        ) : chat.__typename === "ChatRoom" ? (
+          <Box>{chat.name}</Box>
+        ) : (
+          <></>
+        )}
+      </Box>
+      {messages.map((message) => {
+        return (
+          <Box key={message.id}>
+            <Box> {message.sender.username}</Box>
+            <Box> {message.content}</Box>
+          </Box>
+        );
+      })}
     </Box>
   );
 };

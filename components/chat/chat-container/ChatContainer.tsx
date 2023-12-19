@@ -7,6 +7,7 @@ import {
   ChatRoomsQuery,
   Exact,
 } from "../../../generated/graphql";
+import useLocalStorage from "../../../utils/hooks/useLocalStorage";
 import ChatPageContainerLayout from "../../layouts/component-layouts/ChatPageContainerLayout";
 import Chatinfo from "./chat-info/ChatInfo";
 import ChatMessages from "./chat-messages/ChatMessages";
@@ -47,7 +48,10 @@ const DesktopView = ({
   chatPrivates: ChatPrivate[];
   chatRooms: ChatRoom[];
 }) => {
+  const selectedChatState = useLocalStorage("selectedChat", null);
+  const [selectedChat] = selectedChatState;
   const allChats = [...chatPrivates, ...chatRooms];
+  const selectedChatData = allChats.find((chat) => chat.id === selectedChat);
 
   return (
     <Box
@@ -55,9 +59,12 @@ const DesktopView = ({
       h={"100%"}
       w={"100%"}
     >
-      <Chats chats={allChats} />
-      <ChatMessages messages={[]} />
-      <Chatinfo chat={undefined} />
+      <Chats chats={allChats} selectedChatState={selectedChatState} />
+      <ChatMessages
+        chat={selectedChatData}
+        messages={selectedChatData?.messages.reverse() || []}
+      />
+      <Chatinfo chat={selectedChatData} />
     </Box>
   );
 };

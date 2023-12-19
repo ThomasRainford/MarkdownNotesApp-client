@@ -1,4 +1,4 @@
-import { User } from "../generated/graphql";
+import { ChatPrivate, ChatRoom, Message, User } from "../generated/graphql";
 
 export const testNotesLists = {
   collection1: [
@@ -339,3 +339,201 @@ export const testUser = {
 };
 
 export const testSelectedNote = testCollections[0].lists[0].notes[0];
+
+export const testMessages = [
+  {
+    id: "message-1",
+    content: "message1",
+    sender: {
+      id: testUsers[0].id,
+      username: testUsers[0].username,
+      __typename: "User",
+    },
+    __typename: "Message",
+  },
+  {
+    id: "message-2",
+    content: "message2",
+    sender: {
+      id: testUsers[0].id,
+      username: testUsers[0].username,
+      __typename: "User",
+    },
+    __typename: "Message",
+  },
+  {
+    id: "message-3",
+    content: "message1",
+    sender: {
+      id: testUsers[1].id,
+      username: testUsers[1].username,
+      __typename: "User",
+    },
+    __typename: "Message",
+  },
+  {
+    id: "message-4",
+    content: "message2",
+    sender: {
+      id: testUsers[1].id,
+      username: testUsers[1].username,
+      __typename: "User",
+    },
+    __typename: "Message",
+  },
+] as Message[];
+
+export const testChatPrivates = [
+  {
+    id: "65820ab8e5688a580645e8f6",
+    participants: [
+      {
+        id: "65820ab7e5688a580645e8c2",
+        username: "User01",
+        __typename: "User",
+      },
+      {
+        id: "65820ab7e5688a580645e8c3",
+        username: "User02",
+        __typename: "User",
+      },
+    ],
+    messages: [
+      {
+        id: "65820ab8e5688a580645e8f9",
+        content: "message1",
+        sender: {
+          id: "65820ab7e5688a580645e8c2",
+          username: "User01",
+          __typename: "User",
+        },
+        __typename: "Message",
+      },
+      {
+        id: "65820ab8e5688a580645e8fa",
+        content: "message2",
+        sender: {
+          id: "65820ab7e5688a580645e8c2",
+          username: "User01",
+          __typename: "User",
+        },
+        __typename: "Message",
+      },
+      {
+        id: "65820ab8e5688a580645e8fb",
+        content: "message3",
+        sender: {
+          id: "65820ab7e5688a580645e8c2",
+          username: "User01",
+          __typename: "User",
+        },
+        __typename: "Message",
+      },
+    ],
+    __typename: "ChatPrivate",
+  },
+  {
+    id: "65820ab8e5688a580645e8f7",
+    participants: [
+      {
+        id: "65820ab7e5688a580645e8c2",
+        username: "User01",
+        __typename: "User",
+      },
+      {
+        id: "65820ab7e5688a580645e8c4",
+        username: "User03",
+        __typename: "User",
+      },
+    ],
+    messages: [
+      {
+        id: "65820ab8e5688a580645e8fc",
+        content: "message1",
+        sender: {
+          id: "65820ab7e5688a580645e8c4",
+          username: "User03",
+          __typename: "User",
+        },
+        __typename: "Message",
+      },
+      {
+        id: "65820ab8e5688a580645e8fd",
+        content: "message2",
+        sender: {
+          id: "65820ab7e5688a580645e8c4",
+          username: "User03",
+          __typename: "User",
+        },
+        __typename: "Message",
+      },
+      {
+        id: "65820ab8e5688a580645e8fe",
+        content: "message3",
+        sender: {
+          id: "65820ab7e5688a580645e8c4",
+          username: "User03",
+          __typename: "User",
+        },
+        __typename: "Message",
+      },
+    ],
+    __typename: "ChatPrivate",
+  },
+] as ChatPrivate[];
+
+export const testChatRooms = [
+  {
+    id: "65820ab8e5688a580645e8f8",
+    members: [
+      {
+        id: "65820ab7e5688a580645e8c2",
+        username: "User01",
+        __typename: "User",
+      },
+      {
+        id: "65820ab7e5688a580645e8c3",
+        username: "User02",
+        __typename: "User",
+      },
+      {
+        id: "65820ab7e5688a580645e8c4",
+        username: "User03",
+        __typename: "User",
+      },
+    ],
+    messages: [
+      {
+        id: "65820ab8e5688a580645e8ff",
+        content: "I am user 1.",
+        sender: {
+          id: "65820ab7e5688a580645e8c2",
+          username: "User01",
+          __typename: "User",
+        },
+        __typename: "Message",
+      },
+      {
+        id: "65820ab8e5688a580645e900",
+        content: "I am user 2.",
+        sender: {
+          id: "65820ab7e5688a580645e8c3",
+          username: "User02",
+          __typename: "User",
+        },
+        __typename: "Message",
+      },
+      {
+        id: "65820ab8e5688a580645e901",
+        content: "I am user 3.",
+        sender: {
+          id: "65820ab7e5688a580645e8c4",
+          username: "User03",
+          __typename: "User",
+        },
+        __typename: "Message",
+      },
+    ],
+    __typename: "ChatRoom",
+  },
+] as ChatRoom[];
