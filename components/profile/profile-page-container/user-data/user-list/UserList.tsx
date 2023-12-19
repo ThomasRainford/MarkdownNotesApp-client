@@ -114,6 +114,7 @@ const UserList = ({ type, users, me }: Props): JSX.Element => {
               <Flex mr="2em">
                 <Avatar
                   size={"md"}
+                  name={user.username}
                   src={"https://avatars.dicebear.com/api/male/username.svg"}
                 />
               </Flex>

@@ -1,4 +1,4 @@
-import { Box, Heading, Input } from "@chakra-ui/react";
+import { Avatar, Box, Heading, Input } from "@chakra-ui/react";
 import { Chat, ChatPrivate, ChatRoom } from "../../../../generated/graphql";
 
 export interface Props {
@@ -40,24 +40,42 @@ const Chats = ({ chats, selectedChatState }: Props): JSX.Element => {
           return (
             <Box
               key={chat.id}
+              p="1em"
               border={chat.id === selectedChat ? "1px solid white" : ""}
               onClick={() => {
                 handleSelectChat(chat as Chat);
               }}
             >
-              {chat.participants[1].username}
+              <Box display={"flex"} flexDir="row" alignItems={"center"}>
+                <Box mr="0.5em">
+                  <Avatar name={chat.participants[1].username} />
+                </Box>
+                <Box>
+                  <Box>{chat.participants[1].username}</Box>
+                  <Box>Test message</Box>
+                </Box>
+              </Box>
             </Box>
           );
         } else if (chat.__typename === "ChatRoom") {
           return (
             <Box
               key={chat.id}
+              p="1em"
               border={chat.id === selectedChat ? "1px solid white" : ""}
               onClick={() => {
                 handleSelectChat(chat as Chat);
               }}
             >
-              {chat.name}
+              <Box display={"flex"} flexDir="row" alignItems={"center"}>
+                <Box mr="0.5em">
+                  <Avatar bg={"gray.600"} />
+                </Box>
+                <Box>
+                  <Box>{chat.name}</Box>
+                  <Box>Test message</Box>
+                </Box>
+              </Box>
             </Box>
           );
         }

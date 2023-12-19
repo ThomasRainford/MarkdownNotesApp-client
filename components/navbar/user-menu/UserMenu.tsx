@@ -39,18 +39,12 @@ const UserMenu = ({ user: me }: Props): JSX.Element => {
         cursor={"pointer"}
         minW={0}
       >
-        <Avatar
-          size={"sm"}
-          src={"https://avatars.dicebear.com/api/male/username.svg"}
-        />
+        <Avatar size={"sm"} name={username} bg="gray.500" />
       </MenuButton>
       <MenuList alignItems={"center"}>
         <br />
         <Center>
-          <Avatar
-            size={"2xl"}
-            src={"https://avatars.dicebear.com/api/male/username.svg"}
-          />
+          <Avatar size={"2xl"} name={username} bg="gray.500" />
         </Center>
         <br />
         <Center>
