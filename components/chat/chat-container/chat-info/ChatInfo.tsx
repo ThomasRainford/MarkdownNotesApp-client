@@ -32,9 +32,15 @@ const ChatRoomInfo = ({ chatRoom }: { chatRoom: ChatRoom }) => {
       alignItems={"center"}
       flexDir="column"
     >
-      <Box mb="1.5em">
-        <Heading size={"md"}>{chatRoom.name}</Heading>
+      <Box>
+        <Box mb="0.5em">
+          <Avatar size="2xl" bg={"gray.600"} name={chatRoom.name} />
+        </Box>
+        <Box mb="1.5em">
+          <Heading size={"md"}>{chatRoom.name}</Heading>
+        </Box>
       </Box>
+
       <Box>
         {chatRoom.members.map((member) => {
           return (
