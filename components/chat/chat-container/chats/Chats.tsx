@@ -19,6 +19,10 @@ const ChatLayout = ({
     <Box
       key={currentChat.id}
       p="1em"
+      borderRadius={"3px"}
+      _hover={{
+        backgroundColor: currentChat.id !== selectedChat ? "gray.500" : "",
+      }}
       backgroundColor={currentChat.id === selectedChat ? "gray.600" : ""}
       onClick={() => {
         onClick();
@@ -64,7 +68,7 @@ const Chats = ({ chats, selectedChatState }: Props): JSX.Element => {
           color="gray.500"
           onChange={(event) => {
             const value = event.target.value;
-            setFilterText(value);
+            setFilterText(value.toLowerCase());
             const items = chats.map((chat) =>
               chat.__typename === "ChatPrivate"
                 ? chat.participants[1].username.toLowerCase()

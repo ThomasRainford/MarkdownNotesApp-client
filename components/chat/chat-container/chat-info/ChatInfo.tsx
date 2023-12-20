@@ -1,7 +1,11 @@
 import { Avatar, Box, Button, Heading } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 import { ChatPrivate, ChatRoom } from "../../../../generated/graphql";
 
 const ChatPrivateInfo = ({ chatPrivate }: { chatPrivate: ChatPrivate }) => {
+  const router = useRouter();
+  const username = chatPrivate.participants[1].username;
+
   return (
     <Box
       display={"flex"}
@@ -11,20 +15,29 @@ const ChatPrivateInfo = ({ chatPrivate }: { chatPrivate: ChatPrivate }) => {
     >
       <Box mb="1em">
         <Box mb="0.5em">
-          <Avatar size="2xl" name={chatPrivate.participants[1].username} />
+          <Avatar size="2xl" name={username} />
         </Box>
         <Box display={"flex"} justifyContent="center">
-          <Heading size="md">{chatPrivate.participants[1].username}</Heading>
+          <Heading size="md">{username}</Heading>
         </Box>
       </Box>
       <Box>
-        <Button>Profile</Button>
+        <Button
+          role="link"
+          onClick={() => {
+            router.push(`/profile/${username}`);
+          }}
+        >
+          Profile
+        </Button>
       </Box>
     </Box>
   );
 };
 
 const ChatRoomInfo = ({ chatRoom }: { chatRoom: ChatRoom }) => {
+  const router = useRouter();
+
   return (
     <Box
       display={"flex"}
@@ -40,11 +53,23 @@ const ChatRoomInfo = ({ chatRoom }: { chatRoom: ChatRoom }) => {
           <Heading size={"md"}>{chatRoom.name}</Heading>
         </Box>
       </Box>
-
-      <Box>
+      <Box width={"90%"}>
         {chatRoom.members.map((member) => {
           return (
-            <Box key={member.id} display="flex" flexDir="row" mb="1em">
+            <Box
+              key={member.id}
+              role="link"
+              display="flex"
+              flexDir="row"
+              borderRadius={"5px"}
+              p="0.5em"
+              _hover={{
+                backgroundColor: "gray.600",
+              }}
+              onClick={() => {
+                router.push(`/profile/${member.username}`);
+              }}
+            >
               <Box mr="0.5em">
                 <Avatar name={member.username} />
               </Box>
@@ -71,7 +96,7 @@ const Chatinfo = ({ chat }: Props): JSX.Element => {
       flexDirection="column"
       h={"100%"}
       w={{ base: "100%", md: "25%" }}
-      padding="1em"
+      paddingY="1em"
       bg="gray.500"
     >
       <Box>
