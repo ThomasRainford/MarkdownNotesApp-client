@@ -10,62 +10,66 @@ const MeMessageBubble = ({
   date?: string;
 }) => {
   return (
-    <Box display={"flex"} justifyContent={"flex-end"}>
-      <Box mb="0.25em">
-        <Box mb={"0.25em"}>
-          {date && (
-            <Text fontSize={"xs"} color={"gray.400"}>
-              {date}
-            </Text>
-          )}
+    <>
+      {date && (
+        <Box display={"flex"} justifyContent="center" mb="1em">
+          <Text fontSize={"xs"} color={"gray.400"}>
+            {date}
+          </Text>
         </Box>
-        <Box bg={"blue.600"} p="0.5em" borderRadius={"6px"}>
-          {content}
+      )}
+      <Box display={"flex"} justifyContent={"flex-end"}>
+        <Box mb="0.25em">
+          <Box bg={"blue.600"} p="0.5em" borderRadius={"6px"}>
+            {content}
+          </Box>
+        </Box>
+        <Box
+          display="flex"
+          flexDir={"column"}
+          justifyContent={"flex-end"}
+          ml="0.5em"
+        >
+          <Box mr="2em" />
         </Box>
       </Box>
-      <Box
-        display="flex"
-        flexDir={"column"}
-        justifyContent={"flex-end"}
-        ml="0.5em"
-      >
-        <Box mr="2em" />
-      </Box>
-    </Box>
+    </>
   );
 };
 
 const MeMessage = ({ message, date }: { message: Message; date?: string }) => {
   return (
-    <Box display={"flex"} justifyContent={"flex-end"} mb="1em">
-      <Box>
-        <Box mb={"0.25em"}>
-          {date && (
-            <Text fontSize={"xs"} color={"gray.400"}>
-              {date}
-            </Text>
-          )}
-        </Box>
-        <Box bg={"blue.600"} p="0.5em" borderRadius={"6px"}>
-          {message.content}
-        </Box>
-        <Box float="left" ml="0.25em">
-          <Text color="gray.400" fontSize="sm">
-            {message.sender.username}
+    <>
+      {date && (
+        <Box display={"flex"} justifyContent="center" mb="1em">
+          <Text fontSize={"xs"} color={"gray.400"}>
+            {date}
           </Text>
         </Box>
-      </Box>
-      <Box
-        display="flex"
-        flexDir={"column"}
-        justifyContent={"flex-end"}
-        ml="0.5em"
-      >
-        <Box mb="0.25em">
-          <Avatar size="sm" name={message.sender.username} />
+      )}
+      <Box display={"flex"} justifyContent={"flex-end"} mb="1em">
+        <Box>
+          <Box bg={"blue.600"} p="0.5em" borderRadius={"6px"}>
+            {message.content}
+          </Box>
+          <Box float="left" ml="0.25em">
+            <Text color="gray.400" fontSize="sm">
+              {message.sender.username}
+            </Text>
+          </Box>
+        </Box>
+        <Box
+          display="flex"
+          flexDir={"column"}
+          justifyContent={"flex-end"}
+          ml="0.5em"
+        >
+          <Box mb="0.25em">
+            <Avatar size="sm" name={message.sender.username} />
+          </Box>
         </Box>
       </Box>
-    </Box>
+    </>
   );
 };
 
@@ -77,28 +81,30 @@ const UserMessageBubble = ({
   date?: string;
 }) => {
   return (
-    <Box display={"flex"} justifyContent={"flex-start"}>
-      <Box
-        display="flex"
-        flexDir={"column"}
-        justifyContent={"flex-end"}
-        mr="0.5em"
-      >
-        <Box mr="2em" />
-      </Box>
-      <Box mb="0.25em">
-        <Box mb={"0.25em"}>
-          {date && (
-            <Text fontSize={"xs"} color={"gray.400"}>
-              {date}
-            </Text>
-          )}
+    <>
+      {date && (
+        <Box display={"flex"} justifyContent="center" mb="1em">
+          <Text fontSize={"xs"} color={"gray.400"}>
+            {date}
+          </Text>
         </Box>
-        <Box bg={"gray.500"} p="0.5em" borderRadius={"6px"}>
-          {content}
+      )}
+      <Box display={"flex"} justifyContent={"flex-start"}>
+        <Box
+          display="flex"
+          flexDir={"column"}
+          justifyContent={"flex-end"}
+          mr="0.5em"
+        >
+          <Box mr="2em" />
+        </Box>
+        <Box mb="0.25em">
+          <Box bg={"gray.500"} p="0.5em" borderRadius={"6px"}>
+            {content}
+          </Box>
         </Box>
       </Box>
-    </Box>
+    </>
   );
 };
 
@@ -110,35 +116,37 @@ const UserMessage = ({
   date?: string;
 }) => {
   return (
-    <Box display={"flex"} justifyContent={"flex-start"} mb="1em">
-      <Box
-        display="flex"
-        flexDir={"column"}
-        justifyContent={"flex-end"}
-        mr="0.5em"
-      >
-        <Box>
-          <Avatar size="sm" name={message.sender.username} />
-        </Box>
-      </Box>
-      <Box>
-        <Box mb={"0.25em"}>
-          {date && (
-            <Text fontSize={"xs"} color={"gray.400"}>
-              {date}
-            </Text>
-          )}
-        </Box>
-        <Box bg={"gray.500"} p="0.5em" borderRadius={"6px"}>
-          {message.content}
-        </Box>
-        <Box float={"right"}>
-          <Text mr="0.25em" color="gray.400" fontSize="sm">
-            {message.sender.username}
+    <>
+      {date && (
+        <Box display={"flex"} justifyContent="center" mb="1em">
+          <Text fontSize={"xs"} color={"gray.400"}>
+            {date}
           </Text>
         </Box>
+      )}
+      <Box display={"flex"} justifyContent={"flex-start"} mb="1em">
+        <Box
+          display="flex"
+          flexDir={"column"}
+          justifyContent={"flex-end"}
+          mr="0.5em"
+        >
+          <Box>
+            <Avatar size="sm" name={message.sender.username} />
+          </Box>
+        </Box>
+        <Box>
+          <Box bg={"gray.500"} p="0.5em" borderRadius={"6px"}>
+            {message.content}
+          </Box>
+          <Box float={"right"}>
+            <Text mr="0.25em" color="gray.400" fontSize="sm">
+              {message.sender.username}
+            </Text>
+          </Box>
+        </Box>
       </Box>
-    </Box>
+    </>
   );
 };
 
