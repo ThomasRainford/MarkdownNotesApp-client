@@ -711,12 +711,12 @@ export type ChatMessagesQuery = { __typename?: 'Query', chatMessages: Array<{ __
 export type ChatPrivatesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ChatPrivatesQuery = { __typename?: 'Query', chatPrivates: Array<{ __typename?: 'ChatPrivate', id: string, participants: Array<{ __typename?: 'User', id: string, username: string }>, messages: Array<{ __typename?: 'Message', id: string, content: string, sender: { __typename?: 'User', id: string, username: string } }> }> };
+export type ChatPrivatesQuery = { __typename?: 'Query', chatPrivates: Array<{ __typename?: 'ChatPrivate', id: string, participants: Array<{ __typename?: 'User', id: string, username: string }>, messages: Array<{ __typename?: 'Message', id: string, content: string, createdAt: any, updatedAt: any, sender: { __typename?: 'User', id: string, username: string } }> }> };
 
 export type ChatRoomsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ChatRoomsQuery = { __typename?: 'Query', chatRooms: Array<{ __typename?: 'ChatRoom', id: string, name: string, members: Array<{ __typename?: 'User', id: string, username: string, email: string }>, messages: Array<{ __typename?: 'Message', id: string, content: string, sender: { __typename?: 'User', id: string, username: string } }> }> };
+export type ChatRoomsQuery = { __typename?: 'Query', chatRooms: Array<{ __typename?: 'ChatRoom', id: string, name: string, members: Array<{ __typename?: 'User', id: string, username: string, email: string }>, messages: Array<{ __typename?: 'Message', id: string, content: string, createdAt: any, updatedAt: any, sender: { __typename?: 'User', id: string, username: string } }> }> };
 
 export type CollectionsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1112,6 +1112,8 @@ export const ChatPrivatesDocument = gql`
     messages {
       id
       content
+      createdAt
+      updatedAt
       sender {
         id
         username
@@ -1137,6 +1139,8 @@ export const ChatRoomsDocument = gql`
     messages {
       id
       content
+      createdAt
+      updatedAt
       sender {
         id
         username

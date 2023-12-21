@@ -35,6 +35,7 @@ const Chat: NextPageWithLayout = () => {
           <ChatPageContainer
             chatPrivates={chatPrivatesResult}
             chatRooms={chatRoomsResult}
+            me={meResult}
           />
         ) : null}
       </SelectedDataProvider>

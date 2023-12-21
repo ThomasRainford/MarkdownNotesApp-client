@@ -10,6 +10,8 @@ query chatRooms {
     messages {
       id
       content
+      createdAt
+      updatedAt
       sender {
         id
         username

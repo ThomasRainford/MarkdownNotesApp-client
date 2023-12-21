@@ -6,6 +6,8 @@ import {
   ChatRoom,
   ChatRoomsQuery,
   Exact,
+  MeQuery,
+  User,
 } from "../../../generated/graphql";
 import useLocalStorage from "../../../utils/hooks/useLocalStorage";
 import ChatPageContainerLayout from "../../layouts/component-layouts/ChatPageContainerLayout";
@@ -44,9 +46,11 @@ const Loading = () => {
 const DesktopView = ({
   chatPrivates,
   chatRooms,
+  me,
 }: {
   chatPrivates: ChatPrivate[];
   chatRooms: ChatRoom[];
+  me: User;
 }) => {
   const selectedChatState = useLocalStorage("selectedChat", null);
   const [selectedChat] = selectedChatState;
@@ -60,7 +64,7 @@ const DesktopView = ({
       w={"100%"}
     >
       <Chats chats={allChats} selectedChatState={selectedChatState} />
-      <ChatMessages chat={selectedChatData} />
+      <ChatMessages chat={selectedChatData} me={me} />
       <Chatinfo chat={selectedChatData} />
     </Box>
   );
@@ -79,19 +83,32 @@ export interface Props {
       [key: string]: never;
     }>
   >;
+  me: UseQueryState<
+    MeQuery,
+    Exact<{
+      [key: string]: never;
+    }>
+  >;
 }
 
-const ChatPageContainer = ({ chatPrivates, chatRooms }: Props): JSX.Element => {
+const ChatPageContainer = ({
+  chatPrivates,
+  chatRooms,
+  me,
+}: Props): JSX.Element => {
   const chatPrivatesError = chatPrivates.error;
   const chatPrivatesLoading = chatPrivates.fetching;
   const chatPrivatesData = chatPrivates.data?.chatPrivates;
   const chatRoomsError = chatRooms.error;
   const chatRoomsLoading = chatRooms.fetching;
   const chatRoomsData = chatRooms.data?.chatRooms;
+  const meError = me.error;
+  const meLoading = me.fetching;
+  const meData = me.data?.me;
 
-  if (chatPrivatesError || chatRoomsError) {
+  if (chatPrivatesError || chatRoomsError || meError) {
     return <Error />;
-  } else if (chatPrivatesLoading || chatRoomsLoading) {
+  } else if (chatPrivatesLoading || chatRoomsLoading || meLoading) {
     return <Loading />;
   }
 
@@ -106,6 +123,7 @@ const ChatPageContainer = ({ chatPrivates, chatRooms }: Props): JSX.Element => {
           ...chat,
           __typename: "ChatRoom",
         }))}
+        me={meData as User}
       />
     </ChatPageContainerLayout>
   );

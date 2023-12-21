@@ -6,8 +6,9 @@ import {
   Heading,
   IconButton,
   Input,
+  Text,
 } from "@chakra-ui/react";
-import { ChatPrivate, ChatRoom } from "../../../../generated/graphql";
+import { ChatPrivate, ChatRoom, User } from "../../../../generated/graphql";
 
 const ChatMessageHeader = ({
   name,
@@ -30,9 +31,10 @@ const ChatMessageHeader = ({
 
 export interface Props {
   chat: ChatPrivate | ChatRoom | undefined;
+  me: User;
 }
 
-const ChatMessages = ({ chat }: Props): JSX.Element => {
+const ChatMessages = ({ chat, me }: Props): JSX.Element => {
   const messages = chat?.messages.reverse();
 
   return (
@@ -65,10 +67,70 @@ const ChatMessages = ({ chat }: Props): JSX.Element => {
           <Box flexDir="column" width={"100%"}>
             <Box padding="1em">
               {messages?.map((message) => {
+                const isMe = message.sender.id === me.id;
+                const date = new Date().toLocaleString("en-US", {
+                  weekday: "short",
+                  year: "numeric",
+                  month: "short",
+                  day: "numeric",
+                  hour: "numeric",
+                  minute: "numeric",
+                  second: "numeric",
+                });
                 return (
-                  <Box key={message.id}>
-                    <Box> {message.sender.username}</Box>
-                    <Box> {message.content}</Box>
+                  <Box
+                    display={"flex"}
+                    justifyContent={isMe ? "flex-end" : "flex-start"}
+                    key={message.id}
+                    mb="2em"
+                  >
+                    {isMe ? (
+                      <>
+                        <Box>
+                          <Box mb={"0.25em"}>
+                            <Text fontSize={"xs"} color={"gray.400"}>
+                              {date}
+                            </Text>
+                          </Box>
+                          <Box bg={"blue.600"} p="0.5em" borderRadius={"6px"}>
+                            {message.content}
+                          </Box>
+                          <Box ml="0.25em">
+                            <Text color="gray.400" fontSize="sm">
+                              {message.sender.username}
+                            </Text>
+                          </Box>
+                        </Box>
+                        <Box ml="0.5em">
+                          <Box mb="0.25em">
+                            <Avatar size="sm" name={message.sender.username} />
+                          </Box>
+                        </Box>
+                      </>
+                    ) : (
+                      <>
+                        <Box mr="0.5em">
+                          <Box>
+                            <Avatar size="sm" name={message.sender.username} />
+                          </Box>
+                        </Box>
+                        <Box>
+                          <Box mb={"0.25em"}>
+                            <Text fontSize={"xs"} color={"gray.400"}>
+                              {date}
+                            </Text>
+                          </Box>
+                          <Box bg={"gray.500"} p="0.5em" borderRadius={"6px"}>
+                            {message.content}
+                          </Box>
+                          <Box float={"right"}>
+                            <Text mr="0.25em" color="gray.400" fontSize="sm">
+                              {message.sender.username}
+                            </Text>
+                          </Box>
+                        </Box>
+                      </>
+                    )}
                   </Box>
                 );
               })}

@@ -8,6 +8,8 @@ query chatPrivates {
     messages {
       id
       content
+      createdAt
+      updatedAt
       sender {
         id
         username
