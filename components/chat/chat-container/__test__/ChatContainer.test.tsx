@@ -2,6 +2,7 @@ import { render } from "@testing-library/react";
 import {
   testChatPrivates,
   testChatRooms,
+  testUsers,
 } from "../../../../test-utils/testData";
 import ChatPageContainer from "../ChatContainer";
 
@@ -23,8 +24,20 @@ describe("ChatPageContainer component", () => {
         chatRooms: testChatRooms,
       },
     };
+    const me = {
+      stale: false,
+      fetching: true,
+      error: undefined,
+      data: {
+        me: testUsers[0],
+      },
+    };
     render(
-      <ChatPageContainer chatPrivates={chatPrivates} chatRooms={chatRooms} />
+      <ChatPageContainer
+        chatPrivates={chatPrivates}
+        chatRooms={chatRooms}
+        me={me}
+      />
     );
   });
 });

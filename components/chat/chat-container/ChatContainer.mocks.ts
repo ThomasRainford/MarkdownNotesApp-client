@@ -1,4 +1,8 @@
-import { testChatPrivates, testChatRooms } from "../../../test-utils/testData";
+import {
+  testChatPrivates,
+  testChatRooms,
+  testUser,
+} from "../../../test-utils/testData";
 import { Props } from "./ChatContainer";
 
 const chatPrivates = {
@@ -21,6 +25,16 @@ const chatRooms = {
 const base: Props = {
   chatPrivates,
   chatRooms,
+  me: {
+    stale: false,
+    fetching: false,
+    error: undefined,
+    data: {
+      me: {
+        ...testUser,
+      },
+    },
+  },
 };
 
 export const mockChatsProps = {

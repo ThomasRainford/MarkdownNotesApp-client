@@ -344,6 +344,8 @@ export const testMessages = [
   {
     id: "message-1",
     content: "message1",
+    updatedAt: "2023-01-03T08:52:02.025+00:00",
+    createdAt: "2023-01-03T08:52:02.025+00:00",
     sender: {
       id: testUsers[0].id,
       username: testUsers[0].username,
@@ -354,6 +356,8 @@ export const testMessages = [
   {
     id: "message-2",
     content: "message2",
+    updatedAt: "2023-01-03T08:52:02.025+00:00",
+    createdAt: "2023-01-03T08:52:02.025+00:00",
     sender: {
       id: testUsers[0].id,
       username: testUsers[0].username,
@@ -364,6 +368,8 @@ export const testMessages = [
   {
     id: "message-3",
     content: "message1",
+    updatedAt: "2023-01-03T08:52:02.025+00:00",
+    createdAt: "2023-01-03T08:52:02.025+00:00",
     sender: {
       id: testUsers[1].id,
       username: testUsers[1].username,
@@ -374,6 +380,8 @@ export const testMessages = [
   {
     id: "message-4",
     content: "message2",
+    updatedAt: "2023-01-03T08:52:02.025+00:00",
+    createdAt: "2023-01-03T08:52:02.025+00:00",
     sender: {
       id: testUsers[1].id,
       username: testUsers[1].username,
