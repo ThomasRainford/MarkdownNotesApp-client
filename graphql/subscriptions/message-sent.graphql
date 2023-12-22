@@ -1,0 +1,15 @@
+subscription MessageSent($messageSentInput: NewMessageArgs!) {
+  messageSent(messageSentInput: $messageSentInput) {
+    message {
+      id
+      content
+      createdAt
+      updatedAt
+      sender {
+        id
+        username
+      }
+    }
+    error
+  }
+}

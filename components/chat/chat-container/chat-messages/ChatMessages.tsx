@@ -5,9 +5,16 @@ import {
   ButtonGroup,
   Heading,
   IconButton,
-  Input,
 } from "@chakra-ui/react";
-import { ChatPrivate, ChatRoom, User } from "../../../../generated/graphql";
+import { useEffect, useState } from "react";
+import {
+  ChatPrivate,
+  ChatRoom,
+  Message,
+  useMessageSentSubscription,
+  User,
+} from "../../../../generated/graphql";
+import MessageInput from "./message-input/MessageInput";
 import Messages from "./messages/Messages";
 
 const ChatMessageHeader = ({
@@ -35,7 +42,23 @@ export interface Props {
 }
 
 const ChatMessages = ({ chat, me }: Props): JSX.Element => {
-  const messages = chat?.messages.reverse();
+  const [messages, setMessages] = useState(chat?.messages.reverse() || []);
+
+  const [result] = useMessageSentSubscription({
+    variables: {
+      messageSentInput: {
+        chatId: chat?.id || "",
+        userId: me.id,
+      },
+    },
+  });
+
+  useEffect(() => {
+    setMessages((messages) => [
+      ...messages,
+      result.data?.messageSent.message as Message,
+    ]);
+  }, [result.data?.messageSent.message]);
 
   return (
     <Box
@@ -69,13 +92,8 @@ const ChatMessages = ({ chat, me }: Props): JSX.Element => {
               <Messages messages={messages || []} me={me} />
             </Box>
             <Box display="flex" m={"0.5em"}>
-              <Box flexGrow={4} mr="0.5em">
-                <Input
-                  type={"filled"}
-                  bg="gray.700"
-                  placeholder="Type your message here..."
-                  onClick={() => {}}
-                />
+              <Box flexGrow={10} mr="0.5em">
+                <MessageInput />
               </Box>
               <Box display="flex" alignItems="center" flexGrow={1}>
                 <ButtonGroup spacing="1">

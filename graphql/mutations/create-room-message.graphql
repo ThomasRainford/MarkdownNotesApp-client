@@ -1,0 +1,18 @@
+mutation CreateRoomMessage($createMessageInput: CreateMessageInput!) {
+  createRoomMessage(createMessageInput: $createMessageInput) {
+    message {
+      id
+      content
+      createdAt
+      updatedAt
+      sender {
+        id
+        username
+      }
+    }
+    error {
+      property
+      message
+    }
+  }
+}

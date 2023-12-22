@@ -1,0 +1,18 @@
+mutation CreatePrivateMessage($createMessageInput: CreateMessageInput!) {
+  createPrivateMessage(createMessageInput: $createMessageInput) {
+    message {
+      id
+      content
+      createdAt
+      updatedAt
+      sender {
+        id
+        username
+      }
+    }
+    error {
+      property
+      message
+    }
+  }
+}
