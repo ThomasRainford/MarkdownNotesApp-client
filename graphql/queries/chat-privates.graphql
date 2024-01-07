@@ -1,0 +1,19 @@
+query chatPrivates {
+  chatPrivates {
+    id
+    participants {
+      id
+      username
+    }
+    messages {
+      id
+      content
+      createdAt
+      updatedAt
+      sender {
+        id
+        username
+      }
+    }
+  }
+}

@@ -93,11 +93,7 @@ const EditProfile = ({
         w={"100%"}
         mb={"1.25em"}
       >
-        <Avatar
-          size={"3xl"}
-          mb={"0.45em"}
-          src={"https://avatars.dicebear.com/api/male/username.svg"}
-        />
+        <Avatar size={"3xl"} mb={"0.45em"} />
         <Input
           placeholder="Username"
           size="lg"
@@ -163,11 +159,7 @@ const UserDetails = ({ user, me }: Props): JSX.Element => {
         w={"100%"}
         mb={"1.25em"}
       >
-        <Avatar
-          size={"3xl"}
-          mb={"0.45em"}
-          src={"https://avatars.dicebear.com/api/male/username.svg"}
-        />
+        <Avatar size={"3xl"} mb={"0.45em"} />
         <Tooltip
           isDisabled={!isMe}
           label="👈 This is you!"

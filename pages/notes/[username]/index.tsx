@@ -2,6 +2,7 @@ import { Box } from "@chakra-ui/react";
 import "allotment/dist/style.css";
 import { withUrqlClient } from "next-urql";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
 import SelectedDataProvider from "../../../components/helper/SelectedDataProvider";
 import PrimaryLayout from "../../../components/layouts/PrimaryLayout";
 import NavBar from "../../../components/navbar/NavBar";
@@ -22,6 +23,16 @@ const Notes: NextPageWithLayout = () => {
   });
 
   useIsAuth(meResult);
+
+  useEffect(() => {
+    const selectedUserName = localStorage.getItem("selectedUser");
+    if (selectedUserName !== username) {
+      localStorage.setItem("selectedCollection", JSON.stringify(""));
+      localStorage.setItem("selectedList", JSON.stringify(""));
+      localStorage.setItem("selectedNote", JSON.stringify(""));
+    }
+    if (!selectedUserName) localStorage.setItem("selectedUser", username);
+  }, [username]);
 
   return (
     <Box className="my-notes-page" h={"100%"}>

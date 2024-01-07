@@ -94,6 +94,24 @@ const invalidateNotesList = (cache: Cache) => {
   });
 };
 
+const invalidateChatPrivates = (cache: Cache) => {
+  const allFields = cache.inspectFields("Query");
+  const fieldInfos = allFields.filter(
+    (info) => info.fieldName === "chatPrivates"
+  );
+  fieldInfos.forEach((fi) => {
+    cache.invalidate("Query", "chatPrivates", fi.arguments || null);
+  });
+};
+
+const invalidateChatRooms = (cache: Cache) => {
+  const allFields = cache.inspectFields("Query");
+  const fieldInfos = allFields.filter((info) => info.fieldName === "chatRooms");
+  fieldInfos.forEach((fi) => {
+    cache.invalidate("Query", "chatRooms", fi.arguments || null);
+  });
+};
+
 export const createUrqlClient = (ssrExchange: SSRExchange) => {
   return {
     url: process.env.NEXT_PUBLIC_API_URL,
@@ -112,6 +130,8 @@ export const createUrqlClient = (ssrExchange: SSRExchange) => {
               invalidateNotesLists(cache);
               invalidateUserNotesLists(cache);
               invalidateNotesList(cache);
+              invalidateChatPrivates(cache);
+              invalidateChatRooms(cache);
             },
             createCollection: (_result, _args, cache, _info) => {
               invalidateCollections(cache);

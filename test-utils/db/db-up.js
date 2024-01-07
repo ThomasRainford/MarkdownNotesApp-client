@@ -29,6 +29,44 @@ db.user.insertMany([
   },
 ]);
 
+// db['chat-privates'].insertMany([
+
+// ])
+
+/**
+ * Insert Messages.
+ */
+// db.message.insertMany([
+//   {
+//     _id: new ObjectId("c11111111111111111111111"),
+//     content: "message1",
+//     sender: new ObjectId("111111111111111111111111"),
+//     createdAt: new Date(),
+//     updatedAt: new Date(),
+//   },
+//   {
+//     _id: new ObjectId("c22222222222222222222222"),
+//     content: "message2",
+//     sender: new ObjectId("111111111111111111111111"),
+//     createdAt: new Date(),
+//     updatedAt: new Date(),
+//   },
+//   {
+//     _id: new ObjectId("c33333333333333333333333"),
+//     content: "message1",
+//     sender: new ObjectId("222222222222222222222222"),
+//     createdAt: new Date(),
+//     updatedAt: new Date(),
+//   },
+//   {
+//     _id: new ObjectId("c44444444444444444444444"),
+//     content: "message2",
+//     sender: new ObjectId("222222222222222222222222"),
+//     createdAt: new Date(),
+//     updatedAt: new Date(),
+//   },
+// ]);
+
 /**
  * Insert Collections.
  */

@@ -22,6 +22,42 @@ export type ActivityFeedResponse = {
   collection: Collection;
 };
 
+export type Chat = {
+  __typename?: 'Chat';
+  _id: Scalars['ID'];
+  id: Scalars['String'];
+  messages: Array<Message>;
+};
+
+export type ChatPrivate = {
+  __typename?: 'ChatPrivate';
+  _id: Scalars['ID'];
+  id: Scalars['String'];
+  messages: Array<Message>;
+  participants: Array<User>;
+};
+
+export type ChatPrivateResponse = {
+  __typename?: 'ChatPrivateResponse';
+  chatPrivate?: Maybe<ChatPrivate>;
+  error?: Maybe<Error>;
+};
+
+export type ChatRoom = {
+  __typename?: 'ChatRoom';
+  _id: Scalars['ID'];
+  id: Scalars['String'];
+  members: Array<User>;
+  messages: Array<Message>;
+  name: Scalars['String'];
+};
+
+export type ChatRoomResponse = {
+  __typename?: 'ChatRoomResponse';
+  chatRoom?: Maybe<ChatRoom>;
+  error?: Maybe<Error>;
+};
+
 export type Collection = {
   __typename?: 'Collection';
   _id: Scalars['ID'];
@@ -46,6 +82,25 @@ export type CollectionUpdateInput = {
   visibility?: InputMaybe<Scalars['String']>;
 };
 
+export type CreateChatPrivateInput = {
+  userId: Scalars['String'];
+};
+
+export type CreateChatRoomInput = {
+  name: Scalars['String'];
+  userIds: Array<Scalars['String']>;
+};
+
+export type CreateMessageInput = {
+  chatId: Scalars['String'];
+  content: Scalars['String'];
+};
+
+export type DeleteMessageArgs = {
+  chatId: Scalars['String'];
+  userId: Scalars['String'];
+};
+
 export type Error = {
   __typename?: 'Error';
   message: Scalars['String'];
@@ -63,23 +118,70 @@ export type ListLocationInput = {
   listId: Scalars['String'];
 };
 
+export type Message = {
+  __typename?: 'Message';
+  _id: Scalars['ID'];
+  chat: Chat;
+  content: Scalars['String'];
+  createdAt: Scalars['DateTime'];
+  id: Scalars['String'];
+  sender: User;
+  updatedAt: Scalars['DateTime'];
+};
+
+export type MessageDeleteResponse = {
+  __typename?: 'MessageDeleteResponse';
+  messageId: Scalars['String'];
+};
+
+export type MessageResponse = {
+  __typename?: 'MessageResponse';
+  error?: Maybe<Error>;
+  message?: Maybe<Message>;
+};
+
+export type MessageSentResponse = {
+  __typename?: 'MessageSentResponse';
+  error?: Maybe<Scalars['String']>;
+  message?: Maybe<Message>;
+};
+
+export type MessageUpdateInput = {
+  content: Scalars['String'];
+};
+
+export type MessageUpdatedResponse = {
+  __typename?: 'MessageUpdatedResponse';
+  error?: Maybe<Scalars['String']>;
+  message?: Maybe<Message>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   addNote: NoteResponse;
+  createChatPrivate: ChatPrivateResponse;
+  createChatRoom: ChatRoomResponse;
   createCollection: CollectionResponse;
   createNotesList: NotesListResponse;
+  createPrivateMessage: MessageResponse;
+  createRoomMessage: MessageResponse;
   deleteCollection: Scalars['Boolean'];
+  deleteMessage: Scalars['Boolean'];
   deleteNote: Scalars['Boolean'];
   deleteNotesList: Scalars['Boolean'];
   follow: Scalars['Boolean'];
   forgotPassword: UserResponse;
+  joinChatRoom: ChatRoomResponse;
+  leaveChatRoom: ChatRoomResponse;
   login: UserResponse;
   logout?: Maybe<User>;
   moveList: NotesListResponse;
   register: UserResponse;
   resetPassword: UserResponse;
   savePublicCollection: CollectionResponse;
+  updateChatRoom: ChatRoomResponse;
   updateCollection: CollectionResponse;
+  updateMessage: MessageResponse;
   updateNote: NoteResponse;
   updateNotesList: NotesListResponse;
   updateUser: UserResponse;
@@ -90,6 +192,16 @@ export type Mutation = {
 export type MutationAddNoteArgs = {
   listLocation: ListLocationInput;
   noteInput: NoteInput;
+};
+
+
+export type MutationCreateChatPrivateArgs = {
+  chatPrivateInput: CreateChatPrivateInput;
+};
+
+
+export type MutationCreateChatRoomArgs = {
+  chatRoomInput: CreateChatRoomInput;
 };
 
 
@@ -105,8 +217,23 @@ export type MutationCreateNotesListArgs = {
 };
 
 
+export type MutationCreatePrivateMessageArgs = {
+  createMessageInput: CreateMessageInput;
+};
+
+
+export type MutationCreateRoomMessageArgs = {
+  createMessageInput: CreateMessageInput;
+};
+
+
 export type MutationDeleteCollectionArgs = {
   id: Scalars['String'];
+};
+
+
+export type MutationDeleteMessageArgs = {
+  messageId: Scalars['String'];
 };
 
 
@@ -127,6 +254,16 @@ export type MutationFollowArgs = {
 
 export type MutationForgotPasswordArgs = {
   email: Scalars['String'];
+};
+
+
+export type MutationJoinChatRoomArgs = {
+  chatRoomId: Scalars['String'];
+};
+
+
+export type MutationLeaveChatRoomArgs = {
+  chatRoomId: Scalars['String'];
 };
 
 
@@ -160,9 +297,21 @@ export type MutationSavePublicCollectionArgs = {
 };
 
 
+export type MutationUpdateChatRoomArgs = {
+  chatRoomId: Scalars['String'];
+  name: Scalars['String'];
+};
+
+
 export type MutationUpdateCollectionArgs = {
   collectionInput: CollectionUpdateInput;
   id: Scalars['String'];
+};
+
+
+export type MutationUpdateMessageArgs = {
+  messageId: Scalars['String'];
+  messageInput: MessageUpdateInput;
 };
 
 
@@ -186,6 +335,11 @@ export type MutationUpdateUserArgs = {
 
 export type MutationVoteArgs = {
   id: Scalars['String'];
+};
+
+export type NewMessageArgs = {
+  chatId: Scalars['String'];
+  userId: Scalars['String'];
 };
 
 export type Note = {
@@ -240,14 +394,25 @@ export type NotesListUpdateInput = {
   title?: InputMaybe<Scalars['String']>;
 };
 
+export type PaginationInput = {
+  cursor: Scalars['Float'];
+  limit: Scalars['Float'];
+};
+
 export type Query = {
   __typename?: 'Query';
   activityFeed?: Maybe<Array<ActivityFeedResponse>>;
+  chatMessages: Array<Message>;
+  chatPrivate: ChatPrivateResponse;
+  chatPrivates: Array<ChatPrivate>;
+  chatRoom: ChatRoomResponse;
+  chatRooms: Array<ChatRoom>;
   collection: CollectionResponse;
   collections: Array<Collection>;
   followers: Array<User>;
   following: Array<User>;
   me?: Maybe<User>;
+  messages: Array<Message>;
   note: NoteResponse;
   notesList?: Maybe<NotesList>;
   notesLists?: Maybe<Array<NotesList>>;
@@ -258,6 +423,22 @@ export type Query = {
   userFollowing: Array<User>;
   userNotesLists?: Maybe<Array<NotesList>>;
   userVotes: Array<Collection>;
+};
+
+
+export type QueryChatMessagesArgs = {
+  chatId: Scalars['String'];
+  pagination: PaginationInput;
+};
+
+
+export type QueryChatPrivateArgs = {
+  chatPrivateId: Scalars['String'];
+};
+
+
+export type QueryChatRoomArgs = {
+  chatRoomId: Scalars['String'];
 };
 
 
@@ -317,9 +498,50 @@ export type QueryUserVotesArgs = {
   userId: Scalars['String'];
 };
 
+export type Subscription = {
+  __typename?: 'Subscription';
+  messageDeleted: MessageDeleteResponse;
+  messageSent: MessageSentResponse;
+  messageUpdated: MessageUpdatedResponse;
+  userJoinChatRoom: UserLeaveChatRoomResponse;
+  userLeaveChatRoom: UserLeaveChatRoomResponse;
+};
+
+
+export type SubscriptionMessageDeletedArgs = {
+  messageDeletedInput: DeleteMessageArgs;
+};
+
+
+export type SubscriptionMessageSentArgs = {
+  messageSentInput: NewMessageArgs;
+};
+
+
+export type SubscriptionMessageUpdatedArgs = {
+  messageUpdatedInput: UpdateMessageArgs;
+};
+
+
+export type SubscriptionUserJoinChatRoomArgs = {
+  userJoinChatRoomInput: UserJoinChatRoomArgs;
+};
+
+
+export type SubscriptionUserLeaveChatRoomArgs = {
+  userLeaveChatRoomInput: UserLeaveChatRoomArgs;
+};
+
+export type UpdateMessageArgs = {
+  chatId: Scalars['String'];
+  userId: Scalars['String'];
+};
+
 export type User = {
   __typename?: 'User';
   _id: Scalars['ID'];
+  chatPrivates: Array<ChatPrivate>;
+  chatRooms: Array<ChatRoom>;
   collections: Array<Collection>;
   createdAt: Scalars['DateTime'];
   email: Scalars['String'];
@@ -329,6 +551,22 @@ export type User = {
   updatedAt: Scalars['DateTime'];
   upvoted: Array<Scalars['String']>;
   username: Scalars['String'];
+};
+
+export type UserJoinChatRoomArgs = {
+  chatId: Scalars['String'];
+  userId: Scalars['String'];
+};
+
+export type UserLeaveChatRoomArgs = {
+  chatId: Scalars['String'];
+  userId: Scalars['String'];
+};
+
+export type UserLeaveChatRoomResponse = {
+  __typename?: 'UserLeaveChatRoomResponse';
+  chatRoomId: Scalars['String'];
+  userId: Scalars['String'];
 };
 
 export type UserRegisterInput = {
@@ -461,6 +699,24 @@ export type VoteMutationVariables = Exact<{
 
 
 export type VoteMutation = { __typename?: 'Mutation', vote: { __typename?: 'CollectionResponse', collection?: { __typename?: 'Collection', id: string, title: string, visibility: string, upvotes: number, createdAt: any, updatedAt: any, owner: { __typename?: 'User', id: string, username: string }, lists: Array<{ __typename?: 'NotesList', id: string, title: string }> } | null, error?: { __typename?: 'Error', property: string, message: string } | null } };
+
+export type ChatMessagesQueryVariables = Exact<{
+  chatId: Scalars['String'];
+  pagination: PaginationInput;
+}>;
+
+
+export type ChatMessagesQuery = { __typename?: 'Query', chatMessages: Array<{ __typename?: 'Message', id: string, content: string, sender: { __typename?: 'User', username: string } }> };
+
+export type ChatPrivatesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ChatPrivatesQuery = { __typename?: 'Query', chatPrivates: Array<{ __typename?: 'ChatPrivate', id: string, participants: Array<{ __typename?: 'User', id: string, username: string }>, messages: Array<{ __typename?: 'Message', id: string, content: string, createdAt: any, updatedAt: any, sender: { __typename?: 'User', id: string, username: string } }> }> };
+
+export type ChatRoomsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ChatRoomsQuery = { __typename?: 'Query', chatRooms: Array<{ __typename?: 'ChatRoom', id: string, name: string, members: Array<{ __typename?: 'User', id: string, username: string, email: string }>, messages: Array<{ __typename?: 'Message', id: string, content: string, createdAt: any, updatedAt: any, sender: { __typename?: 'User', id: string, username: string } }> }> };
 
 export type CollectionsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -829,6 +1085,73 @@ export const VoteDocument = gql`
 
 export function useVoteMutation() {
   return Urql.useMutation<VoteMutation, VoteMutationVariables>(VoteDocument);
+};
+export const ChatMessagesDocument = gql`
+    query ChatMessages($chatId: String!, $pagination: PaginationInput!) {
+  chatMessages(chatId: $chatId, pagination: $pagination) {
+    id
+    content
+    sender {
+      username
+    }
+  }
+}
+    `;
+
+export function useChatMessagesQuery(options: Omit<Urql.UseQueryArgs<ChatMessagesQueryVariables>, 'query'>) {
+  return Urql.useQuery<ChatMessagesQuery, ChatMessagesQueryVariables>({ query: ChatMessagesDocument, ...options });
+};
+export const ChatPrivatesDocument = gql`
+    query chatPrivates {
+  chatPrivates {
+    id
+    participants {
+      id
+      username
+    }
+    messages {
+      id
+      content
+      createdAt
+      updatedAt
+      sender {
+        id
+        username
+      }
+    }
+  }
+}
+    `;
+
+export function useChatPrivatesQuery(options?: Omit<Urql.UseQueryArgs<ChatPrivatesQueryVariables>, 'query'>) {
+  return Urql.useQuery<ChatPrivatesQuery, ChatPrivatesQueryVariables>({ query: ChatPrivatesDocument, ...options });
+};
+export const ChatRoomsDocument = gql`
+    query chatRooms {
+  chatRooms {
+    id
+    name
+    members {
+      id
+      username
+      email
+    }
+    messages {
+      id
+      content
+      createdAt
+      updatedAt
+      sender {
+        id
+        username
+      }
+    }
+  }
+}
+    `;
+
+export function useChatRoomsQuery(options?: Omit<Urql.UseQueryArgs<ChatRoomsQueryVariables>, 'query'>) {
+  return Urql.useQuery<ChatRoomsQuery, ChatRoomsQueryVariables>({ query: ChatRoomsDocument, ...options });
 };
 export const CollectionsDocument = gql`
     query collections {

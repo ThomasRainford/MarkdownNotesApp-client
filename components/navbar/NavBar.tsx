@@ -49,6 +49,7 @@ const NavBar = ({ user }: Props) => {
 
   const Links = [
     { name: "My Notes", route: `/notes/${user.data?.me?.username}` },
+    { name: "Chat", route: `/chat` },
   ];
 
   return (
