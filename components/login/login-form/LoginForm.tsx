@@ -42,6 +42,7 @@ const LoginForm = () => {
       const response = await login({ usernameOrEmail, password });
       if (response.data?.login.user && !toast.isActive("login")) {
         router.push("/");
+        localStorage.setItem("userId", response.data?.login.user.id);
         toast({
           id: "login",
           title: "Login Successfull",

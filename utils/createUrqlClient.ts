@@ -1,6 +1,7 @@
 import { Cache, cacheExchange } from "@urql/exchange-graphcache";
 import { SSRExchange } from "next-urql";
-import { dedupExchange, fetchExchange } from "urql";
+import { SubscriptionClient } from "subscriptions-transport-ws";
+import { dedupExchange, fetchExchange, subscriptionExchange } from "urql";
 
 const invalidateUser = (cache: Cache) => {
   const allFields = cache.inspectFields("Query");
@@ -112,7 +113,24 @@ const invalidateChatRooms = (cache: Cache) => {
   });
 };
 
-export const createUrqlClient = (ssrExchange: SSRExchange) => {
+const createSubscriptionClient = (options: { userId: string }): any => {
+  return process.browser
+    ? (new SubscriptionClient(
+        `ws://${process.env.NEXT_PUBLIC_API_URL.replace(
+          /^https?:\/\//,
+          ""
+        ).replace("graphql", "subscriptions")}`,
+        {
+          reconnect: true,
+          connectionParams: {
+            userId: options.userId,
+          },
+        }
+      ) as any)
+    : null;
+};
+
+export const createUrqlClient = (ssrExchange: SSRExchange, userId?: string) => {
   return {
     url: process.env.NEXT_PUBLIC_API_URL,
     exchanges: [
@@ -193,6 +211,14 @@ export const createUrqlClient = (ssrExchange: SSRExchange) => {
       }),
       fetchExchange,
       ssrExchange,
+      subscriptionExchange({
+        forwardSubscription: (request) => {
+          const subscriptionClient = createSubscriptionClient({
+            userId: userId || "",
+          });
+          return subscriptionClient.request(request);
+        },
+      }),
     ],
     fetchOptions: {
       credentials: "include" as const,

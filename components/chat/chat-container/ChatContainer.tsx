@@ -63,9 +63,9 @@ const DesktopView = ({
       h={"100%"}
       w={"100%"}
     >
-      <Chats chats={allChats} selectedChatState={selectedChatState} />
+      <Chats chats={allChats} selectedChatState={selectedChatState} me={me} />
       <ChatMessages chat={selectedChatData} me={me} />
-      <Chatinfo chat={selectedChatData} />
+      <Chatinfo chat={selectedChatData} me={me} />
     </Box>
   );
 };

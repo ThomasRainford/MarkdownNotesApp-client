@@ -1,5 +1,5 @@
 import { Box } from "@chakra-ui/react";
-import { withUrqlClient } from "next-urql";
+import { SSRExchange, withUrqlClient } from "next-urql";
 import ChatPageContainer from "../../components/chat/chat-container/ChatContainer";
 import SelectedDataProvider from "../../components/helper/SelectedDataProvider";
 import PrimaryLayout from "../../components/layouts/PrimaryLayout";
@@ -47,4 +47,10 @@ Chat.getLayout = (page) => {
   return <PrimaryLayout>{page}</PrimaryLayout>;
 };
 
-export default withUrqlClient(createUrqlClient)(Chat);
+export default withUrqlClient((ssrExchange: SSRExchange) => {
+  let userId = "";
+  if (typeof window !== "undefined") {
+    userId = localStorage.getItem("userId") || "";
+  }
+  return createUrqlClient(ssrExchange, userId);
+})(Chat);

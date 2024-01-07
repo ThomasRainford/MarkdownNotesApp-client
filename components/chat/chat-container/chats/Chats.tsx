@@ -2,7 +2,13 @@ import { Avatar, Box, Heading, Input, Text } from "@chakra-ui/react";
 import filter from "lodash/filter";
 import includes from "lodash/includes";
 import { ReactNode, useState } from "react";
-import { Chat, ChatPrivate, ChatRoom } from "../../../../generated/graphql";
+import {
+  Chat,
+  ChatPrivate,
+  ChatRoom,
+  User,
+} from "../../../../generated/graphql";
+import { chatName } from "../../../../utils/util";
 
 const ChatLayout = ({
   children,
@@ -36,9 +42,10 @@ const ChatLayout = ({
 export interface Props {
   chats: (ChatPrivate | ChatRoom)[];
   selectedChatState: [string, (_: string) => void];
+  me: User;
 }
 
-const Chats = ({ chats, selectedChatState }: Props): JSX.Element => {
+const Chats = ({ chats, selectedChatState, me }: Props): JSX.Element => {
   const [selectedChat, setSelectedChat] = selectedChatState;
 
   const [filterText, setFilterText] = useState<string>("");
@@ -97,6 +104,7 @@ const Chats = ({ chats, selectedChatState }: Props): JSX.Element => {
           const lastMessage = chat.messages[chat.messages.length - 1];
           const senderUsername = lastMessage.sender.username;
           const messageContent = lastMessage.content.slice(0, 20) + "...";
+          const chatUserName = chatName(chat, me.id);
           return (
             <ChatLayout
               key={chat.id}
@@ -106,11 +114,11 @@ const Chats = ({ chats, selectedChatState }: Props): JSX.Element => {
             >
               <Box display={"flex"} flexDir="row" alignItems={"center"}>
                 <Box mr="0.5em">
-                  <Avatar name={chat.participants[1].username} />
+                  <Avatar name={chatUserName} />
                 </Box>
                 <Box>
                   <Box>
-                    <Heading size="sm">{chat.participants[1].username}</Heading>
+                    <Heading size="sm">{chatUserName}</Heading>
                   </Box>
                   <Box>
                     <Text fontSize={"sm"} color="gray.400">
