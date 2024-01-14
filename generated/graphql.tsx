@@ -605,6 +605,20 @@ export type CreateNotesListMutationVariables = Exact<{
 
 export type CreateNotesListMutation = { __typename?: 'Mutation', createNotesList: { __typename?: 'NotesListResponse', notesList?: { __typename?: 'NotesList', id: string, title: string } | null, error?: { __typename?: 'Error', property: string, message: string } | null } };
 
+export type CreatePrivateMessageMutationVariables = Exact<{
+  createMessageInput: CreateMessageInput;
+}>;
+
+
+export type CreatePrivateMessageMutation = { __typename?: 'Mutation', createPrivateMessage: { __typename?: 'MessageResponse', message?: { __typename?: 'Message', id: string, content: string, createdAt: any, updatedAt: any, sender: { __typename?: 'User', id: string, username: string } } | null, error?: { __typename?: 'Error', property: string, message: string } | null } };
+
+export type CreateRoomMessageMutationVariables = Exact<{
+  createMessageInput: CreateMessageInput;
+}>;
+
+
+export type CreateRoomMessageMutation = { __typename?: 'Mutation', createRoomMessage: { __typename?: 'MessageResponse', message?: { __typename?: 'Message', id: string, content: string, createdAt: any, updatedAt: any, sender: { __typename?: 'User', id: string, username: string } } | null, error?: { __typename?: 'Error', property: string, message: string } | null } };
+
 export type DeleteCollectionMutationVariables = Exact<{
   id: Scalars['String'];
 }>;
@@ -795,6 +809,13 @@ export type UserQueryVariables = Exact<{
 
 export type UserQuery = { __typename?: 'Query', user?: { __typename?: 'User', _id: string, id: string, email: string, username: string, following: Array<string>, followers: Array<string>, upvoted: Array<string> } | null };
 
+export type MessageSentSubscriptionVariables = Exact<{
+  messageSentInput: NewMessageArgs;
+}>;
+
+
+export type MessageSentSubscription = { __typename?: 'Subscription', messageSent: { __typename?: 'MessageSentResponse', error?: string | null, message?: { __typename?: 'Message', id: string, content: string, createdAt: any, updatedAt: any, sender: { __typename?: 'User', id: string, username: string } } | null } };
+
 
 export const AddNoteDocument = gql`
     mutation AddNote($listLocation: ListLocationInput!, $noteInput: NoteInput!) {
@@ -852,6 +873,54 @@ export const CreateNotesListDocument = gql`
 
 export function useCreateNotesListMutation() {
   return Urql.useMutation<CreateNotesListMutation, CreateNotesListMutationVariables>(CreateNotesListDocument);
+};
+export const CreatePrivateMessageDocument = gql`
+    mutation CreatePrivateMessage($createMessageInput: CreateMessageInput!) {
+  createPrivateMessage(createMessageInput: $createMessageInput) {
+    message {
+      id
+      content
+      createdAt
+      updatedAt
+      sender {
+        id
+        username
+      }
+    }
+    error {
+      property
+      message
+    }
+  }
+}
+    `;
+
+export function useCreatePrivateMessageMutation() {
+  return Urql.useMutation<CreatePrivateMessageMutation, CreatePrivateMessageMutationVariables>(CreatePrivateMessageDocument);
+};
+export const CreateRoomMessageDocument = gql`
+    mutation CreateRoomMessage($createMessageInput: CreateMessageInput!) {
+  createRoomMessage(createMessageInput: $createMessageInput) {
+    message {
+      id
+      content
+      createdAt
+      updatedAt
+      sender {
+        id
+        username
+      }
+    }
+    error {
+      property
+      message
+    }
+  }
+}
+    `;
+
+export function useCreateRoomMessageMutation() {
+  return Urql.useMutation<CreateRoomMessageMutation, CreateRoomMessageMutationVariables>(CreateRoomMessageDocument);
 };
 export const DeleteCollectionDocument = gql`
     mutation DeleteCollection($id: String!) {
@@ -1420,4 +1489,25 @@ export const UserDocument = gql`
 
 export function useUserQuery(options: Omit<Urql.UseQueryArgs<UserQueryVariables>, 'query'>) {
   return Urql.useQuery<UserQuery, UserQueryVariables>({ query: UserDocument, ...options });
+};
+export const MessageSentDocument = gql`
+    subscription MessageSent($messageSentInput: NewMessageArgs!) {
+  messageSent(messageSentInput: $messageSentInput) {
+    message {
+      id
+      content
+      createdAt
+      updatedAt
+      sender {
+        id
+        username
+      }
+    }
+    error
+  }
+}
+    `;
+
+export function useMessageSentSubscription<TData = MessageSentSubscription>(options: Omit<Urql.UseSubscriptionArgs<MessageSentSubscriptionVariables>, 'query'> = {}, handler?: Urql.SubscriptionHandler<MessageSentSubscription, TData>) {
+  return Urql.useSubscription<MessageSentSubscription, TData, MessageSentSubscriptionVariables>({ query: MessageSentDocument, ...options }, handler);
 };

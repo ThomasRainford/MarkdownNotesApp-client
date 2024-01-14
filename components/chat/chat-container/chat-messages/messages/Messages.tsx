@@ -1,5 +1,5 @@
 import { Avatar, Box, Text } from "@chakra-ui/react";
-import { Fragment } from "react";
+import { Fragment, useEffect, useRef } from "react";
 import { Message, User } from "../../../../../generated/graphql";
 
 const MeMessageBubble = ({
@@ -156,8 +156,18 @@ export interface Props {
 }
 
 const Messages = ({ messages, me }: Props): JSX.Element => {
+  const boxRef = useRef<HTMLDivElement | null>(null);
+
+  // Scroll box to bottom.
+  useEffect(() => {
+    if (boxRef.current) {
+      const container = boxRef.current;
+      container.scrollTop = container.scrollHeight;
+    }
+  });
+
   return (
-    <Box padding="1em">
+    <Box ref={boxRef} padding="1em" h="100%" overflowY="scroll">
       {messages?.map((message, i) => {
         const isMe = message.sender.id === me.id;
         const date = new Date(message.createdAt).toLocaleString("en-US", {

@@ -1,5 +1,7 @@
 // Contains small utility functions.
 
+import { ChatPrivate, ChatRoom } from "../generated/graphql";
+
 /**
  * Returns whether arr1 contains an element in arr2.
  *
@@ -14,4 +16,16 @@ export const includesAny = <T>(arr1: T[], arr2: T[]) => {
     }
   }
   return false;
+};
+
+export const chatName = (chat: ChatPrivate | ChatRoom, meId: string) => {
+  const name =
+    chat.__typename === "ChatPrivate"
+      ? chat.participants[0].id === meId
+        ? chat.participants[1].username
+        : chat.participants[0].username
+      : chat.__typename === "ChatRoom"
+      ? chat.name
+      : "";
+  return name;
 };

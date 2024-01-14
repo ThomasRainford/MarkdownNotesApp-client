@@ -41,4 +41,4 @@ Profile.getLayout = (page) => {
   return <PrimaryLayout>{page}</PrimaryLayout>;
 };
 
-export default withUrqlClient(createUrqlClient)(Profile);
+export default withUrqlClient(createUrqlClient as any)(Profile);

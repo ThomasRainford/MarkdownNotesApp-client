@@ -1,10 +1,17 @@
 import { Avatar, Box, Button, Heading } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { ChatPrivate, ChatRoom } from "../../../../generated/graphql";
+import { ChatPrivate, ChatRoom, User } from "../../../../generated/graphql";
+import { chatName } from "../../../../utils/util";
 
-const ChatPrivateInfo = ({ chatPrivate }: { chatPrivate: ChatPrivate }) => {
+const ChatPrivateInfo = ({
+  chatPrivate,
+  me,
+}: {
+  chatPrivate: ChatPrivate;
+  me: User;
+}) => {
   const router = useRouter();
-  const username = chatPrivate.participants[1].username;
+  const chatUserName = chatName(chatPrivate, me.id);
 
   return (
     <Box
@@ -15,17 +22,17 @@ const ChatPrivateInfo = ({ chatPrivate }: { chatPrivate: ChatPrivate }) => {
     >
       <Box mb="1em">
         <Box mb="0.5em">
-          <Avatar size="2xl" name={username} />
+          <Avatar size="2xl" name={chatUserName} />
         </Box>
         <Box display={"flex"} justifyContent="center">
-          <Heading size="md">{username}</Heading>
+          <Heading size="md">{chatUserName}</Heading>
         </Box>
       </Box>
       <Box>
         <Button
           role="link"
           onClick={() => {
-            router.push(`/profile/${username}`);
+            router.push(`/profile/${chatUserName}`);
           }}
         >
           Profile
@@ -87,9 +94,10 @@ const ChatRoomInfo = ({ chatRoom }: { chatRoom: ChatRoom }) => {
 
 export interface Props {
   chat: ChatPrivate | ChatRoom | undefined;
+  me: User;
 }
 
-const Chatinfo = ({ chat }: Props): JSX.Element => {
+const Chatinfo = ({ chat, me }: Props): JSX.Element => {
   return (
     <Box
       display={"flex"}
@@ -101,7 +109,7 @@ const Chatinfo = ({ chat }: Props): JSX.Element => {
     >
       <Box>
         {chat?.__typename === "ChatPrivate" ? (
-          <ChatPrivateInfo chatPrivate={chat} />
+          <ChatPrivateInfo chatPrivate={chat} me={me} />
         ) : chat?.__typename === "ChatRoom" ? (
           <ChatRoomInfo chatRoom={chat} />
         ) : (

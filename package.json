@@ -46,6 +46,7 @@
     "react-autosave": "^0.4.2",
     "react-dom": "18.2.0",
     "shelljs": "^0.8.5",
+    "subscriptions-transport-ws": "^0.11.0",
     "urql": "3.0.3",
     "wonka": "^4.0.15",
     "yup": "^0.32.11"

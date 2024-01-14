@@ -1,29 +1,39 @@
-import { ArrowRightIcon } from "@chakra-ui/icons";
+import { Avatar, Box, Heading } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
 import {
-  Avatar,
-  Box,
-  ButtonGroup,
-  Heading,
-  IconButton,
-  Input,
-} from "@chakra-ui/react";
-import { ChatPrivate, ChatRoom, User } from "../../../../generated/graphql";
+  ChatPrivate,
+  ChatRoom,
+  Message,
+  useMessageSentSubscription,
+  User,
+} from "../../../../generated/graphql";
+import { chatName } from "../../../../utils/util";
+import MessageInput from "./message-input/MessageInput";
 import Messages from "./messages/Messages";
 
 const ChatMessageHeader = ({
-  name,
-  colour,
+  chat,
+  me,
 }: {
-  name: string;
+  chat: ChatPrivate | ChatRoom;
   colour?: string;
+  me: User;
 }) => {
+  const chatUserName = chatName(chat, me.id);
+
+  const colour = chat.__typename === "ChatRoom" && "gray.700";
+
   return (
     <Box display={"flex"} flexDir="row">
       <Box mr="1em">
-        {colour ? <Avatar name={name} bg={colour} /> : <Avatar name={name} />}
+        {colour ? (
+          <Avatar name={chatUserName} bg={colour} />
+        ) : (
+          <Avatar name={chatUserName} />
+        )}
       </Box>
       <Box display={"flex"} alignItems="center">
-        <Heading size={"md"}>{name}</Heading>
+        <Heading size={"md"}>{chatUserName}</Heading>
       </Box>
     </Box>
   );
@@ -35,59 +45,55 @@ export interface Props {
 }
 
 const ChatMessages = ({ chat, me }: Props): JSX.Element => {
-  const messages = chat?.messages.reverse();
+  const [messages, setMessages] = useState(chat?.messages.reverse() || []);
+  const [result] = useMessageSentSubscription({
+    variables: {
+      messageSentInput: {
+        chatId: chat?.id || "",
+        userId: me.id,
+      },
+    },
+  });
+
+  useEffect(() => {
+    if (!result.data?.messageSent.message) return;
+    setMessages((messages) => [
+      ...messages,
+      result.data?.messageSent.message as Message,
+    ]);
+  }, [result.data?.messageSent.message]);
+
+  useEffect(() => {
+    setMessages(chat?.messages || []);
+  }, [chat?.messages]);
 
   return (
     <Box
       display={"flex"}
       flexDirection="column"
-      h={"100%"}
       w={{ base: "100%", md: "50%" }}
       bg="gray.600"
-      height={"100%"}
+      className="chatmessages-container"
+      h="calc(100vh - 64px)"
     >
       {!chat ? (
         <></>
       ) : (
         <Box
           display={"flex"}
+          h="calc(100vh - 64px)"
           justifyContent="space-between"
           flexDir="column"
-          height={"100%"}
         >
           <Box mb={"2em"} padding="1em">
-            {chat.__typename === "ChatPrivate" ? (
-              <ChatMessageHeader name={chat.participants[1].username} />
-            ) : chat.__typename === "ChatRoom" ? (
-              <ChatMessageHeader name={chat.name} colour="gray.700" />
-            ) : (
-              <></>
-            )}
+            <ChatMessageHeader chat={chat} me={me} />
           </Box>
-          <Box>
-            <Box>
+          <Box display={"flex"} flexDir="column" h="calc(100vh - 180px)">
+            <Box className="messages-container" h="calc(100vh - 240px)">
               <Messages messages={messages || []} me={me} />
             </Box>
             <Box display="flex" m={"0.5em"}>
-              <Box flexGrow={4} mr="0.5em">
-                <Input
-                  type={"filled"}
-                  bg="gray.700"
-                  placeholder="Type your message here..."
-                  onClick={() => {}}
-                />
-              </Box>
-              <Box display="flex" alignItems="center" flexGrow={1}>
-                <ButtonGroup spacing="1">
-                  <IconButton
-                    variant={"outline"}
-                    icon={<ArrowRightIcon />}
-                    color="blue.500"
-                    bg={"gray.600"}
-                    aria-label={"send-message-button"}
-                  />
-                </ButtonGroup>
-              </Box>
+              <MessageInput chat={chat} />
             </Box>
           </Box>
         </Box>
