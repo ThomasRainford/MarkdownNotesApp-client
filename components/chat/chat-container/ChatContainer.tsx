@@ -54,6 +54,7 @@ const DesktopView = ({
 }) => {
   const selectedChatState = useLocalStorage("selectedChat", null);
   const [selectedChat] = selectedChatState;
+
   const allChats = [...chatPrivates, ...chatRooms];
   const selectedChatData = allChats.find((chat) => chat.id === selectedChat);
 

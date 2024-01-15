@@ -428,7 +428,7 @@ export type Query = {
 
 export type QueryChatMessagesArgs = {
   chatId: Scalars['String'];
-  pagination: PaginationInput;
+  pagination?: InputMaybe<PaginationInput>;
 };
 
 
@@ -716,11 +716,11 @@ export type VoteMutation = { __typename?: 'Mutation', vote: { __typename?: 'Coll
 
 export type ChatMessagesQueryVariables = Exact<{
   chatId: Scalars['String'];
-  pagination: PaginationInput;
+  pagination?: InputMaybe<PaginationInput>;
 }>;
 
 
-export type ChatMessagesQuery = { __typename?: 'Query', chatMessages: Array<{ __typename?: 'Message', id: string, content: string, sender: { __typename?: 'User', username: string } }> };
+export type ChatMessagesQuery = { __typename?: 'Query', chatMessages: Array<{ __typename?: 'Message', id: string, content: string, createdAt: any, updatedAt: any, sender: { __typename?: 'User', id: string, username: string } }> };
 
 export type ChatPrivatesQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1156,11 +1156,14 @@ export function useVoteMutation() {
   return Urql.useMutation<VoteMutation, VoteMutationVariables>(VoteDocument);
 };
 export const ChatMessagesDocument = gql`
-    query ChatMessages($chatId: String!, $pagination: PaginationInput!) {
+    query ChatMessages($chatId: String!, $pagination: PaginationInput) {
   chatMessages(chatId: $chatId, pagination: $pagination) {
     id
     content
+    createdAt
+    updatedAt
     sender {
+      id
       username
     }
   }
