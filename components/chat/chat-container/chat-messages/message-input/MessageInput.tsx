@@ -14,12 +14,17 @@ export interface Props {
 
 const MessageInput = ({ chat }: Props): JSX.Element => {
   const [inputValue, setInputValue] = useState("");
-  const [, createPrivateMessage] = useCreatePrivateMessageMutation();
-  const [, createRoomMessage] = useCreateRoomMessageMutation();
+  const [createPrivateMessageResult, createPrivateMessage] =
+    useCreatePrivateMessageMutation();
+  const [createRoomMessageResult, createRoomMessage] =
+    useCreateRoomMessageMutation();
 
   const chatType = chat.__typename;
   const create =
     chatType === "ChatPrivate" ? createPrivateMessage : createRoomMessage;
+
+  const messageSendLoading =
+    createPrivateMessageResult.fetching || createRoomMessageResult.fetching;
 
   return (
     <>
@@ -61,6 +66,7 @@ const MessageInput = ({ chat }: Props): JSX.Element => {
               });
               setInputValue("");
             }}
+            isLoading={messageSendLoading}
           />
         </ButtonGroup>
       </Box>

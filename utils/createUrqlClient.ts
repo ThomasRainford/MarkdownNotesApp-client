@@ -150,6 +150,7 @@ export const createUrqlClient = (ssrExchange: SSRExchange, userId?: string) => {
     exchanges: [
       dedupExchange,
       cacheExchange({
+        optimistic: {},
         updates: {
           Mutation: {
             logout: (_result, _args, cache, _info) => {
