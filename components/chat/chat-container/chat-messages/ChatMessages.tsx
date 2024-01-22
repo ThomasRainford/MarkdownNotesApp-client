@@ -4,6 +4,7 @@ import {
   ChatPrivate,
   ChatRoom,
   Message,
+  useChatMessagesQuery,
   useMessageSentSubscription,
   User,
 } from "../../../../generated/graphql";
@@ -45,7 +46,14 @@ export interface Props {
 }
 
 const ChatMessages = ({ chat, me }: Props): JSX.Element => {
-  const [messages, setMessages] = useState(chat?.messages.reverse() || []);
+  const [chatMessages] = useChatMessagesQuery({
+    variables: {
+      chatId: chat?.id || "",
+    },
+  });
+  const [messages, setMessages] = useState(
+    (chatMessages.data?.chatMessages.reverse() || []) as Message[]
+  );
   const [result] = useMessageSentSubscription({
     variables: {
       messageSentInput: {
@@ -64,8 +72,8 @@ const ChatMessages = ({ chat, me }: Props): JSX.Element => {
   }, [result.data?.messageSent.message]);
 
   useEffect(() => {
-    setMessages(chat?.messages || []);
-  }, [chat?.messages]);
+    setMessages((chatMessages.data?.chatMessages || []) as Message[]);
+  }, [chatMessages.data?.chatMessages]);
 
   return (
     <Box

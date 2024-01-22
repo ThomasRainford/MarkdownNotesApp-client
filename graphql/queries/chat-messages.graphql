@@ -1,8 +1,11 @@
-query ChatMessages($chatId: String!, $pagination: PaginationInput!) {
+query ChatMessages($chatId: String!, $pagination: PaginationInput) {
   chatMessages(chatId: $chatId, pagination: $pagination) {
     id
     content
+    createdAt
+    updatedAt
     sender {
+      id
       username
     }
   }

@@ -113,6 +113,16 @@ const invalidateChatRooms = (cache: Cache) => {
   });
 };
 
+const invalidateChatMessages = (cache: Cache) => {
+  const allFields = cache.inspectFields("Query");
+  const fieldInfos = allFields.filter(
+    (info) => info.fieldName === "chatMessages"
+  );
+  fieldInfos.forEach((fi) => {
+    cache.invalidate("Query", "chatMessages", fi.arguments || null);
+  });
+};
+
 const createSubscriptionClient = (options: { userId: string }): any => {
   return process.browser
     ? (new SubscriptionClient(
@@ -131,11 +141,16 @@ const createSubscriptionClient = (options: { userId: string }): any => {
 };
 
 export const createUrqlClient = (ssrExchange: SSRExchange, userId?: string) => {
+  const subscriptionClient = createSubscriptionClient({
+    userId: userId || "",
+  });
+
   return {
     url: process.env.NEXT_PUBLIC_API_URL,
     exchanges: [
       dedupExchange,
       cacheExchange({
+        optimistic: {},
         updates: {
           Mutation: {
             logout: (_result, _args, cache, _info) => {
@@ -207,15 +222,17 @@ export const createUrqlClient = (ssrExchange: SSRExchange, userId?: string) => {
               invalidateUserFollowers(cache);
             },
           },
+          Subscription: {
+            messageSent: (_result, _args, cache, _info) => {
+              invalidateChatMessages(cache);
+            },
+          },
         },
       }),
       fetchExchange,
       ssrExchange,
       subscriptionExchange({
         forwardSubscription: (request) => {
-          const subscriptionClient = createSubscriptionClient({
-            userId: userId || "",
-          });
           return subscriptionClient.request(request);
         },
       }),

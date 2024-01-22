@@ -93,7 +93,7 @@ const EditProfile = ({
         w={"100%"}
         mb={"1.25em"}
       >
-        <Avatar size={"3xl"} mb={"0.45em"} />
+        <Avatar size={"2xl"} mb={"0.45em"} name={user.username} />
         <Input
           placeholder="Username"
           size="lg"
@@ -159,7 +159,9 @@ const UserDetails = ({ user, me }: Props): JSX.Element => {
         w={"100%"}
         mb={"1.25em"}
       >
-        <Avatar size={"3xl"} mb={"0.45em"} />
+        <Box>
+          <Avatar size={"2xl"} mb={"0.45em"} name={user?.username} />
+        </Box>
         <Tooltip
           isDisabled={!isMe}
           label="👈 This is you!"

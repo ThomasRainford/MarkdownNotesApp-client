@@ -1,4 +1,4 @@
-import { Avatar, Box, Button, Heading } from "@chakra-ui/react";
+import { Avatar, Box, Button, Heading, Text } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { ChatPrivate, ChatRoom, User } from "../../../../generated/graphql";
 import { chatName } from "../../../../utils/util";
@@ -81,8 +81,14 @@ const ChatRoomInfo = ({ chatRoom }: { chatRoom: ChatRoom }) => {
                 <Avatar name={member.username} />
               </Box>
               <Box display={"flex"} flexDir="column">
-                <Box mr="0.5em">{member.username}</Box>
-                <Box>{member.email}</Box>
+                <Box mr="0.5em">
+                  <Text>{member.username}</Text>
+                </Box>
+                <Box>
+                  <Text fontSize={"sm"} fontWeight="light" color={"gray.300"}>
+                    {member.email}
+                  </Text>
+                </Box>
               </Box>
             </Box>
           );
