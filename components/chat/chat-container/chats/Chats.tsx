@@ -9,6 +9,7 @@ import {
   User,
 } from "../../../../generated/graphql";
 import { chatName } from "../../../../utils/util";
+import CreateChat from "./create_chat/CreateChat";
 
 const ChatLayout = ({
   children,
@@ -61,7 +62,7 @@ const Chats = ({ chats, selectedChatState, me }: Props): JSX.Element => {
       flexDirection="column"
       h={"100%"}
       w={{ base: "100%", md: "25%" }}
-      padding="1em"
+      padding="0.85em"
     >
       <Box mb="1em">
         <Heading>Chats</Heading>
@@ -99,66 +100,71 @@ const Chats = ({ chats, selectedChatState, me }: Props): JSX.Element => {
           }}
         />
       </Box>
-      {displayedChats.map((chat) => {
-        if (chat.__typename === "ChatPrivate") {
-          const lastMessage = chat.messages[chat.messages.length - 1];
-          const senderUsername = lastMessage.sender.username;
-          const messageContent = lastMessage.content.slice(0, 20) + "...";
-          const chatUserName = chatName(chat, me.id);
-          return (
-            <ChatLayout
-              key={chat.id}
-              currentChat={chat}
-              selectedChat={selectedChat}
-              onClick={() => handleSelectChat(chat as Chat)}
-            >
-              <Box display={"flex"} flexDir="row" alignItems={"center"}>
-                <Box mr="0.5em">
-                  <Avatar name={chatUserName} />
-                </Box>
-                <Box>
-                  <Box>
-                    <Heading size="sm">{chatUserName}</Heading>
+      <Box>
+        {displayedChats.map((chat) => {
+          if (chat.__typename === "ChatPrivate") {
+            const lastMessage = chat.messages[chat.messages.length - 1];
+            const senderUsername = lastMessage.sender.username;
+            const messageContent = lastMessage.content.slice(0, 20) + "...";
+            const chatUserName = chatName(chat, me.id);
+            return (
+              <ChatLayout
+                key={chat.id}
+                currentChat={chat}
+                selectedChat={selectedChat}
+                onClick={() => handleSelectChat(chat as Chat)}
+              >
+                <Box display={"flex"} flexDir="row" alignItems={"center"}>
+                  <Box mr="0.5em">
+                    <Avatar name={chatUserName} />
                   </Box>
                   <Box>
-                    <Text fontSize={"sm"} color="gray.400">
-                      {`${senderUsername}: ${messageContent}`}
-                    </Text>
+                    <Box>
+                      <Heading size="sm">{chatUserName}</Heading>
+                    </Box>
+                    <Box>
+                      <Text fontSize={"sm"} color="gray.400">
+                        {`${senderUsername}: ${messageContent}`}
+                      </Text>
+                    </Box>
                   </Box>
                 </Box>
-              </Box>
-            </ChatLayout>
-          );
-        } else if (chat.__typename === "ChatRoom") {
-          const lastMessage = chat.messages[chat.messages.length - 1];
-          const senderUsername = lastMessage.sender.username;
-          const messageContent = lastMessage.content.slice(0, 20);
-          return (
-            <ChatLayout
-              key={chat.id}
-              currentChat={chat}
-              selectedChat={selectedChat}
-              onClick={() => handleSelectChat(chat as Chat)}
-            >
-              <Box display={"flex"} flexDir="row" alignItems={"center"}>
-                <Box mr="0.5em">
-                  <Avatar name={chat.name} bg={"gray.600"} />
-                </Box>
-                <Box>
+              </ChatLayout>
+            );
+          } else if (chat.__typename === "ChatRoom") {
+            const lastMessage = chat.messages[chat.messages.length - 1];
+            const senderUsername = lastMessage.sender.username;
+            const messageContent = lastMessage.content.slice(0, 20);
+            return (
+              <ChatLayout
+                key={chat.id}
+                currentChat={chat}
+                selectedChat={selectedChat}
+                onClick={() => handleSelectChat(chat as Chat)}
+              >
+                <Box display={"flex"} flexDir="row" alignItems={"center"}>
+                  <Box mr="0.5em">
+                    <Avatar name={chat.name} bg={"gray.600"} />
+                  </Box>
                   <Box>
-                    <Heading size="sm">{chat.name}</Heading>
-                  </Box>
-                  <Box>
-                    <Text fontSize={"sm"} color="gray.400">
-                      {`${senderUsername}: ${messageContent}`}
-                    </Text>
+                    <Box>
+                      <Heading size="sm">{chat.name}</Heading>
+                    </Box>
+                    <Box>
+                      <Text fontSize={"sm"} color="gray.400">
+                        {`${senderUsername}: ${messageContent}`}
+                      </Text>
+                    </Box>
                   </Box>
                 </Box>
-              </Box>
-            </ChatLayout>
-          );
-        }
-      })}
+              </ChatLayout>
+            );
+          }
+        })}
+      </Box>
+      <Box mt="1.5em">
+        <CreateChat />
+      </Box>
     </Box>
   );
 };
