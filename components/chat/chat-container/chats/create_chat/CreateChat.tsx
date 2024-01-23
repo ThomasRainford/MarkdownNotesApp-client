@@ -128,8 +128,8 @@ const CreateChatModal = ({
 
   const [result] = useFollowingQuery();
 
-  const followingError = result.error;
-  const followingLoading = result.fetching;
+  // const followingError = result.error;
+  // const followingLoading = result.fetching;
   const followingData = result.data;
 
   return (
