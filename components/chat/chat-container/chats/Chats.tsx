@@ -9,7 +9,7 @@ import {
   User,
 } from "../../../../generated/graphql";
 import { chatName } from "../../../../utils/util";
-import CreateChat from "./create_chat/CreateChat";
+import CreateChat from "./create-chat/CreateChat";
 
 const ChatLayout = ({
   children,
