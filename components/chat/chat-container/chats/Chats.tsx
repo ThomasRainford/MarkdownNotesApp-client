@@ -163,7 +163,7 @@ const Chats = ({ chats, selectedChatState, me }: Props): JSX.Element => {
         })}
       </Box>
       <Box mt="1.5em">
-        <CreateChat />
+        <CreateChat chats={chats} />
       </Box>
     </Box>
   );

@@ -1,5 +1,6 @@
 import { AddIcon } from "@chakra-ui/icons";
 import {
+  Avatar,
   Box,
   Button,
   IconButton,
@@ -24,16 +25,33 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { useRef, useState } from "react";
-import { useFollowingQuery, User } from "../../../../../generated/graphql";
+import {
+  ChatPrivate,
+  ChatRoom,
+  useFollowingQuery,
+  useMeQuery,
+  User,
+} from "../../../../../generated/graphql";
 
 const CreateChatPrivateModalContent = ({
+  chats,
   followingUsers,
   onModalClose,
 }: {
+  chats: ChatPrivate[];
   followingUsers: User[];
   onModalClose: () => void;
 }) => {
   const [selectedUser, setSelectedUser] = useState<User | undefined>(undefined);
+  const [result] = useMeQuery();
+  const me = result.data?.me;
+
+  const currentChatUsers = chats.map((c) => {
+    return c.participants.filter((p) => p.id !== me?.id)[0].id;
+  });
+  const noChatsUsers = followingUsers.filter(
+    (fu) => !currentChatUsers.includes(fu.id)
+  );
 
   return (
     <>
@@ -53,9 +71,11 @@ const CreateChatPrivateModalContent = ({
               <option value="" disabled selected>
                 Select user...
               </option>
-              {followingUsers.map((user) => (
+              {noChatsUsers.map((user) => (
                 <option key={user.id} value={user.id}>
-                  {user.username}
+                  <Box>
+                    <Text>{user.username}</Text>
+                  </Box>
                 </option>
               ))}
             </Select>
@@ -84,17 +104,71 @@ const CreateChatPrivateModalContent = ({
 };
 
 const CreateChatRoomModalContent = ({
+  chats,
   followingUsers,
   onModalClose,
 }: {
+  chats: ChatRoom[];
   followingUsers: User[];
   onModalClose: () => void;
 }) => {
+  const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
+  const displayUsers = followingUsers.filter(
+    (fu) => !selectedUsers.find((su) => su.id === fu.id)
+  );
+  console.log(displayUsers);
+
   return (
     <>
       <ModalBody>
         <Box>
-          <Box>{followingUsers.map((user) => user.username)}</Box>
+          <Box>
+            <Box mb="0.5em">
+              <Text fontWeight={"bold"}>Select a user:</Text>
+            </Box>
+            <Select
+              onChange={(e) => {
+                const user = followingUsers.find(
+                  (fu) => fu.id === e.target.value
+                ) as User;
+                if (selectedUsers.find((su) => su.id === user.id)) return;
+                setSelectedUsers([...selectedUsers, user]);
+              }}
+            >
+              <option value="" disabled selected>
+                Select user...
+              </option>
+              {followingUsers.map((user) => (
+                <option
+                  key={user.id}
+                  value={user.id}
+                  disabled={
+                    selectedUsers.findIndex((su) => su.id === user.id) !== -1
+                  }
+                >
+                  <Box>
+                    <Text>{user.username}</Text>
+                  </Box>
+                </option>
+              ))}
+            </Select>
+          </Box>
+          <Box mt="1em">
+            {selectedUsers.map((user) => {
+              return (
+                <Box
+                  key={user.id}
+                  display="flex"
+                  flexDir={"row"}
+                  alignItems="center"
+                  mt="0.25em"
+                >
+                  <Avatar name={user.username} size={"sm"} />
+                  <Text ml="0.5em">{user.username}</Text>
+                </Box>
+              );
+            })}
+          </Box>
         </Box>
       </ModalBody>
       <ModalFooter>
@@ -110,9 +184,11 @@ const CreateChatRoomModalContent = ({
 };
 
 const CreateChatModal = ({
+  chats,
   chatType,
   modalDisclosure,
 }: {
+  chats: (ChatPrivate | ChatRoom)[];
   chatType: "ChatPrivate" | "ChatRoom";
   modalDisclosure: {
     isOpen: boolean;
@@ -148,11 +224,19 @@ const CreateChatModal = ({
           <ModalCloseButton />
           {!followingData ? null : chatType === "ChatPrivate" ? (
             <CreateChatPrivateModalContent
+              chats={
+                chats.filter(
+                  (c) => c.__typename === "ChatPrivate"
+                ) as ChatPrivate[]
+              }
               followingUsers={followingData.following as User[]}
               onModalClose={onClose}
             />
           ) : (
             <CreateChatRoomModalContent
+              chats={
+                chats.filter((c) => c.__typename === "ChatRoom") as ChatRoom[]
+              }
               followingUsers={followingData.following as User[]}
               onModalClose={onClose}
             />
@@ -163,9 +247,11 @@ const CreateChatModal = ({
   );
 };
 
-export interface Props {}
+export interface Props {
+  chats: (ChatPrivate | ChatRoom)[];
+}
 
-const CreateChat = (): JSX.Element => {
+const CreateChat = ({ chats }: Props): JSX.Element => {
   const createChatDisclosure = useDisclosure();
 
   const initRef = useRef<any>();
@@ -248,6 +334,7 @@ const CreateChat = (): JSX.Element => {
       </Box>
       {selectedChatType ? (
         <CreateChatModal
+          chats={chats}
           chatType={selectedChatType}
           modalDisclosure={createChatDisclosure}
         />
