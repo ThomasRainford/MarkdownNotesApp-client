@@ -4,6 +4,7 @@ import {
   Box,
   Button,
   IconButton,
+  Input,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -23,11 +24,13 @@ import {
   Text,
   Tooltip,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import { useRef, useState } from "react";
 import {
   ChatPrivate,
   ChatRoom,
+  useCreateChatPrivateMutation,
   useFollowingQuery,
   useMeQuery,
   User,
@@ -42,6 +45,8 @@ const CreateChatPrivateModalContent = ({
   followingUsers: User[];
   onModalClose: () => void;
 }) => {
+  const [, createChatPrivate] = useCreateChatPrivateMutation();
+  const toast = useToast();
   const [selectedUser, setSelectedUser] = useState<User | undefined>(undefined);
   const [result] = useMeQuery();
   const me = result.data?.me;
@@ -69,7 +74,9 @@ const CreateChatPrivateModalContent = ({
               }}
             >
               <option value="" disabled selected>
-                Select user...
+                {noChatsUsers.length > 0
+                  ? "Select user..."
+                  : "No users to select."}
               </option>
               {noChatsUsers.map((user) => (
                 <option key={user.id} value={user.id}>
@@ -92,7 +99,39 @@ const CreateChatPrivateModalContent = ({
         </Box>
       </ModalBody>
       <ModalFooter>
-        <Button colorScheme="blue" mr={3}>
+        <Button
+          colorScheme="blue"
+          mr={3}
+          disabled={!selectedUser}
+          onClick={async () => {
+            if (!selectedUser) return;
+            const result = await createChatPrivate({
+              chatPrivateInput: {
+                userId: selectedUser.id,
+              },
+            });
+            const error = result.data?.createChatPrivate.error;
+            const data = result.data?.createChatPrivate.chatPrivate;
+            if (error) {
+              toast({
+                id: "create-chat-private-error",
+                title: "Failed to create a private chat.",
+                status: "error",
+                position: "top",
+                duration: 2000,
+              });
+            } else if (data) {
+              toast({
+                id: "create-chat-private-success",
+                title: "Successfully created a new private chat.",
+                status: "success",
+                position: "top",
+                duration: 2000,
+              });
+            }
+            onModalClose();
+          }}
+        >
           Create Chat
         </Button>
         <Button variant="ghost" onClick={onModalClose}>
@@ -110,6 +149,7 @@ const CreateChatRoomModalContent = ({
   followingUsers: User[];
   onModalClose: () => void;
 }) => {
+  const [chatRoomName, setChatRoomName] = useState("");
   const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
 
   return (
@@ -117,6 +157,17 @@ const CreateChatRoomModalContent = ({
       <ModalBody>
         <Box>
           <Box>
+            <Box mb="0.5em">
+              <Box mb="0.5em">
+                <Text fontWeight={"bold"}>Enter chat room name:</Text>
+              </Box>
+              <Input
+                placeholder="Chat room name..."
+                onChange={(e) => {
+                  setChatRoomName(e.target.value);
+                }}
+              />
+            </Box>
             <Box mb="0.5em">
               <Text fontWeight={"bold"}>Select a user:</Text>
             </Box>
@@ -130,7 +181,7 @@ const CreateChatRoomModalContent = ({
               }}
             >
               <option value="" disabled selected>
-                Select user...
+                Select users...
               </option>
               {followingUsers.map((user) => (
                 <option

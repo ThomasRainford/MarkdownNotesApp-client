@@ -1,0 +1,16 @@
+mutation CreateChatRoom($chatRoomInput: CreateChatRoomInput!) {
+  createChatRoom(chatRoomInput: $chatRoomInput) {
+    chatRoom {
+      id
+      name
+      members {
+        id
+        username
+      }
+    }
+    error {
+      property
+      message
+    }
+  }
+}

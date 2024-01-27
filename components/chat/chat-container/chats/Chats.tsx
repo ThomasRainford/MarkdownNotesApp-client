@@ -1,7 +1,7 @@
 import { Avatar, Box, Heading, Input, Text } from "@chakra-ui/react";
 import filter from "lodash/filter";
 import includes from "lodash/includes";
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import {
   Chat,
   ChatPrivate,
@@ -51,6 +51,10 @@ const Chats = ({ chats, selectedChatState, me }: Props): JSX.Element => {
 
   const [filterText, setFilterText] = useState<string>("");
   const [displayedChats, setDisplayedChats] = useState(chats);
+
+  useEffect(() => {
+    setDisplayedChats(chats);
+  }, [chats]);
 
   const handleSelectChat = (chat: Chat) => {
     setSelectedChat(chat.id);
@@ -103,9 +107,12 @@ const Chats = ({ chats, selectedChatState, me }: Props): JSX.Element => {
       <Box>
         {displayedChats.map((chat) => {
           if (chat.__typename === "ChatPrivate") {
-            const lastMessage = chat.messages[chat.messages.length - 1];
-            const senderUsername = lastMessage.sender.username;
-            const messageContent = lastMessage.content.slice(0, 20) + "...";
+            const lastMessage =
+              chat.messages.length > 0
+                ? chat.messages[chat.messages.length - 1]
+                : null;
+            const senderUsername = lastMessage?.sender.username;
+            const messageContent = lastMessage?.content.slice(0, 20) + "...";
             const chatUserName = chatName(chat, me.id);
             return (
               <ChatLayout
@@ -124,7 +131,9 @@ const Chats = ({ chats, selectedChatState, me }: Props): JSX.Element => {
                     </Box>
                     <Box>
                       <Text fontSize={"sm"} color="gray.400">
-                        {`${senderUsername}: ${messageContent}`}
+                        {!lastMessage
+                          ? "No messages yet..."
+                          : `${senderUsername}: ${messageContent}`}
                       </Text>
                     </Box>
                   </Box>
