@@ -225,6 +225,10 @@ export const createUrqlClient = (ssrExchange: SSRExchange, userId?: string) => {
               invalidateChatPrivates(cache);
               invalidateChatRooms(cache);
             },
+            createChatRoom: (_result, _args, cache, _info) => {
+              invalidateChatPrivates(cache);
+              invalidateChatRooms(cache);
+            },
           },
           Subscription: {
             messageSent: (_result, _args, cache, _info) => {

@@ -31,6 +31,7 @@ import {
   ChatPrivate,
   ChatRoom,
   useCreateChatPrivateMutation,
+  useCreateChatRoomMutation,
   useFollowingQuery,
   useMeQuery,
   User,
@@ -46,8 +47,8 @@ const CreateChatPrivateModalContent = ({
   onModalClose: () => void;
 }) => {
   const [, createChatPrivate] = useCreateChatPrivateMutation();
-  const toast = useToast();
   const [selectedUser, setSelectedUser] = useState<User | undefined>(undefined);
+  const toast = useToast();
   const [result] = useMeQuery();
   const me = result.data?.me;
 
@@ -149,8 +150,12 @@ const CreateChatRoomModalContent = ({
   followingUsers: User[];
   onModalClose: () => void;
 }) => {
+  const [, createChatRoom] = useCreateChatRoomMutation();
   const [chatRoomName, setChatRoomName] = useState("");
   const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
+  const toast = useToast();
+  const [result] = useMeQuery();
+  const me = result.data?.me;
 
   return (
     <>
@@ -217,7 +222,41 @@ const CreateChatRoomModalContent = ({
         </Box>
       </ModalBody>
       <ModalFooter>
-        <Button colorScheme="blue" mr={3}>
+        <Button
+          colorScheme="blue"
+          mr={3}
+          disabled={selectedUsers.length === 0}
+          onClick={async () => {
+            if (selectedUsers.length === 0) return;
+            if (!me) return;
+            const result = await createChatRoom({
+              chatRoomInput: {
+                name: chatRoomName,
+                userIds: [...selectedUsers.map((su) => su.id), me?.id],
+              },
+            });
+            const error = result.data?.createChatRoom.error;
+            const data = result.data?.createChatRoom.chatRoom;
+            if (error) {
+              toast({
+                id: "create-chat-room-error",
+                title: "Failed to create a room chat.",
+                status: "error",
+                position: "top",
+                duration: 2000,
+              });
+            } else if (data) {
+              toast({
+                id: "create-chat-room-success",
+                title: "Successfully created a new room chat.",
+                status: "success",
+                position: "top",
+                duration: 2000,
+              });
+            }
+            onModalClose();
+          }}
+        >
           Create Chat
         </Button>
         <Button variant="ghost" onClick={onModalClose}>

@@ -141,9 +141,12 @@ const Chats = ({ chats, selectedChatState, me }: Props): JSX.Element => {
               </ChatLayout>
             );
           } else if (chat.__typename === "ChatRoom") {
-            const lastMessage = chat.messages[chat.messages.length - 1];
-            const senderUsername = lastMessage.sender.username;
-            const messageContent = lastMessage.content.slice(0, 20);
+            const lastMessage =
+              chat.messages.length > 0
+                ? chat.messages[chat.messages.length - 1]
+                : null;
+            const senderUsername = lastMessage?.sender.username;
+            const messageContent = lastMessage?.content.slice(0, 20);
             return (
               <ChatLayout
                 key={chat.id}
@@ -161,7 +164,9 @@ const Chats = ({ chats, selectedChatState, me }: Props): JSX.Element => {
                     </Box>
                     <Box>
                       <Text fontSize={"sm"} color="gray.400">
-                        {`${senderUsername}: ${messageContent}`}
+                        {!lastMessage
+                          ? "No messages yet..."
+                          : `${senderUsername}: ${messageContent}`}
                       </Text>
                     </Box>
                   </Box>
