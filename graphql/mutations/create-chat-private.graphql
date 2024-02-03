@@ -1,0 +1,15 @@
+mutation CreateChatPrivate($chatPrivateInput: CreateChatPrivateInput!) {
+  createChatPrivate(chatPrivateInput: $chatPrivateInput) {
+    chatPrivate {
+      id
+      participants {
+        id
+        username
+      }
+    }
+    error {
+      property
+      message
+    }
+  }
+}

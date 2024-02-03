@@ -589,6 +589,20 @@ export type AddNoteMutationVariables = Exact<{
 
 export type AddNoteMutation = { __typename?: 'Mutation', addNote: { __typename?: 'NoteResponse', note?: { __typename?: 'Note', id: string, title: string, body: string, createdAt: any, updatedAt: any } | null, error?: { __typename?: 'Error', property: string, message: string } | null } };
 
+export type CreateChatPrivateMutationVariables = Exact<{
+  chatPrivateInput: CreateChatPrivateInput;
+}>;
+
+
+export type CreateChatPrivateMutation = { __typename?: 'Mutation', createChatPrivate: { __typename?: 'ChatPrivateResponse', chatPrivate?: { __typename?: 'ChatPrivate', id: string, participants: Array<{ __typename?: 'User', id: string, username: string }> } | null, error?: { __typename?: 'Error', property: string, message: string } | null } };
+
+export type CreateChatRoomMutationVariables = Exact<{
+  chatRoomInput: CreateChatRoomInput;
+}>;
+
+
+export type CreateChatRoomMutation = { __typename?: 'Mutation', createChatRoom: { __typename?: 'ChatRoomResponse', chatRoom?: { __typename?: 'ChatRoom', id: string, name: string, members: Array<{ __typename?: 'User', id: string, username: string }> } | null, error?: { __typename?: 'Error', property: string, message: string } | null } };
+
 export type CreateCollectionMutationVariables = Exact<{
   title: Scalars['String'];
   visibility: Scalars['String'];
@@ -837,6 +851,49 @@ export const AddNoteDocument = gql`
 
 export function useAddNoteMutation() {
   return Urql.useMutation<AddNoteMutation, AddNoteMutationVariables>(AddNoteDocument);
+};
+export const CreateChatPrivateDocument = gql`
+    mutation CreateChatPrivate($chatPrivateInput: CreateChatPrivateInput!) {
+  createChatPrivate(chatPrivateInput: $chatPrivateInput) {
+    chatPrivate {
+      id
+      participants {
+        id
+        username
+      }
+    }
+    error {
+      property
+      message
+    }
+  }
+}
+    `;
+
+export function useCreateChatPrivateMutation() {
+  return Urql.useMutation<CreateChatPrivateMutation, CreateChatPrivateMutationVariables>(CreateChatPrivateDocument);
+};
+export const CreateChatRoomDocument = gql`
+    mutation CreateChatRoom($chatRoomInput: CreateChatRoomInput!) {
+  createChatRoom(chatRoomInput: $chatRoomInput) {
+    chatRoom {
+      id
+      name
+      members {
+        id
+        username
+      }
+    }
+    error {
+      property
+      message
+    }
+  }
+}
+    `;
+
+export function useCreateChatRoomMutation() {
+  return Urql.useMutation<CreateChatRoomMutation, CreateChatRoomMutationVariables>(CreateChatRoomDocument);
 };
 export const CreateCollectionDocument = gql`
     mutation CreateCollection($title: String!, $visibility: String!) {
