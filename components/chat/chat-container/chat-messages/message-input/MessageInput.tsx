@@ -1,5 +1,5 @@
 import { ArrowRightIcon } from "@chakra-ui/icons";
-import { Box, ButtonGroup, IconButton, Input } from "@chakra-ui/react";
+import { Box, ButtonGroup, IconButton, Textarea } from "@chakra-ui/react";
 import { useState } from "react";
 import {
   ChatPrivate,
@@ -29,35 +29,40 @@ const MessageInput = ({ chat }: Props): JSX.Element => {
   return (
     <>
       <Box flexGrow={10} mr="0.5em">
-        <Input
-          type={"filled"}
+        <Textarea
+          resize={"none"}
+          rows={3}
           bg="gray.700"
           placeholder="Type your message here..."
           value={inputValue}
           onChange={(e) => {
+            if (messageSendLoading) return;
             setInputValue(e.target.value);
           }}
           onKeyDown={(e) => {
-            if (e.key !== "Enter") return;
-            create({
-              createMessageInput: {
-                chatId: chat.id,
-                content: inputValue,
-              },
-            });
-            setInputValue("");
+            if (e.shiftKey && e.key === "Enter") {
+              create({
+                createMessageInput: {
+                  chatId: chat.id,
+                  content: inputValue,
+                },
+              });
+              setInputValue("");
+            }
           }}
         />
       </Box>
-      <Box display="flex" alignItems="center" flexGrow={1}>
+      <Box display="flex" alignItems="end" flexGrow={1} mb="0.15em">
         <ButtonGroup spacing="1">
           <IconButton
             variant={"outline"}
             icon={<ArrowRightIcon />}
             color="blue.500"
             bg={"gray.600"}
+            disabled={inputValue === ""}
             aria-label={"send-message-button"}
             onClick={() => {
+              if (inputValue === "") return;
               create({
                 createMessageInput: {
                   chatId: chat.id,

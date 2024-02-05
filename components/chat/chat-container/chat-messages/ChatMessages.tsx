@@ -97,7 +97,7 @@ const ChatMessages = ({ chat, me }: Props): JSX.Element => {
             <ChatMessageHeader chat={chat} me={me} />
           </Box>
           <Box display={"flex"} flexDir="column" h="calc(100vh - 180px)">
-            <Box className="messages-container" h="calc(100vh - 240px)">
+            <Box className="messages-container" h="calc(100vh - 280px)">
               <Messages messages={messages || []} me={me} />
             </Box>
             <Box display="flex" m={"0.5em"}>
