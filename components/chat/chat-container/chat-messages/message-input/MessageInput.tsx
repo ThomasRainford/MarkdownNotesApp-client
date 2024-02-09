@@ -27,6 +27,7 @@ import {
   useCollectionsQuery,
   useCreatePrivateMessageMutation,
   useCreateRoomMessageMutation,
+  useMeQuery,
 } from "../../../../../generated/graphql";
 
 type Option = {
@@ -37,9 +38,11 @@ type Option = {
 const LinkNoteModal = ({
   isOpen,
   onClose,
+  onNoteLink,
 }: {
   isOpen: boolean;
   onClose: () => void;
+  onNoteLink: (_: string) => void;
 }) => {
   const [result] = useCollectionsQuery();
   const data = result.data?.collections;
@@ -62,7 +65,7 @@ const LinkNoteModal = ({
           });
         })
         .map((note) => ({
-          value: note,
+          value: note.collection,
           label: `${note.list.title} / ${note.title}`,
         })) || [],
     [data]
@@ -72,7 +75,7 @@ const LinkNoteModal = ({
     () =>
       Object.values(
         notesOptions.reduce((acc: any, obj) => {
-          const key = obj.value.collection.title;
+          const key = obj.value.title;
           if (!acc[key]) {
             acc[key] = { label: key, options: [] };
           }
@@ -143,7 +146,18 @@ const LinkNoteModal = ({
           <Button variant={"outline"} mr={3} onClick={onClose}>
             Close
           </Button>
-          <Button variant="solid" colorScheme={"blue"}>
+          <Button
+            variant="solid"
+            colorScheme={"blue"}
+            onClick={() => {
+              onNoteLink(
+                `${selectedOption?.value.title} / ${
+                  selectedOption?.label || ""
+                }`
+              );
+              onClose();
+            }}
+          >
             Link
           </Button>
         </ModalFooter>
@@ -152,7 +166,11 @@ const LinkNoteModal = ({
   );
 };
 
-const MoreActionsButton = () => {
+const MoreActionsButton = ({
+  onNoteLink,
+}: {
+  onNoteLink: (_: string) => void;
+}) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
@@ -176,17 +194,23 @@ const MoreActionsButton = () => {
           </MenuItem>
         </MenuList>
       </Menu>
-      <LinkNoteModal isOpen={isOpen} onClose={onClose} />
+      <LinkNoteModal
+        isOpen={isOpen}
+        onClose={onClose}
+        onNoteLink={onNoteLink}
+      />
     </>
   );
 };
 
 const MessageInputButtons = ({
   onMessageSend,
+  onNoteLink,
   messageSendLoading,
   inputValue,
 }: {
   onMessageSend: () => void;
+  onNoteLink: (_: string) => void;
   messageSendLoading: boolean;
   inputValue: string;
 }) => {
@@ -199,7 +223,7 @@ const MessageInputButtons = ({
         alignItems="center"
         w="100%"
       >
-        <MoreActionsButton />
+        <MoreActionsButton onNoteLink={onNoteLink} />
         <IconButton
           variant={"solid"}
           icon={<ArrowRightIcon />}
@@ -223,6 +247,7 @@ export interface Props {
 }
 
 const MessageInput = ({ chat }: Props): JSX.Element => {
+  const [me] = useMeQuery();
   const [inputValue, setInputValue] = useState("");
   const [createPrivateMessageResult, createPrivateMessage] =
     useCreatePrivateMessageMutation();
@@ -272,6 +297,13 @@ const MessageInput = ({ chat }: Props): JSX.Element => {
             },
           });
           setInputValue("");
+        }}
+        onNoteLink={(note) => {
+          // TODO: Need to set selected collection, list and note in localstorage.
+          setInputValue((value) => {
+            if (!me.data?.me) return value;
+            return `${value} \\\n Note Link \n >[${note}](notes/${me.data?.me?.username})`;
+          });
         }}
         messageSendLoading={messageSendLoading}
         inputValue={inputValue}
