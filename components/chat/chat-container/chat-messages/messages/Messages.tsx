@@ -18,7 +18,7 @@ const MessageContent = ({ content }: { content: string }) => {
         components={ChakraUIRenderer(newTheme)}
         remarkPlugins={[remarkGfm]}
       >
-        {content}
+        {content.trim()}
       </ReactMarkdown>
     </Box>
   );

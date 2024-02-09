@@ -12,6 +12,9 @@ query chatRooms {
       content
       createdAt
       updatedAt
+      chat {
+        id
+      }
       sender {
         id
         username
