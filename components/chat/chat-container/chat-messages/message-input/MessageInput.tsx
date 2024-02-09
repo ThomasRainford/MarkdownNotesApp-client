@@ -18,15 +18,21 @@ import {
   Textarea,
   useDisclosure,
 } from "@chakra-ui/react";
-import { Select, SingleValue } from "chakra-react-select";
-import { useState } from "react";
+import { GroupBase, Select, SingleValue } from "chakra-react-select";
+import { useCallback, useMemo, useState } from "react";
 import {
   ChatPrivate,
   ChatRoom,
+  Collection,
   useCollectionsQuery,
   useCreatePrivateMessageMutation,
   useCreateRoomMessageMutation,
 } from "../../../../../generated/graphql";
+
+type Option = {
+  value: Collection;
+  label: string;
+};
 
 const LinkNoteModal = ({
   isOpen,
@@ -41,34 +47,69 @@ const LinkNoteModal = ({
   const error = result.error;
 
   const [selectedOption, setSelectedOption] = useState<
-    | SingleValue<{
-        value: string;
-        label: string;
-      }>
-    | undefined
+    SingleValue<Option> | undefined
   >(undefined);
-  const handleChange = (
-    selectedOption: SingleValue<{
-      value: string;
-      label: string;
-    }>
-  ) => {
+  const handleChange = (selectedOption: SingleValue<Option>) => {
     setSelectedOption(selectedOption);
   };
 
-  const notesOptions =
-    data
-      ?.flatMap((collection) => {
-        return collection.lists.flatMap((list) => {
-          return list.notes.map((note) => ({ ...note, collection, list }));
-        });
-      })
-      .map((note) => ({
-        value: note.id,
-        label: `${note.collection.title} / ${note.list.title} / ${note.title}`,
-      })) || [];
+  const notesOptions = useMemo(
+    () =>
+      data
+        ?.flatMap((collection) => {
+          return collection.lists.flatMap((list) => {
+            return list.notes.map((note) => ({ ...note, collection, list }));
+          });
+        })
+        .map((note) => ({
+          value: note,
+          label: `${note.list.title} / ${note.title}`,
+        })) || [],
+    [data]
+  );
 
-  //console.log(notesOptions);
+  const groupedByCategory = useMemo(
+    () =>
+      Object.values(
+        notesOptions.reduce((acc: any, obj) => {
+          const key = obj.value.collection.title;
+          if (!acc[key]) {
+            acc[key] = { label: key, options: [] };
+          }
+          acc[key].options.push({ value: obj.value, label: obj.label });
+          return acc;
+        }, {})
+      ) as unknown as GroupBase<Option>[],
+    [notesOptions]
+  );
+
+  const filterOption = useCallback(
+    ({ label, value }: Option, inputValue: string) => {
+      // default search
+      if (
+        label.toLocaleLowerCase().includes(inputValue.toLocaleLowerCase()) ||
+        value.title.toLocaleLowerCase().includes(inputValue.toLocaleLowerCase())
+      )
+        return true;
+      // check if a group as the filter string as label
+      const groupOptions = groupedByCategory.filter((group) =>
+        group.label?.toLocaleLowerCase().includes(inputValue)
+      );
+      if (groupOptions) {
+        for (const groupOption of groupOptions) {
+          // Check if current option is in group
+          const option = groupOption.options.find(
+            (opt) => opt.value.id === value.id
+          );
+          if (option) {
+            return true;
+          }
+        }
+      }
+      return false;
+    },
+    [groupedByCategory]
+  );
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="sm" isCentered>
@@ -88,7 +129,10 @@ const LinkNoteModal = ({
                 onChange={(option) => {
                   handleChange(option);
                 }}
-                options={notesOptions}
+                // react-select doesn't like the Option 'value'
+                // being something other than a string.
+                filterOption={filterOption as any}
+                options={groupedByCategory}
                 isSearchable={true}
                 placeholder="Select a note..."
               />
