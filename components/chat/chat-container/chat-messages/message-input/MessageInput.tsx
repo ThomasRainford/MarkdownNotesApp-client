@@ -24,25 +24,29 @@ import {
   ChatPrivate,
   ChatRoom,
   Collection,
+  Note,
+  NotesList,
   useCollectionsQuery,
   useCreatePrivateMessageMutation,
   useCreateRoomMessageMutation,
   useMeQuery,
 } from "../../../../../generated/graphql";
 
+type NoteWithParents = Note & { collection: Collection; list: NotesList };
+
 type Option = {
-  value: Collection;
+  value: NoteWithParents;
   label: string;
 };
 
-const LinkNoteModal = ({
+const CopyNoteModal = ({
   isOpen,
   onClose,
-  onNoteLink,
+  onNoteCopy,
 }: {
   isOpen: boolean;
   onClose: () => void;
-  onNoteLink: (_: string) => void;
+  onNoteCopy: (_: NoteWithParents) => void;
 }) => {
   const [result] = useCollectionsQuery();
   const data = result.data?.collections;
@@ -65,7 +69,7 @@ const LinkNoteModal = ({
           });
         })
         .map((note) => ({
-          value: note.collection,
+          value: note,
           label: `${note.list.title} / ${note.title}`,
         })) || [],
     [data]
@@ -75,7 +79,7 @@ const LinkNoteModal = ({
     () =>
       Object.values(
         notesOptions.reduce((acc: any, obj) => {
-          const key = obj.value.title;
+          const key = obj.value.collection.title;
           if (!acc[key]) {
             acc[key] = { label: key, options: [] };
           }
@@ -118,7 +122,7 @@ const LinkNoteModal = ({
     <Modal isOpen={isOpen} onClose={onClose} size="sm" isCentered>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Link Note</ModalHeader>
+        <ModalHeader>Copy Note</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           {fetching ? (
@@ -150,15 +154,11 @@ const LinkNoteModal = ({
             variant="solid"
             colorScheme={"blue"}
             onClick={() => {
-              onNoteLink(
-                `${selectedOption?.value.title} / ${
-                  selectedOption?.label || ""
-                }`
-              );
+              if (selectedOption) onNoteCopy(selectedOption.value);
               onClose();
             }}
           >
-            Link
+            Copy & Paste
           </Button>
         </ModalFooter>
       </ModalContent>
@@ -167,9 +167,9 @@ const LinkNoteModal = ({
 };
 
 const MoreActionsButton = ({
-  onNoteLink,
+  onNoteCopy,
 }: {
-  onNoteLink: (_: string) => void;
+  onNoteCopy: (_: NoteWithParents) => void;
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -190,14 +190,14 @@ const MoreActionsButton = ({
               onOpen();
             }}
           >
-            Link Note
+            Copy Note
           </MenuItem>
         </MenuList>
       </Menu>
-      <LinkNoteModal
+      <CopyNoteModal
         isOpen={isOpen}
         onClose={onClose}
-        onNoteLink={onNoteLink}
+        onNoteCopy={onNoteCopy}
       />
     </>
   );
@@ -205,12 +205,12 @@ const MoreActionsButton = ({
 
 const MessageInputButtons = ({
   onMessageSend,
-  onNoteLink,
+  onNoteCopy,
   messageSendLoading,
   inputValue,
 }: {
   onMessageSend: () => void;
-  onNoteLink: (_: string) => void;
+  onNoteCopy: (_: NoteWithParents) => void;
   messageSendLoading: boolean;
   inputValue: string;
 }) => {
@@ -223,7 +223,7 @@ const MessageInputButtons = ({
         alignItems="center"
         w="100%"
       >
-        <MoreActionsButton onNoteLink={onNoteLink} />
+        <MoreActionsButton onNoteCopy={onNoteCopy} />
         <IconButton
           variant={"solid"}
           icon={<ArrowRightIcon />}
@@ -298,11 +298,11 @@ const MessageInput = ({ chat }: Props): JSX.Element => {
           });
           setInputValue("");
         }}
-        onNoteLink={(note) => {
-          // TODO: Need to set selected collection, list and note in localstorage.
+        onNoteCopy={(note) => {
+          const noteLocationText = `${note.collection.title}/${note.list.title}/${note.title}`;
           setInputValue((value) => {
             if (!me.data?.me) return value;
-            return `${value} \\\n Note Link \n >[${note}](notes/${me.data?.me?.username})`;
+            return `${value} \\\n **${noteLocationText}:** \\\n\\\n ${note.body} `;
           });
         }}
         messageSendLoading={messageSendLoading}
