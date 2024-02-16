@@ -1,21 +1,16 @@
-import { Avatar, Box, ListItem, Text } from "@chakra-ui/react";
+import { Avatar, Box, Text } from "@chakra-ui/react";
 import ChakraUIRenderer from "chakra-ui-markdown-renderer";
 import { Fragment, useEffect, useRef } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Message, User } from "../../../../../generated/graphql";
+import { markdownTheme } from "./utils";
 
 const MessageContent = ({ content }: { content: string }) => {
-  const newTheme = {
-    li: (props: any) => {
-      const { children } = props;
-      return <ListItem>{children}</ListItem>;
-    },
-  };
   return (
     <Box>
       <ReactMarkdown
-        components={ChakraUIRenderer(newTheme)}
+        components={ChakraUIRenderer(markdownTheme)}
         remarkPlugins={[remarkGfm]}
       >
         {content.trim()}
