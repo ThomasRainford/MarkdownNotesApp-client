@@ -18,6 +18,10 @@ const customJestConfig = {
     "<rootDir>/components/notes/notes-container/__test__/NotesContainer.test.tsx",
     "<rootDir>/components/notes/notes-content/right-pane-content/__test__/RightPaneContent.test.tsx",
   ],
+  moduleNameMapper: {
+    "react-markdown": "<rootDir>/test-utils/mocks/react-markdown.tsx",
+    "remark-gfm": "<rootDir>/test-utils/mocks/remark-gfm.ts",
+  },
 };
 
 module.exports = createJestConfig(customJestConfig);
