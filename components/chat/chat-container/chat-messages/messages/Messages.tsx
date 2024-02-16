@@ -45,6 +45,7 @@ const MessageContent = ({ content }: { content: string }) => {
 
   const theme = markdownTheme({
     "save-collection-button": (props: any) => {
+      console.log("found button save-collection-button");
       console.log(props);
       const { children } = props;
       return (
@@ -52,9 +53,11 @@ const MessageContent = ({ content }: { content: string }) => {
           {...props}
           isLoading={savePublicCollectionResult.fetching}
           onClick={async () => {
+            console.log("click");
+            console.log(props);
             const result = await savePublicCollection({
               targetUserId: props.userId,
-              collectionId: props.collectioIid,
+              collectionId: props.collectionId,
             });
             if (result.data?.savePublicCollection.collection) {
               toast({
