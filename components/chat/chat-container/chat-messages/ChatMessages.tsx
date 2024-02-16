@@ -1,5 +1,4 @@
 import { Avatar, Box, Heading } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
 import {
   ChatPrivate,
   ChatRoom,
@@ -51,29 +50,39 @@ const ChatMessages = ({ chat, me }: Props): JSX.Element => {
       chatId: chat?.id || "",
     },
   });
-  const [messages, setMessages] = useState(
-    (chatMessages.data?.chatMessages.reverse() || []) as Message[]
-  );
-  const [result] = useMessageSentSubscription({
-    variables: {
-      messageSentInput: {
-        chatId: chat?.id || "",
-        userId: me.id,
+
+  const [result] = useMessageSentSubscription(
+    {
+      variables: {
+        messageSentInput: {
+          chatId: chat?.id || "",
+          userId: me.id,
+        },
       },
     },
-  });
+    (_: Message[] | undefined, response) => {
+      return [
+        ...(chatMessages.data?.chatMessages || []),
+        response.messageSent.message,
+      ] as Message[];
+    }
+  );
 
-  useEffect(() => {
-    if (!result.data?.messageSent.message) return;
-    setMessages((messages) => [
-      ...messages,
-      result.data?.messageSent.message as Message,
-    ]);
-  }, [result.data?.messageSent.message]);
+  const messages = () => {
+    const currentMessages = (chatMessages.data?.chatMessages ||
+      []) as Message[];
+    const concatMessages = (result.data || []) as Message[];
 
-  useEffect(() => {
-    setMessages((chatMessages.data?.chatMessages || []) as Message[]);
-  }, [chatMessages.data?.chatMessages]);
+    if (
+      concatMessages &&
+      concatMessages.length > 0 &&
+      concatMessages[0].chat.id === currentMessages[0].chat.id
+    ) {
+      return concatMessages;
+    } else {
+      return currentMessages;
+    }
+  };
 
   return (
     <Box
@@ -97,8 +106,8 @@ const ChatMessages = ({ chat, me }: Props): JSX.Element => {
             <ChatMessageHeader chat={chat} me={me} />
           </Box>
           <Box display={"flex"} flexDir="column" h="calc(100vh - 180px)">
-            <Box className="messages-container" h="calc(100vh - 240px)">
-              <Messages messages={messages || []} me={me} />
+            <Box className="messages-container" h="calc(100vh - 280px)">
+              <Messages messages={messages()} me={me} />
             </Box>
             <Box display="flex" m={"0.5em"}>
               <MessageInput chat={chat} />

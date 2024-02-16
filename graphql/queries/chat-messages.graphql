@@ -4,6 +4,9 @@ query ChatMessages($chatId: String!, $pagination: PaginationInput) {
     content
     createdAt
     updatedAt
+    chat {
+      id
+    }
     sender {
       id
       username

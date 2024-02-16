@@ -25,14 +25,17 @@ const Notes: NextPageWithLayout = () => {
   useIsAuth(meResult);
 
   useEffect(() => {
+    if (meResult.fetching) return;
     const selectedUserName = localStorage.getItem("selectedUser");
     if (selectedUserName !== username) {
       localStorage.setItem("selectedCollection", JSON.stringify(""));
       localStorage.setItem("selectedList", JSON.stringify(""));
       localStorage.setItem("selectedNote", JSON.stringify(""));
     }
-    if (!selectedUserName) localStorage.setItem("selectedUser", username);
-  }, [username]);
+    if (!selectedUserName) {
+      localStorage.setItem("selectedUser", username);
+    }
+  }, [meResult.fetching, username]);
 
   return (
     <Box className="my-notes-page" h={"100%"}>

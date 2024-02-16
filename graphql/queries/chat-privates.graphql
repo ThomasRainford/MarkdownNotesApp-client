@@ -10,6 +10,9 @@ query chatPrivates {
       content
       createdAt
       updatedAt
+      chat {
+        id
+      }
       sender {
         id
         username

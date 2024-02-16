@@ -5,6 +5,9 @@ mutation CreatePrivateMessage($createMessageInput: CreateMessageInput!) {
       content
       createdAt
       updatedAt
+      chat {
+        id
+      }
       sender {
         id
         username

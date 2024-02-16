@@ -734,17 +734,17 @@ export type ChatMessagesQueryVariables = Exact<{
 }>;
 
 
-export type ChatMessagesQuery = { __typename?: 'Query', chatMessages: Array<{ __typename?: 'Message', id: string, content: string, createdAt: any, updatedAt: any, sender: { __typename?: 'User', id: string, username: string } }> };
+export type ChatMessagesQuery = { __typename?: 'Query', chatMessages: Array<{ __typename?: 'Message', id: string, content: string, createdAt: any, updatedAt: any, chat: { __typename?: 'Chat', id: string }, sender: { __typename?: 'User', id: string, username: string } }> };
 
 export type ChatPrivatesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ChatPrivatesQuery = { __typename?: 'Query', chatPrivates: Array<{ __typename?: 'ChatPrivate', id: string, participants: Array<{ __typename?: 'User', id: string, username: string }>, messages: Array<{ __typename?: 'Message', id: string, content: string, createdAt: any, updatedAt: any, sender: { __typename?: 'User', id: string, username: string } }> }> };
+export type ChatPrivatesQuery = { __typename?: 'Query', chatPrivates: Array<{ __typename?: 'ChatPrivate', id: string, participants: Array<{ __typename?: 'User', id: string, username: string }>, messages: Array<{ __typename?: 'Message', id: string, content: string, createdAt: any, updatedAt: any, chat: { __typename?: 'Chat', id: string }, sender: { __typename?: 'User', id: string, username: string } }> }> };
 
 export type ChatRoomsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ChatRoomsQuery = { __typename?: 'Query', chatRooms: Array<{ __typename?: 'ChatRoom', id: string, name: string, members: Array<{ __typename?: 'User', id: string, username: string, email: string }>, messages: Array<{ __typename?: 'Message', id: string, content: string, createdAt: any, updatedAt: any, sender: { __typename?: 'User', id: string, username: string } }> }> };
+export type ChatRoomsQuery = { __typename?: 'Query', chatRooms: Array<{ __typename?: 'ChatRoom', id: string, name: string, members: Array<{ __typename?: 'User', id: string, username: string, email: string }>, messages: Array<{ __typename?: 'Message', id: string, content: string, createdAt: any, updatedAt: any, chat: { __typename?: 'Chat', id: string }, sender: { __typename?: 'User', id: string, username: string } }> }> };
 
 export type CollectionsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -828,7 +828,7 @@ export type MessageSentSubscriptionVariables = Exact<{
 }>;
 
 
-export type MessageSentSubscription = { __typename?: 'Subscription', messageSent: { __typename?: 'MessageSentResponse', error?: string | null, message?: { __typename?: 'Message', id: string, content: string, createdAt: any, updatedAt: any, sender: { __typename?: 'User', id: string, username: string } } | null } };
+export type MessageSentSubscription = { __typename?: 'Subscription', messageSent: { __typename?: 'MessageSentResponse', error?: string | null, message?: { __typename?: 'Message', id: string, content: string, createdAt: any, updatedAt: any, chat: { __typename?: 'Chat', id: string }, sender: { __typename?: 'User', id: string, username: string } } | null } };
 
 
 export const AddNoteDocument = gql`
@@ -1219,6 +1219,9 @@ export const ChatMessagesDocument = gql`
     content
     createdAt
     updatedAt
+    chat {
+      id
+    }
     sender {
       id
       username
@@ -1243,6 +1246,9 @@ export const ChatPrivatesDocument = gql`
       content
       createdAt
       updatedAt
+      chat {
+        id
+      }
       sender {
         id
         username
@@ -1270,6 +1276,9 @@ export const ChatRoomsDocument = gql`
       content
       createdAt
       updatedAt
+      chat {
+        id
+      }
       sender {
         id
         username
@@ -1558,6 +1567,9 @@ export const MessageSentDocument = gql`
       content
       createdAt
       updatedAt
+      chat {
+        id
+      }
       sender {
         id
         username

@@ -1,6 +1,23 @@
 import { Avatar, Box, Text } from "@chakra-ui/react";
+import ChakraUIRenderer from "chakra-ui-markdown-renderer";
 import { Fragment, useEffect, useRef } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { Message, User } from "../../../../../generated/graphql";
+import { markdownTheme } from "./utils";
+
+const MessageContent = ({ content }: { content: string }) => {
+  return (
+    <Box>
+      <ReactMarkdown
+        components={ChakraUIRenderer(markdownTheme)}
+        remarkPlugins={[remarkGfm]}
+      >
+        {content.trim()}
+      </ReactMarkdown>
+    </Box>
+  );
+};
 
 const MeMessageBubble = ({
   content,
@@ -21,7 +38,7 @@ const MeMessageBubble = ({
       <Box display={"flex"} justifyContent={"flex-end"}>
         <Box mb="0.25em">
           <Box bg={"blue.600"} p="0.5em" borderRadius={"6px"}>
-            {content}
+            <MessageContent content={content} />
           </Box>
         </Box>
         <Box
@@ -50,7 +67,7 @@ const MeMessage = ({ message, date }: { message: Message; date?: string }) => {
       <Box display={"flex"} justifyContent={"flex-end"} mb="1em">
         <Box>
           <Box bg={"blue.600"} p="0.5em" borderRadius={"6px"}>
-            {message.content}
+            <MessageContent content={message.content} />
           </Box>
           <Box float="left" ml="0.25em">
             <Text color="gray.400" fontSize="sm">
@@ -100,7 +117,7 @@ const UserMessageBubble = ({
         </Box>
         <Box mb="0.25em">
           <Box bg={"gray.500"} p="0.5em" borderRadius={"6px"}>
-            {content}
+            <MessageContent content={content} />
           </Box>
         </Box>
       </Box>
@@ -137,7 +154,7 @@ const UserMessage = ({
         </Box>
         <Box>
           <Box bg={"gray.500"} p="0.5em" borderRadius={"6px"}>
-            {message.content}
+            <MessageContent content={message.content} />{" "}
           </Box>
           <Box float={"right"}>
             <Text mr="0.25em" color="gray.400" fontSize="sm">
