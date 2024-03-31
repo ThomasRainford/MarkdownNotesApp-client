@@ -414,7 +414,6 @@ const MessageInput = ({ chat }: Props): JSX.Element => {
         onCollectionToSave={(collectionInfo) => {
           if (!collectionInfo || !collectionInfo.id || !collectionInfo.title)
             return;
-          console.log("info to save", collectionInfo);
           setInputValue((value) => {
             if (!me.data?.me) return value;
             const buttonText = `::save-collection-button[Save]{userId=${me.data?.me?.id} collectionId=${collectionInfo.id}}`;
