@@ -21,6 +21,9 @@ const customJestConfig = {
   moduleNameMapper: {
     "react-markdown": "<rootDir>/test-utils/mocks/react-markdown.tsx",
     "remark-gfm": "<rootDir>/test-utils/mocks/remark-gfm.ts",
+    "remark-directive": "<rootDir>/test-utils/mocks/remark-directive.ts",
+    hastscript: "<rootDir>/test-utils/mocks/hastscript.ts",
+    "unist-util-visit": "<rootDir>/test-utils/mocks/unist-util-visit.ts",
   },
 };
 
