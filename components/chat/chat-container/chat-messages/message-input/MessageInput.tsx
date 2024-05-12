@@ -33,9 +33,14 @@ import {
 } from "../../../../../generated/graphql";
 
 type NoteWithParents = Note & { collection: Collection; list: NotesList };
+type CollectionInfo = Pick<Collection, "id" | "title">;
 
-type Option = {
+type CopyNoteOption = {
   value: NoteWithParents;
+  label: string;
+};
+type SendCollectionOption = {
+  value: string;
   label: string;
 };
 
@@ -54,9 +59,9 @@ const CopyNoteModal = ({
   const error = result.error;
 
   const [selectedOption, setSelectedOption] = useState<
-    SingleValue<Option> | undefined
+    SingleValue<CopyNoteOption> | undefined
   >(undefined);
-  const handleChange = (selectedOption: SingleValue<Option>) => {
+  const handleChange = (selectedOption: SingleValue<CopyNoteOption>) => {
     setSelectedOption(selectedOption);
   };
 
@@ -86,12 +91,12 @@ const CopyNoteModal = ({
           acc[key].options.push({ value: obj.value, label: obj.label });
           return acc;
         }, {})
-      ) as unknown as GroupBase<Option>[],
+      ) as unknown as GroupBase<CopyNoteOption>[],
     [notesOptions]
   );
 
   const filterOption = useCallback(
-    ({ label, value }: Option, inputValue: string) => {
+    ({ label, value }: CopyNoteOption, inputValue: string) => {
       // default search
       if (
         label.toLocaleLowerCase().includes(inputValue.toLocaleLowerCase()) ||
@@ -166,12 +171,95 @@ const CopyNoteModal = ({
   );
 };
 
+const SendCollectionModal = ({
+  isOpen,
+  onClose,
+  onCollectionToSave,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  onCollectionToSave: (_: CollectionInfo) => void;
+}) => {
+  const [result] = useCollectionsQuery();
+  const data = result.data?.collections;
+  const fetching = result.fetching;
+  const error = result.error;
+
+  const [selectedOption, setSelectedOption] = useState<
+    SingleValue<SendCollectionOption> | undefined
+  >(undefined);
+
+  const handleChange = (selectedOption: SingleValue<SendCollectionOption>) => {
+    setSelectedOption(selectedOption);
+  };
+
+  const options =
+    data
+      ?.filter((collection) => collection.visibility === "public")
+      .map((collection) => ({
+        label: collection.title,
+        value: collection.id,
+      })) || [];
+
+  return (
+    <Modal isOpen={isOpen} onClose={onClose} size="sm" isCentered>
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader>Send Collection</ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+          {fetching ? (
+            <Spinner />
+          ) : error ? (
+            "Could not get collections."
+          ) : (
+            <Box>
+              <Select
+                value={selectedOption}
+                onChange={(option) => {
+                  handleChange(option);
+                }}
+                //filterOption={() => {}}
+                options={options}
+                isSearchable={true}
+                placeholder="Select a collection..."
+              />
+            </Box>
+          )}
+        </ModalBody>
+        <ModalFooter>
+          <Button variant={"outline"} mr={3} onClick={onClose}>
+            Close
+          </Button>
+          <Button
+            variant="solid"
+            colorScheme={"blue"}
+            onClick={() => {
+              if (selectedOption)
+                onCollectionToSave({
+                  id: selectedOption.value,
+                  title: selectedOption.label,
+                });
+              onClose();
+            }}
+          >
+            Send Collection
+          </Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
+  );
+};
+
 const MoreActionsButton = ({
   onNoteCopy,
+  onCollectionToSave,
 }: {
   onNoteCopy: (_: NoteWithParents) => void;
+  onCollectionToSave: (_: CollectionInfo) => void;
 }) => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const onNoteCopyDisclosure = useDisclosure();
+  const onCollectionToSaveDisclosure = useDisclosure();
 
   return (
     <>
@@ -187,17 +275,30 @@ const MoreActionsButton = ({
           <MenuItem
             icon={<LinkIcon />}
             onClick={() => {
-              onOpen();
+              onNoteCopyDisclosure.onOpen();
             }}
           >
             Copy Note
           </MenuItem>
+          <MenuItem
+            icon={<LinkIcon />}
+            onClick={() => {
+              onCollectionToSaveDisclosure.onOpen();
+            }}
+          >
+            Send Collection
+          </MenuItem>
         </MenuList>
       </Menu>
       <CopyNoteModal
-        isOpen={isOpen}
-        onClose={onClose}
+        isOpen={onNoteCopyDisclosure.isOpen}
+        onClose={onNoteCopyDisclosure.onClose}
         onNoteCopy={onNoteCopy}
+      />
+      <SendCollectionModal
+        isOpen={onCollectionToSaveDisclosure.isOpen}
+        onClose={onCollectionToSaveDisclosure.onClose}
+        onCollectionToSave={onCollectionToSave}
       />
     </>
   );
@@ -206,11 +307,13 @@ const MoreActionsButton = ({
 const MessageInputButtons = ({
   onMessageSend,
   onNoteCopy,
+  onCollectionToSave,
   messageSendLoading,
   inputValue,
 }: {
   onMessageSend: () => void;
   onNoteCopy: (_: NoteWithParents) => void;
+  onCollectionToSave: (_: CollectionInfo) => void;
   messageSendLoading: boolean;
   inputValue: string;
 }) => {
@@ -223,7 +326,10 @@ const MessageInputButtons = ({
         alignItems="center"
         w="100%"
       >
-        <MoreActionsButton onNoteCopy={onNoteCopy} />
+        <MoreActionsButton
+          onNoteCopy={onNoteCopy}
+          onCollectionToSave={onCollectionToSave}
+        />
         <IconButton
           variant={"solid"}
           icon={<ArrowRightIcon />}
@@ -303,6 +409,15 @@ const MessageInput = ({ chat }: Props): JSX.Element => {
           setInputValue((value) => {
             if (!me.data?.me) return value;
             return `${value} \\\n **${noteLocationText}:** \\\n\\\n ${note.body} `;
+          });
+        }}
+        onCollectionToSave={(collectionInfo) => {
+          if (!collectionInfo || !collectionInfo.id || !collectionInfo.title)
+            return;
+          setInputValue((value) => {
+            if (!me.data?.me) return value;
+            const buttonText = `::save-collection-button[Save]{userId=${me.data?.me?.id} collectionId=${collectionInfo.id}}`;
+            return `${value} \\\n **Click 'Save' to save the collection ${collectionInfo.title}:**\\\n${buttonText}`;
           });
         }}
         messageSendLoading={messageSendLoading}

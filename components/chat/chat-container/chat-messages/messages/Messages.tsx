@@ -1,17 +1,90 @@
-import { Avatar, Box, Text } from "@chakra-ui/react";
+import { Avatar, Box, Button, Text, useToast } from "@chakra-ui/react";
 import ChakraUIRenderer from "chakra-ui-markdown-renderer";
+import { h } from "hastscript";
+import { Child } from "hastscript/lib/create-h";
 import { Fragment, useEffect, useRef } from "react";
 import ReactMarkdown from "react-markdown";
+import remarkDirective from "remark-directive";
 import remarkGfm from "remark-gfm";
-import { Message, User } from "../../../../../generated/graphql";
+import { visit } from "unist-util-visit";
+import {
+  Message,
+  User,
+  useSavePublicCollectionMutation,
+} from "../../../../../generated/graphql";
 import { markdownTheme } from "./utils";
 
 const MessageContent = ({ content }: { content: string }) => {
+  const [savePublicCollectionResult, savePublicCollection] =
+    useSavePublicCollectionMutation();
+  const toast = useToast();
+
+  // remark plugin to add a custom tag to the AST
+  function htmlDirectives() {
+    return transform;
+
+    function transform(tree: any) {
+      visit(
+        tree,
+        ["textDirective", "leafDirective", "containerDirective"],
+        ondirective
+      );
+    }
+
+    function ondirective(node: {
+      data: any;
+      name: string | undefined;
+      attributes: Child;
+    }) {
+      var data = node.data || (node.data = {});
+      var hast = h(node.name as any, node.attributes) as any;
+      data.hName = node.name;
+      data.hProperties = hast.properties;
+    }
+  }
+
+  const theme = markdownTheme({
+    "save-collection-button": (props: any) => {
+      const { children } = props;
+      return (
+        <Button
+          {...props}
+          isLoading={savePublicCollectionResult.fetching}
+          onClick={async () => {
+            const result = await savePublicCollection({
+              targetUserId: props.userId,
+              collectionId: props.collectionId,
+            });
+            if (result.data?.savePublicCollection.collection) {
+              toast({
+                id: "save-public-collection-success",
+                title: `Successfuly saved collection`,
+                status: "success",
+                position: "top",
+                duration: 2000,
+              });
+            } else {
+              toast({
+                id: "save-public-collection-error",
+                title: `Failed to save collection`,
+                status: "error",
+                position: "top",
+                duration: 2000,
+              });
+            }
+          }}
+        >
+          {children}
+        </Button>
+      );
+    },
+  });
+
   return (
     <Box>
       <ReactMarkdown
-        components={ChakraUIRenderer(markdownTheme)}
-        remarkPlugins={[remarkGfm]}
+        components={ChakraUIRenderer(theme)}
+        remarkPlugins={[remarkGfm, remarkDirective, htmlDirectives]}
       >
         {content.trim()}
       </ReactMarkdown>

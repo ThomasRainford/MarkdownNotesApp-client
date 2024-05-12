@@ -147,6 +147,7 @@ export const createUrqlClient = (ssrExchange: SSRExchange, userId?: string) => {
 
   return {
     url: process.env.NEXT_PUBLIC_API_URL,
+    fetchSubscriptions: true,
     exchanges: [
       dedupExchange,
       cacheExchange({

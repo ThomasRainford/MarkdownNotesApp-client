@@ -1,6 +1,6 @@
 import { Box } from "@chakra-ui/react";
 import "allotment/dist/style.css";
-import { withUrqlClient } from "next-urql";
+import { SSRExchange, withUrqlClient } from "next-urql";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import SelectedDataProvider from "../../../components/helper/SelectedDataProvider";
@@ -53,4 +53,10 @@ Notes.getLayout = (page) => {
   return <PrimaryLayout>{page}</PrimaryLayout>;
 };
 
-export default withUrqlClient(createUrqlClient as any)(Notes);
+export default withUrqlClient((ssrExchange: SSRExchange) => {
+  let userId = "";
+  if (typeof window !== "undefined") {
+    userId = localStorage.getItem("userId") || "";
+  }
+  return createUrqlClient(ssrExchange, userId);
+})(Notes);
