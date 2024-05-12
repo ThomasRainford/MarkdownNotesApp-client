@@ -51,7 +51,6 @@ const ChatMessages = ({ chat, me }: Props): JSX.Element => {
     },
   });
 
-  console.log("chat messages");
   const [result] = useMessageSentSubscription(
     {
       variables: {
