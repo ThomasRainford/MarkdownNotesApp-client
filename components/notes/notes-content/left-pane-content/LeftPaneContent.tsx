@@ -60,7 +60,7 @@ const LeftPaneContent = ({ isMe, userCollectionsData }: Props): JSX.Element => {
           />
         </Box>
       </Box>
-      <Box display={"flex"} px={"1em"} py={"1em"}>
+      <Box display={"flex"} px={"1em"} py={"1.25em"}>
         {selectedList ? (
           <Box visibility={selectedList ? "visible" : "hidden"}>
             <IconButton
@@ -68,19 +68,20 @@ const LeftPaneContent = ({ isMe, userCollectionsData }: Props): JSX.Element => {
               variant="outline"
               colorScheme="blue"
               icon={<ArrowBackIcon />}
+              size="sm"
               onClick={() => setSelectedList("")}
             />
           </Box>
         ) : null}
-        <Box display={"flex"} justifyContent={"center"}>
+        <Box display={"flex"} justifyContent={"center"} alignItems="center">
           {!selectedList ? (
             <Heading
               id="collection-heading"
-              as="h3"
-              size={"lg"}
+              as="h4"
+              size={"md"}
               fontWeight="normal"
               textColor={colorMode === "light" ? "gray.700" : "gray.400"}
-              h={"40px"}
+              height="32px"
             >
               Collections
             </Heading>
@@ -90,9 +91,8 @@ const LeftPaneContent = ({ isMe, userCollectionsData }: Props): JSX.Element => {
               as="h4"
               size={"md"}
               fontWeight="normal"
-              fontSize={"30px"}
               textColor={colorMode === "light" ? "gray.700" : "gray.400"}
-              pl={"0.5em"}
+              pl={"0.6em"}
             >
               {collection?.title}
             </Heading>

@@ -22,33 +22,11 @@ const Editor = ({
   handleChange: ((_: EditorState) => void) | undefined;
   readOnly: boolean;
 }): JSX.Element => {
-  const [refContainer, editorView] = useCodeMirror<HTMLDivElement>({
+  const [refContainer] = useCodeMirror<HTMLDivElement>({
     initialDoc: markdownText,
     onChange: handleChange,
     readOnly,
   });
-
-  const replaceEditorContent = useCallback(
-    (text: string) => {
-      const transaction = editorView?.state.update({
-        changes: {
-          from: 0,
-          to: editorView?.state?.doc.length,
-          insert: text,
-        },
-      });
-      if (transaction) {
-        editorView?.dispatch(transaction);
-      }
-    },
-    [editorView]
-  );
-
-  useEffect(() => {
-    if (editorView) {
-      replaceEditorContent(markdownText);
-    }
-  }, [editorView, markdownText, replaceEditorContent]);
 
   return (
     <Box

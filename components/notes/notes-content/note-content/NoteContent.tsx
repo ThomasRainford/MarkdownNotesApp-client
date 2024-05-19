@@ -8,7 +8,7 @@ import {
   Text,
   useColorMode,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Collection,
   Note,
@@ -223,10 +223,20 @@ const NoteContent = ({ isMe, userCollectionsData }: Props): JSX.Element => {
     selectedNote: { selectedNote },
   } = useAllLocalStorageValues();
 
-  const note: Note | undefined = userCollectionsData
-    .find((c) => c.id === selectedNote?.collectionId)
-    ?.lists.find((l) => l.id === selectedNote?.notesListId)
-    ?.notes.find((n) => n.id === selectedNote?.id);
+  const collection = userCollectionsData.find(
+    (c) => c.id === selectedNote?.collectionId
+  );
+
+  const note: Note | undefined = useMemo(
+    () =>
+      collection?.lists
+        .find((l) => l.id === selectedNote?.notesListId)
+        ?.notes.find((n) => n.id === selectedNote?.id),
+    // Dont want to update note when collections changes as this will
+    // reset the inital text in the editor causing the editor to go inactive.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [selectedNote?.id, selectedNote?.notesListId]
+  );
 
   return (
     <Box className="note-content" h={"100%"}>

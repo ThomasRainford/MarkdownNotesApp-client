@@ -266,9 +266,9 @@ const Lists = ({ isMe, notesLists }: Props): JSX.Element => {
                   key={_notesList.id}
                   display={"flex"}
                   pl={"1.5em"}
-                  pr={"1em"}
-                  pt={"1em"}
-                  pb={"1em"}
+                  pr={"em"}
+                  pt={"0.6em"}
+                  pb={"0.6em"}
                   _hover={{
                     bg: colorMode === "light" ? "gray.200" : "gray.600",
                   }}
@@ -284,16 +284,18 @@ const Lists = ({ isMe, notesLists }: Props): JSX.Element => {
                   }}
                 >
                   <Box display={"flex"} justifyContent="space-between" w="100%">
-                    <Heading
-                      id={`list-heading-${_notesList.id}`}
-                      as="h4"
-                      size={"md"}
-                      pr={"1em"}
-                      color={colorMode === "light" ? "gray.600" : "gray.300"}
-                    >
-                      {_notesList.title}
-                    </Heading>
-                    <Box display={"flex"}>
+                    <Box display={"flex"} alignItems="center">
+                      <Heading
+                        id={`list-heading-${_notesList.id}`}
+                        as="h5"
+                        size={"sm"}
+                        pr={"1em"}
+                        color={colorMode === "light" ? "gray.600" : "gray.300"}
+                      >
+                        {_notesList.title}
+                      </Heading>
+                    </Box>
+                    <Box display={"flex"} mr="1em">
                       <Box mr="0.5em">
                         {isMe && _notesList.id === notesList?.id && (
                           <NotesListsUpdate notesList={_notesList} />
