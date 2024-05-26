@@ -116,8 +116,8 @@ const Notes = ({ isMe, notes, notesList }: Props): JSX.Element => {
                 justifyContent={"space-between"}
                 pl={"1em"}
                 pr={"1em"}
-                pt={"0.5em"}
-                pb={"0.7em"}
+                pt={"0.4em"}
+                pb={"0.4em"}
                 _hover={{
                   bg: colorMode === "light" ? "gray.200" : "gray.600",
                 }}
@@ -133,21 +133,21 @@ const Notes = ({ isMe, notes, notesList }: Props): JSX.Element => {
                   <Box mb={"0.95em"}>
                     <Heading
                       id={`note-heading-${note.id}`}
-                      as="h4"
-                      size={"md"}
+                      as="h5"
+                      size={"sm"}
                       pr={"1em"}
-                      color={colorMode === "light" ? "gray.600" : "gray.300"}
+                      color={colorMode === "light" ? "gray.600" : "gray.100"}
                     >
                       {note.title}
                     </Heading>
                   </Box>
-                  <Box mb={"0.9em"}>
+                  <Box mb={"0.2em"}>
                     <Tag size={"sm"}>
                       {getTimeSince(new Date(note.updatedAt))}
                     </Tag>
                   </Box>
                   <Box>
-                    <Text fontSize={"sm"}>
+                    <Text fontSize={"xs"}>
                       {(note.body as string).substring(0, 15)}
                     </Text>
                   </Box>

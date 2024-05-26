@@ -162,7 +162,7 @@ const ListPaneHeaderTitle = ({
         >
           <Heading
             id="right-pane-heading"
-            as="h3"
+            as="h4"
             size={"md"}
             pt={"3px"}
             textColor={colorMode === "light" ? "gray.600" : "gray.300"}

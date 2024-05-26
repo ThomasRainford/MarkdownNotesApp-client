@@ -34,9 +34,9 @@ const AddOrCancelAddItem = ({
           aria-label={`add-${type}`}
           icon={
             iconType === "add" ? (
-              <AddIcon boxSize={5} />
+              <AddIcon boxSize={4} />
             ) : (
-              <CloseIcon boxSize={5} />
+              <CloseIcon boxSize={4} />
             )
           }
           w={"100%"}

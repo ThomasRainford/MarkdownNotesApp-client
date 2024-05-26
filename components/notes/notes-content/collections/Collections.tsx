@@ -252,8 +252,8 @@ const Collections = ({ isMe, userCollectionsData }: Props): JSX.Element => {
               display={"flex"}
               pl={"1.5em"}
               pr={"1em"}
-              pt={"1em"}
-              pb={"1em"}
+              pt={"0.6em"}
+              pb={"0.6em"}
               _hover={{
                 bg: colorMode === "light" ? "gray.200" : "gray.600",
               }}
@@ -270,14 +270,16 @@ const Collections = ({ isMe, userCollectionsData }: Props): JSX.Element => {
               }}
             >
               <Box display={"flex"} justifyContent="space-between" w={"100%"}>
-                <Heading
-                  id={`collection-heading-${_collection.id}`}
-                  as="h4"
-                  size={"md"}
-                  color={colorMode === "light" ? "gray.700" : "gray.300"}
-                >
-                  {_collection.title}
-                </Heading>
+                <Box display={"flex"} alignItems="center">
+                  <Heading
+                    id={`collection-heading-${_collection.id}`}
+                    as="h5"
+                    size={"sm"}
+                    color={colorMode === "light" ? "gray.700" : "gray.300"}
+                  >
+                    {_collection.title}
+                  </Heading>
+                </Box>
                 <Box display={"flex"}>
                   <Box mr="0.5em">
                     {isMe && _collection.id === collection?.id && (
