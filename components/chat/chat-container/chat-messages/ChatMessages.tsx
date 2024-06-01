@@ -1,4 +1,4 @@
-import { Avatar, Box, Heading } from "@chakra-ui/react";
+import { Avatar, Box, Heading, useColorMode } from "@chakra-ui/react";
 import {
   ChatPrivate,
   ChatRoom,
@@ -45,6 +45,11 @@ export interface Props {
 }
 
 const ChatMessages = ({ chat, me }: Props): JSX.Element => {
+  const colorMode = useColorMode();
+  const colorModeValue = (light: string, dark: string) => {
+    return colorMode.colorMode === "light" ? light : dark;
+  };
+
   const [chatMessages] = useChatMessagesQuery({
     variables: {
       chatId: chat?.id || "",
@@ -89,7 +94,7 @@ const ChatMessages = ({ chat, me }: Props): JSX.Element => {
       display={"flex"}
       flexDirection="column"
       w={{ base: "100%", md: "50%" }}
-      bg="gray.600"
+      bg={colorModeValue("gray.300", "gray.600")}
       className="chatmessages-container"
       h="calc(100vh - 64px)"
     >

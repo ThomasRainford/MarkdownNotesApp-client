@@ -16,6 +16,7 @@ import {
   ModalOverlay,
   Spinner,
   Textarea,
+  useColorMode,
   useDisclosure,
 } from "@chakra-ui/react";
 import { GroupBase, Select, SingleValue } from "chakra-react-select";
@@ -353,6 +354,10 @@ export interface Props {
 }
 
 const MessageInput = ({ chat }: Props): JSX.Element => {
+  const colorMode = useColorMode();
+  const colorModeValue = (light: string, dark: string) => {
+    return colorMode.colorMode === "light" ? light : dark;
+  };
   const [me] = useMeQuery();
   const [inputValue, setInputValue] = useState("");
   const [createPrivateMessageResult, createPrivateMessage] =
@@ -373,7 +378,7 @@ const MessageInput = ({ chat }: Props): JSX.Element => {
         <Textarea
           resize={"none"}
           rows={3}
-          bg="gray.700"
+          bg={colorModeValue("gray.400", "gray.700")}
           placeholder="Type your message here..."
           value={inputValue}
           onChange={(e) => {

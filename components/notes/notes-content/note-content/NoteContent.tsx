@@ -6,13 +6,13 @@ import {
   Input,
   Tag,
   Text,
-  useColorMode,
+  useColorMode
 } from "@chakra-ui/react";
 import { useEffect, useMemo, useState } from "react";
 import {
   Collection,
   Note,
-  useUpdateNoteMutation,
+  useUpdateNoteMutation
 } from "../../../../generated/graphql";
 import { getTimeSince } from "../../../../utils/getTimeSince";
 import { useAllLocalStorageValues } from "../../../../utils/hooks/useAllLocalStorageValues";
@@ -143,6 +143,8 @@ const NoteContentHeaderTitle = ({
                 }
               }}
             />
+          </Box>
+          <Box display="flex" justifyContent={"end"}>
             <IconButton
               mr="0.5em"
               colorScheme="red"

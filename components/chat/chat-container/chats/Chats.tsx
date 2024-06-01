@@ -1,4 +1,11 @@
-import { Avatar, Box, Heading, Input, Text } from "@chakra-ui/react";
+import {
+  Avatar,
+  Box,
+  Heading,
+  Input,
+  Text,
+  useColorMode,
+} from "@chakra-ui/react";
 import filter from "lodash/filter";
 import includes from "lodash/includes";
 import { ReactNode, useEffect, useState } from "react";
@@ -22,15 +29,23 @@ const ChatLayout = ({
   selectedChat: string;
   onClick: () => void;
 }) => {
+  const colorMode = useColorMode();
+  const colorModeValue = (light: string, dark: string) => {
+    return colorMode.colorMode === "light" ? light : dark;
+  };
+
+  const hoverColour = colorModeValue("gray.600", "gray.500");
+  const backgroundColor = colorModeValue("gray.500", "gray.600");
+
   return (
     <Box
       key={currentChat.id}
       p="1em"
       borderRadius={"3px"}
       _hover={{
-        backgroundColor: currentChat.id !== selectedChat ? "gray.500" : "",
+        backgroundColor: currentChat.id !== selectedChat ? hoverColour : "",
       }}
-      backgroundColor={currentChat.id === selectedChat ? "gray.600" : ""}
+      backgroundColor={currentChat.id === selectedChat ? backgroundColor : ""}
       onClick={() => {
         onClick();
       }}
@@ -52,6 +67,11 @@ const Chats = ({ chats, selectedChatState, me }: Props): JSX.Element => {
   const [filterText, setFilterText] = useState<string>("");
   const [displayedChats, setDisplayedChats] = useState(chats);
 
+  const colorMode = useColorMode();
+  const colorModeValue = (light: string, dark: string) => {
+    return colorMode.colorMode === "light" ? light : dark;
+  };
+
   useEffect(() => {
     setDisplayedChats(chats);
   }, [chats]);
@@ -67,16 +87,18 @@ const Chats = ({ chats, selectedChatState, me }: Props): JSX.Element => {
       h={"100%"}
       w={{ base: "100%", md: "25%" }}
       padding="0.85em"
+      bg={colorModeValue("gray.400", "gray.800")}
     >
       <Box mb="1em">
-        <Heading>Chats</Heading>
+        <Heading color={colorModeValue("gray.700", "gray.100")}>Chats</Heading>
       </Box>
       <Box mb="1em">
         <Input
           type="text"
           value={filterText}
           placeholder={"Search chats..."}
-          bg="gray.600"
+          bg={colorModeValue("gray.500", "gray.800")}
+          _placeholder={{ color: colorModeValue("gray.100", "gray.100") }}
           onChange={(event) => {
             const value = event.target.value;
             setFilterText(value);
@@ -127,10 +149,18 @@ const Chats = ({ chats, selectedChatState, me }: Props): JSX.Element => {
                   </Box>
                   <Box>
                     <Box>
-                      <Heading size="sm">{chatUserName}</Heading>
+                      <Heading
+                        size="sm"
+                        color={colorModeValue("gray.100", "gray.100")}
+                      >
+                        {chatUserName}
+                      </Heading>
                     </Box>
                     <Box>
-                      <Text fontSize={"sm"} color="gray.400">
+                      <Text
+                        fontSize={"sm"}
+                        color={colorModeValue("gray.200", "gray.400")}
+                      >
                         {!lastMessage
                           ? "No messages yet..."
                           : `${senderUsername}: ${messageContent}`}
@@ -160,10 +190,18 @@ const Chats = ({ chats, selectedChatState, me }: Props): JSX.Element => {
                   </Box>
                   <Box>
                     <Box>
-                      <Heading size="sm">{chat.name}</Heading>
+                      <Heading
+                        size="sm"
+                        color={colorModeValue("gray.100", "gray.100")}
+                      >
+                        {chat.name}
+                      </Heading>
                     </Box>
                     <Box>
-                      <Text fontSize={"sm"} color="gray.400">
+                      <Text
+                        fontSize={"sm"}
+                        color={colorModeValue("gray.200", "gray.400")}
+                      >
                         {!lastMessage
                           ? "No messages yet..."
                           : `${senderUsername}: ${messageContent}`}

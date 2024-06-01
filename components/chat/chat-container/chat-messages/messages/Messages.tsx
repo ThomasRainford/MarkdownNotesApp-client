@@ -1,4 +1,11 @@
-import { Avatar, Box, Button, Text, useToast } from "@chakra-ui/react";
+import {
+  Avatar,
+  Box,
+  Button,
+  Text,
+  useColorMode,
+  useToast,
+} from "@chakra-ui/react";
 import ChakraUIRenderer from "chakra-ui-markdown-renderer";
 import { h } from "hastscript";
 import { Child } from "hastscript/lib/create-h";
@@ -15,6 +22,7 @@ import {
 import { markdownTheme } from "./utils";
 
 const MessageContent = ({ content }: { content: string }) => {
+  const colorMode = useColorMode();
   const [savePublicCollectionResult, savePublicCollection] =
     useSavePublicCollectionMutation();
   const toast = useToast();
@@ -43,42 +51,45 @@ const MessageContent = ({ content }: { content: string }) => {
     }
   }
 
-  const theme = markdownTheme({
-    "save-collection-button": (props: any) => {
-      const { children } = props;
-      return (
-        <Button
-          {...props}
-          isLoading={savePublicCollectionResult.fetching}
-          onClick={async () => {
-            const result = await savePublicCollection({
-              targetUserId: props.userId,
-              collectionId: props.collectionId,
-            });
-            if (result.data?.savePublicCollection.collection) {
-              toast({
-                id: "save-public-collection-success",
-                title: `Successfuly saved collection`,
-                status: "success",
-                position: "top",
-                duration: 2000,
+  const theme = markdownTheme(
+    {
+      "save-collection-button": (props: any) => {
+        const { children } = props;
+        return (
+          <Button
+            {...props}
+            isLoading={savePublicCollectionResult.fetching}
+            onClick={async () => {
+              const result = await savePublicCollection({
+                targetUserId: props.userId,
+                collectionId: props.collectionId,
               });
-            } else {
-              toast({
-                id: "save-public-collection-error",
-                title: `Failed to save collection`,
-                status: "error",
-                position: "top",
-                duration: 2000,
-              });
-            }
-          }}
-        >
-          {children}
-        </Button>
-      );
+              if (result.data?.savePublicCollection.collection) {
+                toast({
+                  id: "save-public-collection-success",
+                  title: `Successfuly saved collection`,
+                  status: "success",
+                  position: "top",
+                  duration: 2000,
+                });
+              } else {
+                toast({
+                  id: "save-public-collection-error",
+                  title: `Failed to save collection`,
+                  status: "error",
+                  position: "top",
+                  duration: 2000,
+                });
+              }
+            }}
+          >
+            {children}
+          </Button>
+        );
+      },
     },
-  });
+    colorMode.colorMode
+  );
 
   return (
     <Box>
@@ -170,6 +181,11 @@ const UserMessageBubble = ({
   content: string;
   date?: string;
 }) => {
+  const colorMode = useColorMode();
+  const colorModeValue = (light: string, dark: string) => {
+    return colorMode.colorMode === "light" ? light : dark;
+  };
+
   return (
     <>
       {date && (
@@ -189,7 +205,11 @@ const UserMessageBubble = ({
           <Box mr="2em" />
         </Box>
         <Box mb="0.25em">
-          <Box bg={"gray.500"} p="0.5em" borderRadius={"6px"}>
+          <Box
+            bg={colorModeValue("gray.300", "gray.500")}
+            p="0.5em"
+            borderRadius={"6px"}
+          >
             <MessageContent content={content} />
           </Box>
         </Box>
@@ -205,6 +225,11 @@ const UserMessage = ({
   message: Message;
   date?: string;
 }) => {
+  const colorMode = useColorMode();
+  const colorModeValue = (light: string, dark: string) => {
+    return colorMode.colorMode === "light" ? light : dark;
+  };
+
   return (
     <>
       {date && (
@@ -226,7 +251,11 @@ const UserMessage = ({
           </Box>
         </Box>
         <Box>
-          <Box bg={"gray.500"} p="0.5em" borderRadius={"6px"}>
+          <Box
+            bg={colorModeValue("gray.400", "gray.500")}
+            p="0.5em"
+            borderRadius={"6px"}
+          >
             <MessageContent content={message.content} />{" "}
           </Box>
           <Box float={"right"}>

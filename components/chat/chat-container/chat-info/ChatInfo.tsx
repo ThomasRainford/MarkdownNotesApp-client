@@ -1,4 +1,11 @@
-import { Avatar, Box, Button, Heading, Text } from "@chakra-ui/react";
+import {
+  Avatar,
+  Box,
+  Button,
+  Heading,
+  Text,
+  useColorMode,
+} from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { ChatPrivate, ChatRoom, User } from "../../../../generated/graphql";
 import { chatName } from "../../../../utils/util";
@@ -45,6 +52,11 @@ const ChatPrivateInfo = ({
 const ChatRoomInfo = ({ chatRoom }: { chatRoom: ChatRoom }) => {
   const router = useRouter();
 
+  const colorMode = useColorMode();
+  const colorModeValue = (light: string, dark: string) => {
+    return colorMode.colorMode === "light" ? light : dark;
+  };
+
   return (
     <Box
       display={"flex"}
@@ -71,7 +83,7 @@ const ChatRoomInfo = ({ chatRoom }: { chatRoom: ChatRoom }) => {
               borderRadius={"5px"}
               p="0.5em"
               _hover={{
-                backgroundColor: "gray.600",
+                backgroundColor: colorModeValue("gray.400", "gray.600"),
               }}
               onClick={() => {
                 router.push(`/profile/${member.username}`);
@@ -85,7 +97,11 @@ const ChatRoomInfo = ({ chatRoom }: { chatRoom: ChatRoom }) => {
                   <Text>{member.username}</Text>
                 </Box>
                 <Box>
-                  <Text fontSize={"sm"} fontWeight="light" color={"gray.300"}>
+                  <Text
+                    fontSize={"sm"}
+                    fontWeight="light"
+                    color={colorModeValue("gray.600", "gray.300")}
+                  >
                     {member.email}
                   </Text>
                 </Box>
@@ -104,6 +120,11 @@ export interface Props {
 }
 
 const Chatinfo = ({ chat, me }: Props): JSX.Element => {
+  const colorMode = useColorMode();
+  const colorModeValue = (light: string, dark: string) => {
+    return colorMode.colorMode === "light" ? light : dark;
+  };
+
   return (
     <Box
       display={"flex"}
@@ -111,7 +132,7 @@ const Chatinfo = ({ chat, me }: Props): JSX.Element => {
       h={"100%"}
       w={{ base: "100%", md: "25%" }}
       paddingY="1em"
-      bg="gray.500"
+      bg={colorModeValue("gray.200", "gray.500")}
     >
       <Box>
         {chat?.__typename === "ChatPrivate" ? (

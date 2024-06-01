@@ -33,6 +33,7 @@ const Editor = ({
       ref={refContainer}
       className="note-editor-content"
       h={"calc(100% - 120px)"}
+      w="100%"
       overflowY={"scroll"}
     />
   );
@@ -135,7 +136,7 @@ const NoteEditor = ({ note, readOnly }: Props): JSX.Element => {
   return (
     <Box>
       {readOnly && (
-        <Alert status="info">
+        <Alert status="info" pr="0.25em">
           <AlertIcon />
           This note is read-only.
         </Alert>
