@@ -246,6 +246,10 @@ const Collections = ({ isMe, userCollectionsData }: Props): JSX.Element => {
       <Box>
         {collections?.map((_collection) => {
           const lists = _collection.lists;
+          const lightBorderColor =
+            _collection.id === collection?.id ? "gray.200" : "gray.400";
+          const darkBorderColor =
+            _collection.id === collection?.id ? "gray.200" : "gray.800";
           return (
             <Box
               key={_collection.id}
@@ -259,7 +263,7 @@ const Collections = ({ isMe, userCollectionsData }: Props): JSX.Element => {
               }}
               border={"1px"}
               borderColor={
-                _collection.id === collection?.id ? "gray.200" : "gray.800"
+                colorMode === "light" ? lightBorderColor : darkBorderColor
               }
               onClick={() => {
                 const selectedValue = setCollectionValue(
